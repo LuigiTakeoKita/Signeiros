@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form name="Info" align="client" theme="dark" margins="{top=1}">
+    <template name="labelCli">
+        <label align="left" text="$(text)" width="90"/>
+    </template>
+    <flowLayout align="client" orientation="horizontal" horzAlign="justify" margins="{left=20, top=20, bottom=20, right=20}">
+        <flowPart minWidth="100" maxWidth="500" height="25">
+            <labelCli text="Nome"/>
+            <edit align="client" field="nome"/>
+        </flowPart>
+        <flowPart minWidth="100" maxWidth="500" height="25">
+            <labelCli text="Player"/>
+            <edit align="client" field="player"/>
+        </flowPart>
+        <flowPart minWidth="100" maxWidth="200" height="25" margins="{top=5}">
+            <labelCli text="Idade"/>
+            <edit align="client" field="idade" type="number"/>
+        </flowPart>
+        <flowPart minWidth="100" maxWidth="200" height="25" margins="{top=5}">
+            <labelCli text="Dinheiro"/>
+            <edit align="client" field="dinheiro" type="number"/>
+        </flowPart>
+        <flowLineBreak/>
+        <flowPart minWidth="100" maxWidth="200" height="25">
+            <labelCli text="História"/>
+        </flowPart>
+        <flowLineBreak/>
+        <flowPart minWidth="100" maxWidth="2000" height="800">
+            <richEdit align="client" field="historia"/>
+        </flowPart>
+    </flowLayout>
+</form>

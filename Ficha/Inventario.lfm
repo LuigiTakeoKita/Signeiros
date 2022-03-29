@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form name="Inventario" align="client" theme="dark" margins="{top=1}">
+    <richEdit align="client" backgroundColor="white" defaultFontColor="black" field="inventario" animateImages="false"/>
+</form>

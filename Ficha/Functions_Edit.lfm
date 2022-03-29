@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form name="Functions_Edit" align="client" theme="dark" margins="{top=1}">
+    <script>
+        local function copyAll()
+            local magics = NDB.getChildNodes(sheet.magics)
+            System.setClipboardText(tableToStr(magics))
+        end
+        local function inGrimorio(sequencia)
+            local magics = NDB.getChildNodes(sheet.magics)
+            for i=1, #magics, 1 do
+                if magics[i].sequencia == sequencia then
+                    return true
+                end
+            end
+            return false
+        end
+        local function paste(table)
+            if inGrimorio(table.sequencia) then 
+                return
+            end
+            local node = self.grimorio:append()
+            node.sequencia = table.sequencia
+            if table.nome ~= nil then
+                node.nome = table.nome
+            end
+            if table.dano ~= nil then
+                node.dano = table.dano
+            end
+            if table.desc ~= nil then
+                node.desc = table.desc
+            end
+            if table.unidades ~= nil then
+                node.unidades = table.unidades
+            end
+        end
+        local function pasteAll()
+            local str = System.getClipboardText()
+            if string.find(str, "sequencia = ") == nil then
+                return
+            end
+            str = totable(str)
+            if type(str[1]) == "table" then
+                for i=1, #str, 1 do
+                    paste(str[i])
+                end
+            else
+                paste(str)
+            end
+        end
+    </script>
+</form>

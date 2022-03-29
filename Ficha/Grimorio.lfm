@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form name="Grimorio" align="client" theme="dark" margins="{top=1}">
+    <import file="Functions.lfm"/>
+    <import file="Functions_Roll.lfm"/>
+    <import file="Functions_Edit.lfm"/>
+    <script>
+        local function searchList(addMode)
+            local magics = NDB.getChildNodes(sheet.magics)
+            local magicsInv = NDB.getChildNodes(sheet.magicsInv)
+            local btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
+            if btns[1] == "" then
+                for i=1, #magicsInv, 1 do
+                    local nodo = self.grimorio:append()
+                    NDB.copy(nodo, magicsInv[i])
+                    NDB.deleteNode(magicsInv[i])
+                end
+            else
+                local s = {}
+                local index = 1
+                for i=1, 5, 1 do
+                    if i == 1 then
+                        table.insert(s, btns[i].text)
+                    else
+                        if string.find(s[index], btns[i].text) then
+                            s[index] = s[index] .. btns[i].text
+                        else
+                            table.insert(s, btns[i].text)
+                            index = index + 1
+                        end
+                    end
+                end
+                if addMode then
+                    for i=1, #magics, 1 do
+                        for j=1, #s, 1 do
+                            if string.find(magics[i].sequencia, s[j]) == nil then
+                                local nodo = self.grimorioInv:append()
+                                NDB.copy(nodo, magics[i])
+                                NDB.deleteNode(magics[i])
+                                break
+                            end
+                        end
+                    end
+                else
+                    for i=1, #magicsInv, 1 do
+                        local flag = true
+                        for j=1, #s, 1 do
+                            if string.find(magicsInv[i].sequencia, s[j]) == nil then
+                                flag = false
+                                break
+                            end
+                        end
+                        if flag == true then
+                            local nodo = self.grimorio:append()
+                            NDB.copy(nodo, magicsInv[i])
+                            NDB.deleteNode(magicsInv[i])
+                        end
+                    end
+                end
+            end
+            self.grimorio:needRepaint()
+            self.grimorio:sort()
+        end
+        local function orderSig(a, b)
+            return icons[b] > icons[a]
+        end
+        local function addSig(sig)
+            local btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
+            local sequencia = {sig}
+            if self.btn1.text == "" then
+                self.btn1.text = sig
+            else
+                for i=1, #btns, 1 do
+                    if btns[i].text == "" then
+                        break
+                    else
+                        table.insert(sequencia, btns[i].text)
+                    end
+                end
+                table.sort(sequencia, orderSig)
+                if 5 >= #sequencia then
+                    for i=1, 5, 1 do
+                        btns[i].text = sequencia[i]
+                    end
+                end
+            end
+            if 6 > #sequencia then 
+                searchList(true)
+            end
+        end
+        local function removeSig(btnNum)
+            local btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
+            btns[btnNum].text = ""
+            local sequencia = {}
+            for i=1, #btns, 1 do
+                if btns[i].text ~= "" then
+                    table.insert(sequencia, btns[i].text)
+                end
+            end
+            table.sort(sequencia, orderSig)
+            if 5 >= #sequencia then
+                for i=1, 5, 1 do
+                    btns[i].text = sequencia[i]
+                end
+            end
+            searchList(false)
+        end
+        local function altVigor()
+            local vigor = 15
+            for i=1, 8, 1 do
+                local level = getLevel(i)
+                if level >= 3 then
+                    vigor = vigor + 1
+                end
+                if level >= 5 then
+                    vigor = vigor + 1
+                end
+            end
+            sheet.vigorMax = vigor
+        end
+        local function altLevel(sig, text)
+            if     sig == 1 then sheet.level1 = text
+            elseif sig == 2 then sheet.level2 = text
+            elseif sig == 3 then sheet.level3 = text
+            elseif sig == 4 then sheet.level4 = text
+            elseif sig == 5 then sheet.level5 = text
+            elseif sig == 6 then sheet.level6 = text
+            elseif sig == 7 then sheet.level7 = text
+            elseif sig == 8 then sheet.level8 = text
+            else
+                showMessage("Error")
+            end
+            altVigor()
+        end
+        local SIZE = 1650
+        local function hasSize()
+            return self.body.width > SIZE
+        end
+        local function resizeLayout()
+            if hasSize() then
+                self.layout2.left = "850"
+                self.layout2.top = "0"
+                self.layout2.width = 800+ self.body.width-SIZE
+            else
+                self.layout2.left = "0"
+                self.layout2.top = "810"
+                self.layout2.width = "800"
+            end
+        end
+    </script>
+    <template name="select_magia">
+        <!--
+            local icons = {"🔥","⚡","🎲","🌓","👊","💫","🎱","☔"}
+            local hints = {"Calor", "Disrupção", "Engano", "Equilíbrio", "Força", "Imaterial", "Material", "Proteção"}
+            for i=1, #icons, 1 do
+                ic = icons[i]
+                h = hints[i]
+                index = i
+        -->
+            <layout width="60" height="85" margins="left=5">
+                <button align="top" text="$(ic)" width="60" height="60" hint="$(h)" fontSize="30">
+                    <event name="onClick">
+                        sig = "$(ic)"
+                        addSig(sig)
+                    </event>
+                </button>
+                <label align="top" width="60" height="25" field="level$(index)" horzTextAlign="center" hitTest="true" hint="Level: XP Atual/XP Upar"/>
+            </layout>
+        <!-- 
+            end
+        -->
+    </template>
+    <template name="magic_display">
+        <flowLayout align="top" width="850" height="50" horzAlign="center">
+            <!-- 
+                for i=1, 5, 1 do
+                    btn = "btn" .. i
+                    num = i
+            -->
+                <button align="left" text="" width="50" height="50" name="$(btn)" margins="left=5" fontSize="20">
+                    <event name="onCLick">
+                        btnNum = $(num)
+                        removeSig(btnNum)
+                    </event>
+                </button>
+            <!-- 
+                end
+            -->
+        </flowLayout>
+    </template>
+    <template name="button_addMagic">
+        <button width="150" text="Adicionar Magia" margins="top=10">
+            <event name="onClick">
+                local btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
+                local s = ""
+                for i=1, 5, 1 do
+                    s = s .. btns[i].text
+                end
+                if s == "" then
+                    showMessage("Nenhum Signo na magia.")
+                else
+                    local magics = NDB.getChildNodes(sheet.magics)
+                    local flag = true
+                    for i=1, #magics, 1 do
+                        if magics[i].sequencia == s then
+                            flag = false
+                            break
+                        end
+                    end
+                    if flag then
+                        local node = self.grimorio:append()
+                        node.sequencia = s
+                        self.grimorio:sort()
+                    else
+                        showMessage("Mágica já escrita no Grimório.")
+                    end
+                end
+            </event>
+        </button>
+    </template>
+    <template name="button_Level">
+        <button width="150" text="Ajustar Level de magia" margins="top=10, left=10">
+            <event name="onClick">
+                Dialogs.choose("Escolha o Signo.", {"🔥 - Calor","⚡ - Disrupção","🎲 - Engano","🌓 - Equilíbrio","👊 - Força","💫 - Imaterial","🎱 - Material","☔ - Proteção"},
+                    function(selected, selectedIndex, selectedText)
+                        if selected == false then 
+                            showMessage("Operação cancelada.")
+                        else
+                            local sig = selectedIndex
+                            Dialogs.choose("Escolha o Level.", {"1","2","3","4","5","6"},
+                                function(selected2, selectedIndex2, selectedText2)
+                                    if selected2 == false then 
+                                        showMessage("Operação cancelada.")
+                                    else
+                                        local level = selectedIndex2
+                                        if level == 6 then
+                                            local text = "6: 0/0"
+                                            altLevel(sig, text)
+                                        else
+                                            local qnts = {3, 5, 7, 9, 11}
+                                            local choises = {}
+                                            for i=0, qnts[level]-1, 1 do
+                                                table.insert(choises, ""..i)
+                                            end
+                                            Dialogs.choose("Escolha a quantidade de XP.", choises,
+                                                function(selected3, selectedIndex3, selectedText3)
+                                                    if selected3 == false then 
+                                                        showMessage("Operação cancelada.")
+                                                    else
+                                                        local text = level .. ": " .. selectedText3 .. "/" .. qnts[level]
+                                                        altLevel(sig, text)
+                                                    end
+                                                end
+                                            )
+                                        end
+                                    end
+                                end
+                            )
+                        end
+                    end
+                )
+            </event>
+        </button>
+    </template>
+    <scrollBox align="client" margins="{left=5, top=5, bottom=5, right=5}" name="body">
+        <edit field="admPermission" visible="false" width="0" height="0"/>
+        <layout left="0" top="0" width="800" height="800" margins="{left = 5, right = 5, top = 5, bottom = 5}" name="layout1">
+            <!-- vida/escudos -->
+            <flowLayout align="top" height="150" margins="{left = 5, right = 5, top = 5, bottom = 5}" horzAlign="center">
+                <flowPart minWidth="300" maxWidth="425" height="25" vertAlign="center">
+                    <label align="left" text="Vida" width="100" height="25"/>
+                    <edit align="left" field="vidaAt" width="100" height="25" type="number"/>
+                    <label align="left" text="/" width="10" height="25" margins="left=5"/>
+                    <edit align="left" field="vidaMax" width="100" height="25" type="number"/>
+                </flowPart>
+                <flowPart minWidth="300" maxWidth="425" height="25" vertAlign="center">
+                    <label align="left" text="Escudo" width="100" height="25"/>
+                    <edit align="left" field="escudoAt" width="100" height="25" type="number"/>
+                    <label align="left" text="/" width="10" height="25" margins="left=5"/>
+                    <edit align="left" field="escudoMax" width="100" height="25" type="number"/>
+                </flowPart>
+            </flowLayout>
+            <!-- vigor/resetarvigor -->
+            <flowLayout align="top" height="25" margins="{left = 5, right = 5, top = 5, bottom = 5}" horzAlign="center">
+                <progressBar color="yellow" width="600" fieldMax="vigorMax" field="vigor" hitTest="true">
+                    <event name='onClick'>
+                        showMessage("Vigor: " .. sheet.vigor .. "/" .. sheet.vigorMax)
+                    </event>
+                </progressBar>
+                <button text="Restaurar Vigor" width="100" margins="left=10">
+                    <event name="onClick">
+                        Dialogs.confirmOkCancel("Deseja resetar o vigor(".. sheet.vigorMax ..")?",
+                        function (confirmado)
+                            if confirmado then
+                                sheet.vigor = sheet.vigorMax
+                            end
+                        end)
+                    </event>
+                </button>
+            </flowLayout>
+            <!-- magia -->
+            <layout align="top" height="300" margins="{left = 5, right = 5, top = 5, bottom = 5}">
+                <flowLayout align="top" width="850" height="85" horzAlign="center">
+                    <select_magia/>
+                </flowLayout>
+                <layout align="top" width="850" height="340" margins="top=10">
+                    <magic_display/>
+                    <flowLayout align="top" width="850" height="35" margins="{left = 5, right = 5, top = 5, bottom = 5}" horzAlign="center" name="adminTab">
+                        <button_addMagic/>
+                        <button_Level/>
+                    </flowLayout>
+                </layout>
+            </layout>
+            <!-- desc -->
+            <layout align="top" height="300" margins="{left = 5, right = 5, top = 5, bottom = 5}">
+                <dataScopeBox name="magicDesc" align="client">
+                    <rectangle align="top" color="black" xradius="10" yradius="10" height="290" padding="{top=5, left=5, right=5, bottom=5}">
+                        <layout align="client">
+                            <layout align="top" height="60">
+                                <layout align="left" width="600" height="50">
+                                    <layout align="top" width="90" height="25" margins="top = 5">
+                                        <label align="left" text="Dano" margins="left = 5"/>
+                                        <edit align="left" width="50" field="dano" type="number" min="0" max="5"/>
+                                    </layout>
+                                    <layout align="top" width="90" height="25" margins="top = 5">
+                                        <label align="left" text="Unidade" margins="left = 5"/>
+                                        <edit align="left" width="300" field="unidades" hint="Nome=Valor,Nome=Valor"/>
+                                    </layout>
+                                </layout>
+                                <layout align="right" width="200" height="60">
+                                    <layout align="top" width="90" height="25" margins="top = 5">
+                                        <button align="left" text="Rolar" width="60" margins="left=10">
+                                            <event name="onClick">
+                                                local node = self.grimorio.selectedNode
+                                                if node ~= nil then
+                                                    trySpell()
+                                                end
+                                            </event>
+                                        </button>
+                                        <checkBox align="left" field="modoSecreto" text="Modo Secreto" margins="left = 5"/>
+                                    </layout>
+                                    <layout align="top" width="90" height="25" margins="top = 5">
+                                        <button align="left" text="Revelar Valores" width="180" margins="left=10">
+                                            <event name="onClick">
+                                                local node = self.grimorio.selectedNode
+                                                if node ~= nil then
+                                                    if node.rolagem ~= nil then
+                                                        revealResult(node.rolagem)
+                                                        node.rolagem = nil
+                                                    else
+                                                        showMessage("Nenhuma magia preparada.")
+                                                    end
+                                                end
+                                            </event>
+                                        </button>
+                                    </layout>
+                                </layout>
+                            </layout>
+                            <label align="bottom" text="Descrição" margins="left = 5"/>
+                            <textEditor align="bottom" height="190" field="desc" margins="top = 5"/>
+                        </layout>
+                    </rectangle>
+                </dataScopeBox>
+            </layout>
+        </layout>
+        <!-- Grimorio -->
+        <layout width="900" height="800" margins="{left = 5, right = 5, top = 5, bottom = 5}" name="layout2">
+            <!-- Grimorio head -->
+            <layout align="top" height="25">
+                <label align="left" text="Grimório" width="100" height="25" fontStyle="bold"/>
+                <button align="left" left="10" text="Copiar Grimório" width="150" height="25" margins="left = 10">
+                    <event name="onCLick">
+                        copyAll()
+                    </event>
+                </button>
+                <button align="left" left="10" text="Colar no Grimório" width="150" height="25" margins="left = 10">
+                    <event name="onCLick">
+                        pasteAll()
+                        self.grimorio:sort()
+                    </event>
+                </button>
+            </layout>
+            <!-- lista -->
+            <scrollBox align="top" height="755" margins="{top = 10}">
+                <recordList name="grimorio" field="magics" templateForm="ItemGrimorio" align="client" selectable="true">
+                    <event name="onSelect">
+                        local node = self.grimorio.selectedNode
+                        self.magicDesc.node = node
+                    </event>
+                    <event name="onCompare">
+                        a = nodeA.sequencia or ""
+                        b = nodeB.sequencia or ""
+                        return sortSig(a, b)
+                    </event>
+                </recordList>
+            </scrollBox>
+            <!-- Lista invisivel -->
+            <recordList name="grimorioInv" field="magicsInv" templateForm="ItemGrimorio" width="0" height="0" visible="false"/>
+        </layout>
+        <event name='onResize'>
+            resizeLayout()
+        </event>
+    </scrollBox>
+</form>

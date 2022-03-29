@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form name="Ficha_Signeiros" formType="sheetTemplate" dataType="Signeiros.Ficha" title="Ficha Signeiros" align="client" theme="dark">
+    <tabControl align="client">
+        <tab title="Info Personagem">
+            <import file="Info.lfm"/>
+        </tab>
+        <tab title="Grimório">
+            <import file="Grimorio.lfm"/>
+        </tab>
+        <tab title="Inventário">
+            <import file="Inventario.lfm"/>
+        </tab>
+		<tab title="Anotações">
+            <import file="Anotacoes.lfm"/>
+        </tab>
+    </tabControl>
+   <script>
+        local function getCurrentJogador()
+            local user = Firecast.getCurrentUser()
+            local mesaDoPersonagem = rrpg.getMesaDe(sheet);
+            local jogadores = mesaDoPersonagem.jogadores
+            for i = 1, #jogadores, 1 do
+                    if jogadores[i].login == user.login then
+                        return jogadores[i]
+                    end
+            end
+        end
+   </script>
+    <event name='onNodeReady'>
+        local jogador = getCurrentJogador()
+        self.adminTab.visible = jogador.isMestre
+        if sheet.level1 == nil then
+            sheet.vigor = 15
+            sheet.vigorMax = 15
+            sheet.level1 = "1: 0/3"
+            sheet.level2 = "1: 0/3"
+            sheet.level3 = "1: 0/3"
+            sheet.level4 = "1: 0/3"
+            sheet.level5 = "1: 0/3"
+            sheet.level6 = "1: 0/3"
+            sheet.level7 = "1: 0/3"
+            sheet.level8 = "1: 0/3"
+        end
+    </event>
+</form>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form name="Functions" align="client" theme="dark" margins="{top=1}">
+    <script>
+        icons = {["🔥"]=1,["⚡"]=2,["🎲"]=3,["🌓"]=4,["👊"]=5,["💫"]=6,["🎱"]=7,["☔"]=8}
+        local function splitEmojis(str)
+            local res = {}
+            for emoji in str
+            :gsub("(.)([\194-\244])", "%1\0%2")
+            :gsub("%z(\240\159\143[\187-\191])", "%1")
+            :gsub("%z(\239\184[\128-\143])", "%1")
+            :gsub("%z(\226\128\141)%z", "%1")
+            :gmatch"%Z+" 
+            do
+                table.insert(res, emoji)
+            end
+            return res
+        end
+        local function sortSig(a, b)
+            ta = splitEmojis(a)
+            tb = splitEmojis(b)
+            if #ta ~= #tb then
+                if #ta > #tb then
+                    return 1
+                else
+                    return -1
+                end
+            end
+            for i=1, #ta, 1 do
+                if icons[ta[i]] > icons[tb[i]] then
+                    return 1
+                end
+                if icons[tb[i]] > icons[ta[i]] then
+                    return -1
+                end
+            end
+            return 1
+        end
+        local function split(s, delimiter)
+            result = {};
+            for match in (s..delimiter):gmatch("(.-)"..delimiter) do
+                table.insert(result, match);
+            end
+            return result;
+        end
+        function trim(s)
+            return (s:gsub("^%s*(.-)%s*$", "%1"))
+        end
+    </script>
+</form>
