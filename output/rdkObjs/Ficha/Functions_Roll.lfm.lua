@@ -165,7 +165,11 @@ local function constructNew_Functions_Roll()
                     msg = msg .. ", "
                 end
                 local parts = split(allUnits[i], "=")
-                msg = msg .. trim(parts[1]) .. "(".. trim(parts[2]) ..") = " .. calUnidades(tonumber(parts[2]), sum)
+                if #parts == 2 then
+                    msg = msg .. trim(parts[1]) .. "(".. trim(parts[2]) ..") = " .. calUnidades(tonumber(parts[2]), sum)
+                else
+                    msg = msg .. "Unidade " .. i .. "(".. tonumber(parts[1]) .. ") = " .. calUnidades(tonumber(parts[1]), sum)
+                end
             end
             return msg
         end

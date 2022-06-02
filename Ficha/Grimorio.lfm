@@ -137,13 +137,13 @@
         end
         local function resizeLayout()
             if hasSize() then
-                self.layout2.left = "850"
-                self.layout2.top = "0"
-                self.layout2.width = 800+ self.body.width-SIZE
+                self.layout2.left = 850
+                self.layout2.top = 0
+                self.layout2.width = 800 + self.body.width - SIZE
             else
-                self.layout2.left = "0"
-                self.layout2.top = "810"
-                self.layout2.width = "800"
+                self.layout2.left = 0
+                self.layout2.top = 810
+                self.layout2.width = 800
             end
         end
     </script>
@@ -323,7 +323,7 @@
                                     </layout>
                                     <layout align="top" width="90" height="25" margins="top = 5">
                                         <label align="left" text="Unidade" margins="left = 5"/>
-                                        <edit align="left" width="300" field="unidades" hint="Nome=Valor,Nome=Valor"/>
+                                        <edit align="left" width="300" field="unidades" hint="Nome=Valor,Nome=Valor ou Valor,Valor"/>
                                     </layout>
                                 </layout>
                                 <layout align="right" width="200" height="60">

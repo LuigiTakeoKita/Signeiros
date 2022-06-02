@@ -385,7 +385,11 @@ local function constructNew_Ficha_Signeiros()
                     msg = msg .. ", "
                 end
                 local parts = split(allUnits[i], "=")
-                msg = msg .. trim(parts[1]) .. "(".. trim(parts[2]) ..") = " .. calUnidades(tonumber(parts[2]), sum)
+                if #parts == 2 then
+                    msg = msg .. trim(parts[1]) .. "(".. trim(parts[2]) ..") = " .. calUnidades(tonumber(parts[2]), sum)
+                else
+                    msg = msg .. "Unidade " .. i .. "(".. tonumber(parts[1]) .. ") = " .. calUnidades(tonumber(parts[1]), sum)
+                end
             end
             return msg
         end
@@ -641,13 +645,13 @@ local function constructNew_Ficha_Signeiros()
         end
         local function resizeLayout()
             if hasSize() then
-                self.layout2.left = "850"
-                self.layout2.top = "0"
-                self.layout2.width = 800+ self.body.width-SIZE
+                self.layout2.left = 850
+                self.layout2.top = 0
+                self.layout2.width = 800 + self.body.width - SIZE
             else
-                self.layout2.left = "0"
-                self.layout2.top = "810"
-                self.layout2.width = "800"
+                self.layout2.left = 0
+                self.layout2.top = 810
+                self.layout2.width = 800
             end
         end
     
@@ -1383,7 +1387,7 @@ local function constructNew_Ficha_Signeiros()
 
         local function getCurrentJogador()
             local user = Firecast.getCurrentUser()
-            local mesaDoPersonagem = rrpg.getMesaDe(sheet);
+            local mesaDoPersonagem = Firecast.getMesaDe(sheet);
             local jogadores = mesaDoPersonagem.jogadores
             for i = 1, #jogadores, 1 do
                     if jogadores[i].login == user.login then

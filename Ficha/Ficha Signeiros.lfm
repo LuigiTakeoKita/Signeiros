@@ -17,7 +17,7 @@
    <script>
         local function getCurrentJogador()
             local user = Firecast.getCurrentUser()
-            local mesaDoPersonagem = rrpg.getMesaDe(sheet);
+            local mesaDoPersonagem = Firecast.getMesaDe(sheet);
             local jogadores = mesaDoPersonagem.jogadores
             for i = 1, #jogadores, 1 do
                     if jogadores[i].login == user.login then

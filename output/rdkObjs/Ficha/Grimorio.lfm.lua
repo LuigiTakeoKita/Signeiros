@@ -227,7 +227,11 @@ local function constructNew_Grimorio()
                     msg = msg .. ", "
                 end
                 local parts = split(allUnits[i], "=")
-                msg = msg .. trim(parts[1]) .. "(".. trim(parts[2]) ..") = " .. calUnidades(tonumber(parts[2]), sum)
+                if #parts == 2 then
+                    msg = msg .. trim(parts[1]) .. "(".. trim(parts[2]) ..") = " .. calUnidades(tonumber(parts[2]), sum)
+                else
+                    msg = msg .. "Unidade " .. i .. "(".. tonumber(parts[1]) .. ") = " .. calUnidades(tonumber(parts[1]), sum)
+                end
             end
             return msg
         end
@@ -483,13 +487,13 @@ local function constructNew_Grimorio()
         end
         local function resizeLayout()
             if hasSize() then
-                self.layout2.left = "850"
-                self.layout2.top = "0"
-                self.layout2.width = 800+ self.body.width-SIZE
+                self.layout2.left = 850
+                self.layout2.top = 0
+                self.layout2.width = 800 + self.body.width - SIZE
             else
-                self.layout2.left = "0"
-                self.layout2.top = "810"
-                self.layout2.width = "800"
+                self.layout2.left = 0
+                self.layout2.top = 810
+                self.layout2.width = 800
             end
         end
     
