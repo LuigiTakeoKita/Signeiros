@@ -59,7 +59,7 @@ local function constructNew_Functions_Roll()
             local text = getText(magic)
             text = split(text, ":")
             if text[1] == "6" then
-                return
+                return false
             end
             local xp = split(text[2], "/")
             if tonumber(xp[2]) > tonumber(xp[1])+qnt then
@@ -69,13 +69,14 @@ local function constructNew_Functions_Roll()
             text[1] = tonumber(text[1])+1
             if text[1] == 6 then
                 setText(magic, "6: 0/0")
-                return
+                return true
             end
             if text[1] == 3 or text[1] == 5 then
                 sheet.vigorMax = sheet.vigorMax + 1
             end
             local qnts = {3, 5, 7, 9, 11}
             setText(magic, text[1].. ": 0/" .. qnts[text[1]])
+            return true
         end
         local function reduceVigor(qnt)
             if 0 > qnt then
@@ -123,7 +124,10 @@ local function constructNew_Functions_Roll()
                 if rolagem.ops[i].tipo == "dado" then
                     local item = rolagem.ops[i]
                     if item.resultados[1] == item.face then
-                        addXP(1, icons[sequencia[index]])
+                        local flag = addXP(1, icons[sequencia[index]])
+                        if flag then
+                            return
+                        end
                     end
                     index = index + 1
                 end
@@ -173,10 +177,9 @@ local function constructNew_Functions_Roll()
             end
             return msg
         end
-        local function generateMsg(rolagem)
-            local strRolagem = rolagem
+        local function generateMsg(strRolagem)
             local node = self.grimorio.selectedNode
-            rolagem = Firecast.interpretarRolagem(rolagem)
+            rolagem = Firecast.interpretarRolagem(strRolagem)
             rolagem:rolarLocalmente()
             local resultsStr, resultInt = valuesRolls(rolagem.ops)
             local dano = node.dano or 0
@@ -187,21 +190,21 @@ local function constructNew_Functions_Roll()
                     "Unidades: " .. generateUnidades(node.unidades, resultInt)
             return msg, rolagem
         end
-        local function revealResult(rolagem)
-            local msg, novaRolagem = generateMsg(rolagem)
+        local function revealResult(strRolagem)
+            local msg, rolagem = generateMsg(strRolagem)
             local mesaDoPersonagem = Firecast.getMesaDe(sheet)
             mesaDoPersonagem.chat:enviarMensagem(msg)
-            afterRoll(novaRolagem)
+            afterRoll(rolagem)
         end
         local function generateRoll()
             local sequencia = getSequencia()
-            local dices = {"1d4", "1d6", "1d8", "1d10", "1d12", "1d20"}
+            local dices = {"1d4", "1d4", "1d6", "1d8", "1d10", "1d12", "1d20"}
             local strRolagem = ""
             for i=1, #sequencia, 1 do
                 if i ~= 1 then
                     strRolagem = strRolagem .. "+"
                 end
-                local level = getLevel(icons[sequencia[i]])
+                local level = getLevel(icons[sequencia[i]]) + 1
                 strRolagem = strRolagem .. dices[level]
             end
             return strRolagem
@@ -218,11 +221,27 @@ local function constructNew_Functions_Roll()
                 showMessage("Rolagem preparada.")
             end
         end
+        local function level0Roll()
+            local strRolagem = generateRoll()
+            local msg, rolagem = generateMsg(strRolagem)
+            local item = rolagem.ops[1]
+            local mesaDoPersonagem = Firecast.getMesaDe(sheet)
+            afterRoll(rolagem)
+            if item.resultados[1] == item.face then
+                mesaDoPersonagem.chat:enviarMensagem(msg)
+                return
+            end
+            mesaDoPersonagem.chat:enviarMensagem("Magia falhou. Resultado: " .. item.resultados[1])
+        end
         local function trySpell()
             local sequencia = getSequencia()
             local qnt = #sequencia
             if hasVigor(qnt) == false then
                 showMessage("Vigor não suficiente para executar a magia.")
+                return
+            end
+            if qnt == 1 and getLevel(icons[sequencia[1]]) == 0 then
+                level0Roll()
                 return
             end
             if hasLevel() == false then

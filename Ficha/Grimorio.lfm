@@ -226,27 +226,27 @@
                             showMessage("Operação cancelada.")
                         else
                             local sig = selectedIndex
-                            Dialogs.choose("Escolha o Level.", {"1","2","3","4","5","6"},
+                            Dialogs.choose("Escolha o Level.", {"0","1","2","3","4","5","6"},
                                 function(selected2, selectedIndex2, selectedText2)
                                     if selected2 == false then 
                                         showMessage("Operação cancelada.")
                                     else
                                         local level = selectedIndex2
-                                        if level == 6 then
+                                        if level == 7 then
                                             local text = "6: 0/0"
                                             altLevel(sig, text)
                                         else
-                                            local qnts = {3, 5, 7, 9, 11}
+                                            local qnts = {4, 3, 5, 7, 9, 11}
                                             local choises = {}
                                             for i=0, qnts[level]-1, 1 do
-                                                table.insert(choises, ""..i)
+                                                table.insert(choises, "" .. i)
                                             end
                                             Dialogs.choose("Escolha a quantidade de XP.", choises,
                                                 function(selected3, selectedIndex3, selectedText3)
                                                     if selected3 == false then 
                                                         showMessage("Operação cancelada.")
                                                     else
-                                                        local text = level .. ": " .. selectedText3 .. "/" .. qnts[level]
+                                                        local text = selectedText2 .. ": " .. selectedText3 .. "/" .. qnts[level]
                                                         altLevel(sig, text)
                                                     end
                                                 end
