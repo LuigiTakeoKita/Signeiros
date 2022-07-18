@@ -156,21 +156,21 @@
                 h = hints[i]
                 index = i
         -->
-            <layout width="60" height="85" margins="left=5">
-                <button align="top" text="$(ic)" width="60" height="60" hint="$(h)" fontSize="30">
+            <layout width="70" height="85" margins="left=5">
+                <button align="top" text="$(ic)" height="60" hint="$(h)" fontSize="30">
                     <event name="onClick">
                         sig = "$(ic)"
                         addSig(sig)
                     </event>
                 </button>
-                <label align="top" width="60" height="25" field="level$(index)" horzTextAlign="center" hitTest="true" hint="Level: XP Atual/XP Upar"/>
+                <label align="top" height="25" field="level$(index)" horzTextAlign="center" hitTest="true" hint="Level: XP Atual/XP Upar"/>
             </layout>
         <!-- 
             end
         -->
     </template>
     <template name="magic_display">
-        <flowLayout align="top" width="850" height="50" horzAlign="center">
+        <flowLayout align="top" height="50" horzAlign="center">
             <!-- 
                 for i=1, 5, 1 do
                     btn = "btn" .. i
@@ -232,26 +232,21 @@
                                         showMessage("Operação cancelada.")
                                     else
                                         local level = selectedIndex2
-                                        if level == 7 then
-                                            local text = "6: 0/0"
-                                            altLevel(sig, text)
-                                        else
-                                            local qnts = {4, 3, 5, 7, 9, 11}
-                                            local choises = {}
-                                            for i=0, qnts[level]-1, 1 do
-                                                table.insert(choises, "" .. i)
-                                            end
-                                            Dialogs.choose("Escolha a quantidade de XP.", choises,
-                                                function(selected3, selectedIndex3, selectedText3)
-                                                    if selected3 == false then 
-                                                        showMessage("Operação cancelada.")
-                                                    else
-                                                        local text = selectedText2 .. ": " .. selectedText3 .. "/" .. qnts[level]
-                                                        altLevel(sig, text)
-                                                    end
-                                                end
-                                            )
+                                        local qnts = {4, 3, 5, 7, 9, 11, 100}
+                                        local choises = {}
+                                        for i=0, qnts[level]-1, 1 do
+                                            table.insert(choises, "" .. i)
                                         end
+                                        Dialogs.choose("Escolha a quantidade de XP.", choises,
+                                            function(selected3, selectedIndex3, selectedText3)
+                                                if selected3 == false then 
+                                                    showMessage("Operação cancelada.")
+                                                else
+                                                    local text = selectedText2 .. ": " .. selectedText3 .. "/" .. qnts[level]
+                                                    altLevel(sig, text)
+                                                end
+                                            end
+                                        )
                                     end
                                 end
                             )

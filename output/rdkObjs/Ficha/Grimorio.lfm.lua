@@ -120,23 +120,20 @@ local function constructNew_Grimorio()
         local function addXP(qnt, magic)
             local text = getText(magic)
             text = split(text, ":")
-            if text[1] == "6" then
-                return false
-            end
             local xp = split(text[2], "/")
             if tonumber(xp[2]) > tonumber(xp[1])+qnt then
                 setText(magic, text[1].. ": ".. tonumber(xp[1])+qnt .. "/" .. xp[2])
                 return
             end
             text[1] = tonumber(text[1])+1
-            if text[1] == 6 then
-                setText(magic, "6: 0/0")
+            if text[1] == 7 then
+                setText(magic, "6: 100/100")
                 return true
             end
             if text[1] == 3 or text[1] == 5 then
                 sheet.vigorMax = sheet.vigorMax + 1
             end
-            local qnts = {3, 5, 7, 9, 11}
+            local qnts = {3, 5, 7, 9, 11, 100}
             setText(magic, text[1].. ": 0/" .. qnts[text[1]])
             return true
         end
@@ -676,7 +673,7 @@ local function constructNew_Grimorio()
 
     obj.layout4 = GUI.fromHandle(_obj_newObject("layout"));
     obj.layout4:setParent(obj.flowLayout3);
-    obj.layout4:setWidth(60);
+    obj.layout4:setWidth(70);
     obj.layout4:setHeight(85);
     obj.layout4:setMargins({left=5});
     obj.layout4:setName("layout4");
@@ -685,7 +682,6 @@ local function constructNew_Grimorio()
     obj.button2:setParent(obj.layout4);
     obj.button2:setAlign("top");
     obj.button2:setText("🔥");
-    obj.button2:setWidth(60);
     obj.button2:setHeight(60);
     obj.button2:setHint("Calor");
     obj.button2:setFontSize(30);
@@ -694,7 +690,6 @@ local function constructNew_Grimorio()
     obj.label5 = GUI.fromHandle(_obj_newObject("label"));
     obj.label5:setParent(obj.layout4);
     obj.label5:setAlign("top");
-    obj.label5:setWidth(60);
     obj.label5:setHeight(25);
     obj.label5:setField("level1");
     obj.label5:setHorzTextAlign("center");
@@ -704,7 +699,7 @@ local function constructNew_Grimorio()
 
     obj.layout5 = GUI.fromHandle(_obj_newObject("layout"));
     obj.layout5:setParent(obj.flowLayout3);
-    obj.layout5:setWidth(60);
+    obj.layout5:setWidth(70);
     obj.layout5:setHeight(85);
     obj.layout5:setMargins({left=5});
     obj.layout5:setName("layout5");
@@ -713,7 +708,6 @@ local function constructNew_Grimorio()
     obj.button3:setParent(obj.layout5);
     obj.button3:setAlign("top");
     obj.button3:setText("⚡");
-    obj.button3:setWidth(60);
     obj.button3:setHeight(60);
     obj.button3:setHint("Disrupção");
     obj.button3:setFontSize(30);
@@ -722,7 +716,6 @@ local function constructNew_Grimorio()
     obj.label6 = GUI.fromHandle(_obj_newObject("label"));
     obj.label6:setParent(obj.layout5);
     obj.label6:setAlign("top");
-    obj.label6:setWidth(60);
     obj.label6:setHeight(25);
     obj.label6:setField("level2");
     obj.label6:setHorzTextAlign("center");
@@ -732,7 +725,7 @@ local function constructNew_Grimorio()
 
     obj.layout6 = GUI.fromHandle(_obj_newObject("layout"));
     obj.layout6:setParent(obj.flowLayout3);
-    obj.layout6:setWidth(60);
+    obj.layout6:setWidth(70);
     obj.layout6:setHeight(85);
     obj.layout6:setMargins({left=5});
     obj.layout6:setName("layout6");
@@ -741,7 +734,6 @@ local function constructNew_Grimorio()
     obj.button4:setParent(obj.layout6);
     obj.button4:setAlign("top");
     obj.button4:setText("🎲");
-    obj.button4:setWidth(60);
     obj.button4:setHeight(60);
     obj.button4:setHint("Engano");
     obj.button4:setFontSize(30);
@@ -750,7 +742,6 @@ local function constructNew_Grimorio()
     obj.label7 = GUI.fromHandle(_obj_newObject("label"));
     obj.label7:setParent(obj.layout6);
     obj.label7:setAlign("top");
-    obj.label7:setWidth(60);
     obj.label7:setHeight(25);
     obj.label7:setField("level3");
     obj.label7:setHorzTextAlign("center");
@@ -760,7 +751,7 @@ local function constructNew_Grimorio()
 
     obj.layout7 = GUI.fromHandle(_obj_newObject("layout"));
     obj.layout7:setParent(obj.flowLayout3);
-    obj.layout7:setWidth(60);
+    obj.layout7:setWidth(70);
     obj.layout7:setHeight(85);
     obj.layout7:setMargins({left=5});
     obj.layout7:setName("layout7");
@@ -769,7 +760,6 @@ local function constructNew_Grimorio()
     obj.button5:setParent(obj.layout7);
     obj.button5:setAlign("top");
     obj.button5:setText("🌓");
-    obj.button5:setWidth(60);
     obj.button5:setHeight(60);
     obj.button5:setHint("Equilíbrio");
     obj.button5:setFontSize(30);
@@ -778,7 +768,6 @@ local function constructNew_Grimorio()
     obj.label8 = GUI.fromHandle(_obj_newObject("label"));
     obj.label8:setParent(obj.layout7);
     obj.label8:setAlign("top");
-    obj.label8:setWidth(60);
     obj.label8:setHeight(25);
     obj.label8:setField("level4");
     obj.label8:setHorzTextAlign("center");
@@ -788,7 +777,7 @@ local function constructNew_Grimorio()
 
     obj.layout8 = GUI.fromHandle(_obj_newObject("layout"));
     obj.layout8:setParent(obj.flowLayout3);
-    obj.layout8:setWidth(60);
+    obj.layout8:setWidth(70);
     obj.layout8:setHeight(85);
     obj.layout8:setMargins({left=5});
     obj.layout8:setName("layout8");
@@ -797,7 +786,6 @@ local function constructNew_Grimorio()
     obj.button6:setParent(obj.layout8);
     obj.button6:setAlign("top");
     obj.button6:setText("👊");
-    obj.button6:setWidth(60);
     obj.button6:setHeight(60);
     obj.button6:setHint("Força");
     obj.button6:setFontSize(30);
@@ -806,7 +794,6 @@ local function constructNew_Grimorio()
     obj.label9 = GUI.fromHandle(_obj_newObject("label"));
     obj.label9:setParent(obj.layout8);
     obj.label9:setAlign("top");
-    obj.label9:setWidth(60);
     obj.label9:setHeight(25);
     obj.label9:setField("level5");
     obj.label9:setHorzTextAlign("center");
@@ -816,7 +803,7 @@ local function constructNew_Grimorio()
 
     obj.layout9 = GUI.fromHandle(_obj_newObject("layout"));
     obj.layout9:setParent(obj.flowLayout3);
-    obj.layout9:setWidth(60);
+    obj.layout9:setWidth(70);
     obj.layout9:setHeight(85);
     obj.layout9:setMargins({left=5});
     obj.layout9:setName("layout9");
@@ -825,7 +812,6 @@ local function constructNew_Grimorio()
     obj.button7:setParent(obj.layout9);
     obj.button7:setAlign("top");
     obj.button7:setText("💫");
-    obj.button7:setWidth(60);
     obj.button7:setHeight(60);
     obj.button7:setHint("Imaterial");
     obj.button7:setFontSize(30);
@@ -834,7 +820,6 @@ local function constructNew_Grimorio()
     obj.label10 = GUI.fromHandle(_obj_newObject("label"));
     obj.label10:setParent(obj.layout9);
     obj.label10:setAlign("top");
-    obj.label10:setWidth(60);
     obj.label10:setHeight(25);
     obj.label10:setField("level6");
     obj.label10:setHorzTextAlign("center");
@@ -844,7 +829,7 @@ local function constructNew_Grimorio()
 
     obj.layout10 = GUI.fromHandle(_obj_newObject("layout"));
     obj.layout10:setParent(obj.flowLayout3);
-    obj.layout10:setWidth(60);
+    obj.layout10:setWidth(70);
     obj.layout10:setHeight(85);
     obj.layout10:setMargins({left=5});
     obj.layout10:setName("layout10");
@@ -853,7 +838,6 @@ local function constructNew_Grimorio()
     obj.button8:setParent(obj.layout10);
     obj.button8:setAlign("top");
     obj.button8:setText("🎱");
-    obj.button8:setWidth(60);
     obj.button8:setHeight(60);
     obj.button8:setHint("Material");
     obj.button8:setFontSize(30);
@@ -862,7 +846,6 @@ local function constructNew_Grimorio()
     obj.label11 = GUI.fromHandle(_obj_newObject("label"));
     obj.label11:setParent(obj.layout10);
     obj.label11:setAlign("top");
-    obj.label11:setWidth(60);
     obj.label11:setHeight(25);
     obj.label11:setField("level7");
     obj.label11:setHorzTextAlign("center");
@@ -872,7 +855,7 @@ local function constructNew_Grimorio()
 
     obj.layout11 = GUI.fromHandle(_obj_newObject("layout"));
     obj.layout11:setParent(obj.flowLayout3);
-    obj.layout11:setWidth(60);
+    obj.layout11:setWidth(70);
     obj.layout11:setHeight(85);
     obj.layout11:setMargins({left=5});
     obj.layout11:setName("layout11");
@@ -881,7 +864,6 @@ local function constructNew_Grimorio()
     obj.button9:setParent(obj.layout11);
     obj.button9:setAlign("top");
     obj.button9:setText("☔");
-    obj.button9:setWidth(60);
     obj.button9:setHeight(60);
     obj.button9:setHint("Proteção");
     obj.button9:setFontSize(30);
@@ -890,7 +872,6 @@ local function constructNew_Grimorio()
     obj.label12 = GUI.fromHandle(_obj_newObject("label"));
     obj.label12:setParent(obj.layout11);
     obj.label12:setAlign("top");
-    obj.label12:setWidth(60);
     obj.label12:setHeight(25);
     obj.label12:setField("level8");
     obj.label12:setHorzTextAlign("center");
@@ -909,7 +890,6 @@ local function constructNew_Grimorio()
     obj.flowLayout4 = GUI.fromHandle(_obj_newObject("flowLayout"));
     obj.flowLayout4:setParent(obj.layout12);
     obj.flowLayout4:setAlign("top");
-    obj.flowLayout4:setWidth(850);
     obj.flowLayout4:setHeight(50);
     obj.flowLayout4:setHorzAlign("center");
     obj.flowLayout4:setName("flowLayout4");
@@ -1343,26 +1323,21 @@ local function constructNew_Grimorio()
                                                     showMessage("Operação cancelada.")
                                                 else
                                                     local level = selectedIndex2
-                                                    if level == 7 then
-                                                        local text = "6: 0/0"
-                                                        altLevel(sig, text)
-                                                    else
-                                                        local qnts = {4, 3, 5, 7, 9, 11}
-                                                        local choises = {}
-                                                        for i=0, qnts[level]-1, 1 do
-                                                            table.insert(choises, "" .. i)
-                                                        end
-                                                        Dialogs.choose("Escolha a quantidade de XP.", choises,
-                                                            function(selected3, selectedIndex3, selectedText3)
-                                                                if selected3 == false then 
-                                                                    showMessage("Operação cancelada.")
-                                                                else
-                                                                    local text = selectedText2 .. ": " .. selectedText3 .. "/" .. qnts[level]
-                                                                    altLevel(sig, text)
-                                                                end
-                                                            end
-                                                        )
+                                                    local qnts = {4, 3, 5, 7, 9, 11, 100}
+                                                    local choises = {}
+                                                    for i=0, qnts[level]-1, 1 do
+                                                        table.insert(choises, "" .. i)
                                                     end
+                                                    Dialogs.choose("Escolha a quantidade de XP.", choises,
+                                                        function(selected3, selectedIndex3, selectedText3)
+                                                            if selected3 == false then 
+                                                                showMessage("Operação cancelada.")
+                                                            else
+                                                                local text = selectedText2 .. ": " .. selectedText3 .. "/" .. qnts[level]
+                                                                altLevel(sig, text)
+                                                            end
+                                                        end
+                                                    )
                                                 end
                                             end
                                         )
