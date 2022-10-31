@@ -32,12 +32,12 @@ local function constructNew_Functions_Edit()
     obj:setMargins({top=1});
 
 
-        local function copyAll()
-            local magics = NDB.getChildNodes(sheet.magics)
+        function copyAll()
+            magics = NDB.getChildNodes(sheet.magics)
             System.setClipboardText(tableToStr(magics))
         end
-        local function inGrimorio(sequencia)
-            local magics = NDB.getChildNodes(sheet.magics)
+        function inGrimorio(sequencia)
+            magics = NDB.getChildNodes(sheet.magics)
             for i=1, #magics, 1 do
                 if magics[i].sequencia == sequencia then
                     return true
@@ -45,11 +45,11 @@ local function constructNew_Functions_Edit()
             end
             return false
         end
-        local function paste(table)
+        function paste(table)
             if inGrimorio(table.sequencia) then 
                 return
             end
-            local node = self.grimorio:append()
+            node = self.grimorio:append()
             node.sequencia = table.sequencia
             if table.nome ~= nil then
                 node.nome = table.nome
@@ -63,9 +63,24 @@ local function constructNew_Functions_Edit()
             if table.unidades ~= nil then
                 node.unidades = table.unidades
             end
+            if table.signo1 ~= nil then
+                node.signo1 = table.signo1
+            end
+            if table.signo2 ~= nil then
+                node.signo2 = table.signo2
+            end
+            if table.signo3 ~= nil then
+                node.signo3 = table.signo3
+            end
+            if table.signo4 ~= nil then
+                node.signo4 = table.signo4
+            end
+            if table.signo5 ~= nil then
+                node.signo5 = table.signo5
+            end
         end
-        local function pasteAll()
-            local str = System.getClipboardText()
+        function pasteAll()
+            str = System.getClipboardText()
             if string.find(str, "sequencia = ") == nil then
                 return
             end

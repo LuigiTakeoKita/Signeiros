@@ -31,14 +31,14 @@ local function constructNew_Anotacoes()
     obj:setTheme("dark");
     obj:setMargins({top=1});
 
-    obj.richEdit1 = GUI.fromHandle(_obj_newObject("richEdit"));
-    obj.richEdit1:setParent(obj);
-    obj.richEdit1:setAlign("client");
-    lfm_setPropAsString(obj.richEdit1, "backgroundColor",  "white");
-    lfm_setPropAsString(obj.richEdit1, "defaultFontColor",  "black");
-    obj.richEdit1:setField("anotacoes");
-    lfm_setPropAsString(obj.richEdit1, "animateImages",  "false");
-    obj.richEdit1:setName("richEdit1");
+    obj.anotacoes = GUI.fromHandle(_obj_newObject("richEdit"));
+    obj.anotacoes:setParent(obj);
+    obj.anotacoes:setAlign("client");
+    lfm_setPropAsString(obj.anotacoes, "backgroundColor",  "white");
+    lfm_setPropAsString(obj.anotacoes, "defaultFontColor",  "black");
+    obj.anotacoes:setField("anotacoes");
+    obj.anotacoes:setName("anotacoes");
+    lfm_setPropAsString(obj.anotacoes, "animateImages",  "false");
 
     function obj:_releaseEvents()
     end;
@@ -52,7 +52,7 @@ local function constructNew_Anotacoes()
           self:setNodeDatabase(nil);
         end;
 
-        if self.richEdit1 ~= nil then self.richEdit1:destroy(); self.richEdit1 = nil; end;
+        if self.anotacoes ~= nil then self.anotacoes:destroy(); self.anotacoes = nil; end;
         self:_oldLFMDestroy();
     end;
 

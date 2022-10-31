@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form name="Inventario" align="client" theme="dark" margins="{top=1}">
-    <richEdit align="client" backgroundColor="white" defaultFontColor="black" field="inventario" animateImages="false"/>
+    <button align="top" text='Adicionar Item' width='100'>
+        <event name='onClick'>
+            self.inventario:append()
+        </event>
+    </button>
+    <!-- lista -->
+    <scrollBox align="top" height="755" margins="{top = 10}">
+        <recordList name="inventario" field="inventario" templateForm="ItemInventario" align="client" selectable="true"/>
+    </scrollBox>
 </form>

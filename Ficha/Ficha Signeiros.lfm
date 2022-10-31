@@ -15,10 +15,10 @@
         </tab>
     </tabControl>
    <script>
-        local function getCurrentJogador()
-            local user = Firecast.getCurrentUser()
-            local mesaDoPersonagem = Firecast.getMesaDe(sheet);
-            local jogadores = mesaDoPersonagem.jogadores
+        function getCurrentJogador()
+            user = Firecast.getCurrentUser()
+            mesaDoPersonagem = Firecast.getMesaDe(sheet);
+            jogadores = mesaDoPersonagem.jogadores
             for i = 1, #jogadores, 1 do
                     if jogadores[i].login == user.login then
                         return jogadores[i]
@@ -27,8 +27,9 @@
         end
    </script>
     <event name='onNodeReady'>
-        local jogador = getCurrentJogador()
+        jogador = getCurrentJogador()
         self.adminTab.visible = jogador.isMestre
+        self.anotacoes.visible = jogador.isMestre
         if sheet.level1 == nil then
             sheet.vigor = 15
             sheet.vigorMax = 15

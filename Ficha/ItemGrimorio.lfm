@@ -1,22 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form name="ItemGrimorio" height="30" theme="dark" margins="{top=5}">
-    <edit align="left" field="sequencia" readOnly="true" width="100"/>
+    <script>
+        function self:alternarVisibilidade()
+            if self.cbxInvisivel.checked then
+                NDB.setPermission(sheet, "group", "jogadores", "read", nil)
+                NDB.setPermission(sheet, "group", "espectadores", "read", nil)
+            else
+                NDB.setPermission(sheet, "group", "jogadores", "read", "deny")
+                NDB.setPermission(sheet, "group", "espectadores", "read", "deny")
+            end
+            NDB.setPermission(sheet, "group", "dono", "writePermissions", nil)
+        end
+
+        function self:atualizarCbxInvisivel()          
+            self.cbxInvisivel.checked = NDB.getPermission(sheet, "group", "espectadores", "read") == "deny" or
+                                        NDB.getPermission(sheet, "group", "jogadores", "read") == "deny"
+            self.cbxInvisivel.enabled = NDB.testPermission(sheet, "writePermissions")
+        end
+    </script>
+    <imageCheckBox name="cbxInvisivel" align="left" width="25" checkedImage="images/invisivel.png" uncheckedImage="images/visivel.png"
+        autoChange="false" onClick="self:alternarVisibilidade();"/>
+    <edit field="sequencia" visible="false" width="0"/>
+    <flowLayout align="left" width="150" margins="left=10">
+        <image width="30" height="30" style="stretch" field="signo1"/>
+        <image width="30" height="30" style="stretch" field="signo2"/>
+        <image width="30" height="30" style="stretch" field="signo3"/>
+        <image width="30" height="30" style="stretch" field="signo4"/>
+        <image width="30" height="30" style="stretch" field="signo5"/>
+    </flowLayout>
     <edit align="left" field="nomeMagia" width="350" margins="left=10"/>
-    <button align="left" text='Copiar Sequência' width='150' margins="left=10">
-        <event name='onClick'>
+    <button align="left" text="Copiar Sequência" width="150" margins="left=10">
+        <event name="onClick">
             System.setClipboardText(tableToStr(sheet))
         </event>
     </button>
-    <button align="left" text='Deletar Item' width='150' margins="left=10">
-        <event name='onClick'>
+    <button align="left" text="Deletar Item" width="150" margins="left=10">
+        <event name="onClick">
             if sheet ~= nil then 
-                Dialogs.confirmOkCancel("Deseja realmente deletar essa linha?\n\"" .. (sheet.sequencia or "") .. "\"",
+                Dialogs.confirmOkCancel("Deseja realmente deletar essa linha?\n\"" .. (sheet.nomeMagia or sheet.sequencia or "") .. "\"",
                 function (confirmado)
                     if confirmado then
-                        NDB.deleteNode(sheet);
+                        NDB.deleteNode(sheet)
                     end
                 end)
             end
         </event>
     </button>
+    <event name="onScopeNodeChanged">
+        if self.observer ~= nil then
+            self.observer.enabled = false
+            self.observer = nil
+        end
+        if sheet ~= nil then   
+            self.observer = NDB.newObserver(sheet)
+            self.observer.onPermissionListChanged = function(node)
+                self:atualizarCbxInvisivel()
+            end
+            self.observer.onFinalPermissionsCouldBeChanged = function(node)
+                self:atualizarCbxInvisivel()
+            end
+            self:atualizarCbxInvisivel()
+        end
+    </event>
 </form>

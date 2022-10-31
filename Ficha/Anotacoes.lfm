@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form name="Anotacoes" align="client" theme="dark" margins="{top=1}">
-    <richEdit align="client" backgroundColor="white" defaultFontColor="black" field="anotacoes" animateImages="false"/>
+    <richEdit align="client" backgroundColor="white" defaultFontColor="black" field="anotacoes" name="anotacoes" animateImages="false"/>
 </form>

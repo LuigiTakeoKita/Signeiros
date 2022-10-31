@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form name="ItemInventario" height="30" theme="dark" margins="{top=5}">
+    <script>
+        function changeArmor()
+            root = NDB.getRoot(sheet)
+            if (root ~= nil) then 
+                items = NDB.getChildNodes(root.inventario)
+                armorValue = 0
+                for i=1, #items, 1 do
+                    if (items[i].cbItem == true) then
+                        armorValue = armorValue + (items[i].value or 0)
+                    end
+                end
+                if tonumber(root.armaduraAt) == tonumber(root.armaduraMax) then
+                    root.armaduraAt = armorValue
+                end
+                root.armaduraMax = armorValue
+            end
+        end
+    </script>
+    <checkBox align="left" field="cbItem" width="20" margins="left=10">
+        <event name='onChange'>
+            changeArmor()
+        </event>
+    </checkBox>
+    <edit align="left" field="name" width="200" margins="left=10"/>
+    <edit align="left" field="value" width="50" margins="left=10" type="number" horzTextAlign="center">
+        <event name='onChange'>
+            changeArmor()
+        </event>
+    </edit>
+    <button align="left" text='Deletar Item' width='150' margins="left=10">
+        <event name='onClick'>
+            if sheet ~= nil then 
+                Dialogs.confirmOkCancel("Deseja realmente deletar essa linha?\n\"" .. (sheet.name or "") .. "\"",
+                function (confirmado)
+                    if confirmado then
+                        value = 0
+                        NDB.deleteNode(sheet)
+                    end
+                end)
+            end
+        </event>
+    </button>
+</form>

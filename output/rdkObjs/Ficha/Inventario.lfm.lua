@@ -31,16 +31,35 @@ local function constructNew_Inventario()
     obj:setTheme("dark");
     obj:setMargins({top=1});
 
-    obj.richEdit1 = GUI.fromHandle(_obj_newObject("richEdit"));
-    obj.richEdit1:setParent(obj);
-    obj.richEdit1:setAlign("client");
-    lfm_setPropAsString(obj.richEdit1, "backgroundColor",  "white");
-    lfm_setPropAsString(obj.richEdit1, "defaultFontColor",  "black");
-    obj.richEdit1:setField("inventario");
-    lfm_setPropAsString(obj.richEdit1, "animateImages",  "false");
-    obj.richEdit1:setName("richEdit1");
+    obj.button1 = GUI.fromHandle(_obj_newObject("button"));
+    obj.button1:setParent(obj);
+    obj.button1:setAlign("top");
+    obj.button1:setText("Adicionar Item");
+    obj.button1:setWidth(100);
+    obj.button1:setName("button1");
+
+    obj.scrollBox1 = GUI.fromHandle(_obj_newObject("scrollBox"));
+    obj.scrollBox1:setParent(obj);
+    obj.scrollBox1:setAlign("top");
+    obj.scrollBox1:setHeight(755);
+    obj.scrollBox1:setMargins({top = 10});
+    obj.scrollBox1:setName("scrollBox1");
+
+    obj.inventario = GUI.fromHandle(_obj_newObject("recordList"));
+    obj.inventario:setParent(obj.scrollBox1);
+    obj.inventario:setName("inventario");
+    obj.inventario:setField("inventario");
+    obj.inventario:setTemplateForm("ItemInventario");
+    obj.inventario:setAlign("client");
+    obj.inventario:setSelectable(true);
+
+    obj._e_event0 = obj.button1:addEventListener("onClick",
+        function (_)
+            self.inventario:append()
+        end, obj);
 
     function obj:_releaseEvents()
+        __o_rrpgObjs.removeEventListenerById(self._e_event0);
     end;
 
     obj._oldLFMDestroy = obj.destroy;
@@ -52,7 +71,9 @@ local function constructNew_Inventario()
           self:setNodeDatabase(nil);
         end;
 
-        if self.richEdit1 ~= nil then self.richEdit1:destroy(); self.richEdit1 = nil; end;
+        if self.button1 ~= nil then self.button1:destroy(); self.button1 = nil; end;
+        if self.scrollBox1 ~= nil then self.scrollBox1:destroy(); self.scrollBox1 = nil; end;
+        if self.inventario ~= nil then self.inventario:destroy(); self.inventario = nil; end;
         self:_oldLFMDestroy();
     end;
 

@@ -4,53 +4,45 @@
     <import file="Functions_Roll.lfm"/>
     <import file="Functions_Edit.lfm"/>
     <script>
-        local function searchList(addMode)
-            local magics = NDB.getChildNodes(sheet.magics)
-            local magicsInv = NDB.getChildNodes(sheet.magicsInv)
-            local btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
-            if btns[1] == "" then
+        -- Verificar item oculto
+        function searchList(addMode)
+            magics = NDB.getChildNodes(sheet.magics)
+            magicsInv = NDB.getChildNodes(sheet.magicsInv)
+            btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
+            -- Nenhun Signo selecionado
+            if btns[1].src == "" then
+                -- Passa todos as magias da lista invisivel para o grimorio
                 for i=1, #magicsInv, 1 do
-                    local nodo = self.grimorio:append()
+                    nodo = self.grimorio:append()
                     NDB.copy(nodo, magicsInv[i])
                     NDB.deleteNode(magicsInv[i])
                 end
             else
-                local s = {}
-                local index = 1
-                for i=1, 5, 1 do
-                    if i == 1 then
-                        table.insert(s, btns[i].text)
-                    else
-                        if string.find(s[index], btns[i].text) then
-                            s[index] = s[index] .. btns[i].text
-                        else
-                            table.insert(s, btns[i].text)
-                            index = index + 1
-                        end
+                sequencia = {}
+                -- Criação da sequencia
+                for i=1, #btns, 1 do
+                    signo = getSigno(btns[i].src)
+                    if signo ~= nil then 
+                        table.insert(sequencia, signo)
                     end
                 end
+                -- Ordenar e juntar
+                table.sort(sequencia)
+                sequencia = table.concat(sequencia, " ")
+                -- Limitar lista de acordo com os signos selecionados - Grimório para Lista invisivel
                 if addMode then
                     for i=1, #magics, 1 do
-                        for j=1, #s, 1 do
-                            if string.find(magics[i].sequencia, s[j]) == nil then
-                                local nodo = self.grimorioInv:append()
-                                NDB.copy(nodo, magics[i])
-                                NDB.deleteNode(magics[i])
-                                break
-                            end
+                        if string.find(magics[i].sequencia, sequencia) == nil then
+                            nodo = self.grimorioInv:append()
+                            NDB.copy(nodo, magics[i])
+                            NDB.deleteNode(magics[i])
                         end
                     end
+                -- Limitar lista de acordo com os signos selecionados - Lista invisivel para Grimório
                 else
                     for i=1, #magicsInv, 1 do
-                        local flag = true
-                        for j=1, #s, 1 do
-                            if string.find(magicsInv[i].sequencia, s[j]) == nil then
-                                flag = false
-                                break
-                            end
-                        end
-                        if flag == true then
-                            local nodo = self.grimorio:append()
+                        if string.find(magicsInv[i].sequencia, sequencia) ~= nil then
+                            nodo = self.grimorio:append()
                             NDB.copy(nodo, magicsInv[i])
                             NDB.deleteNode(magicsInv[i])
                         end
@@ -60,26 +52,24 @@
             self.grimorio:needRepaint()
             self.grimorio:sort()
         end
-        local function orderSig(a, b)
-            return icons[b] > icons[a]
-        end
-        local function addSig(sig)
-            local btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
-            local sequencia = {sig}
-            if self.btn1.text == "" then
-                self.btn1.text = sig
+        function addSig(sig)
+            btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
+            sequencia = {sig}
+            -- É o primeiro
+            if btns[1] == "" then
+                btns[1].src = "/Ficha/images/signos/" .. sig .. ".png"
             else
+                -- Cria sequencia
                 for i=1, #btns, 1 do
-                    if btns[i].text == "" then
-                        break
-                    else
-                        table.insert(sequencia, btns[i].text)
+                    signo = getSigno(btns[i].src)
+                    if signo ~= nil then 
+                        table.insert(sequencia, signo)
                     end
                 end
-                table.sort(sequencia, orderSig)
+                table.sort(sequencia)
                 if 5 >= #sequencia then
-                    for i=1, 5, 1 do
-                        btns[i].text = sequencia[i]
+                    for i=1, #sequencia, 1 do
+                        btns[i].src = "/Ficha/images/signos/" .. sequencia[i] .. ".png"
                     end
                 end
             end
@@ -87,27 +77,32 @@
                 searchList(true)
             end
         end
-        local function removeSig(btnNum)
-            local btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
-            btns[btnNum].text = ""
-            local sequencia = {}
+        function removeSig(btnNum)
+            btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
+            btns[btnNum].src = ""
+            sequencia = {}
             for i=1, #btns, 1 do
-                if btns[i].text ~= "" then
-                    table.insert(sequencia, btns[i].text)
+                signo = getSigno(btns[i].src)
+                if signo ~= nil then 
+                    table.insert(sequencia, signo)
                 end
             end
-            table.sort(sequencia, orderSig)
+            table.sort(sequencia)
             if 5 >= #sequencia then
                 for i=1, 5, 1 do
-                    btns[i].text = sequencia[i]
+                    if sequencia[i] ~= nil then
+                        btns[i].src = "/Ficha/images/signos/" .. sequencia[i] .. ".png"
+                    else
+                        btns[i].src = ""
+                    end
                 end
             end
             searchList(false)
         end
-        local function altVigor()
-            local vigor = 15
+        function altVigor()
+            vigor = 15
             for i=1, 8, 1 do
-                local level = getLevel(i)
+                level = getLevel(i)
                 if level >= 3 then
                     vigor = vigor + 1
                 end
@@ -117,7 +112,7 @@
             end
             sheet.vigorMax = vigor
         end
-        local function altLevel(sig, text)
+        function altLevel(sig, text)
             if     sig == 1 then sheet.level1 = text
             elseif sig == 2 then sheet.level2 = text
             elseif sig == 3 then sheet.level3 = text
@@ -131,11 +126,11 @@
             end
             altVigor()
         end
-        local SIZE = 1650
-        local function hasSize()
+        SIZE = 1650
+        function hasSize()
             return self.body.width > SIZE
         end
-        local function resizeLayout()
+        function resizeLayout()
             if hasSize() then
                 self.layout2.left = 850
                 self.layout2.top = 0
@@ -149,20 +144,19 @@
     </script>
     <template name="select_magia">
         <!--
-            local icons = {"🔥","⚡","🎲","🌓","👊","💫","🎱","☔"}
-            local hints = {"Calor", "Disrupção", "Engano", "Equilíbrio", "Força", "Imaterial", "Material", "Proteção"}
-            for i=1, #icons, 1 do
-                ic = icons[i]
+            hints = {"Calor", "Disrupção", "Engano", "Equilíbrio", "Força", "Imaterial", "Material", "Proteção"}
+            for i=1, #hints, 1 do
                 h = hints[i]
                 index = i
+                image = tostring(i)
         -->
             <layout width="70" height="85" margins="left=5">
-                <button align="top" text="$(ic)" height="60" hint="$(h)" fontSize="30">
+                <image align="top" height="60" width="60" style="proportional" hitTest="true" hint="$(h)" src="/Ficha/images/signos/$(image).png">
                     <event name="onClick">
-                        sig = "$(ic)"
+                        sig = tonumber($(index))
                         addSig(sig)
                     </event>
-                </button>
+                </image>
                 <label align="top" height="25" field="level$(index)" horzTextAlign="center" hitTest="true" hint="Level: XP Atual/XP Upar"/>
             </layout>
         <!-- 
@@ -176,12 +170,14 @@
                     btn = "btn" .. i
                     num = i
             -->
-                <button align="left" text="" width="50" height="50" name="$(btn)" margins="left=5" fontSize="20">
-                    <event name="onCLick">
-                        btnNum = $(num)
-                        removeSig(btnNum)
-                    </event>
-                </button>
+                <rectangle align="left" width="50" height="50" margins="left=5" color="black" strokeColor="red" strokeSize="2">
+                    <image width="50" height="50" style="stretch" hitTest="true" name="$(btn)">
+                        <event name="onCLick">
+                            btnNum = $(num)
+                            removeSig(btnNum)
+                        </event>
+                    </image>
+                </rectangle>
             <!-- 
                 end
             -->
@@ -190,25 +186,50 @@
     <template name="button_addMagic">
         <button width="150" text="Adicionar Magia" margins="top=10">
             <event name="onClick">
-                local btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
-                local s = ""
+                btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
+                sequencia = ""
                 for i=1, 5, 1 do
-                    s = s .. btns[i].text
+                    if getSigno(btns[i].src) == nil then
+                        break
+                    end
+                    if i ~= 1 then
+                        sequencia = sequencia .. " "
+                    end
+                    sequencia = sequencia .. getSigno(btns[i].src)
                 end
-                if s == "" then
+                if sequencia == "" then
                     showMessage("Nenhum Signo na magia.")
                 else
-                    local magics = NDB.getChildNodes(sheet.magics)
-                    local flag = true
+                    -- Verifica se sequencia ja existe
+                    magics = NDB.getChildNodes(sheet.magics)
+                    flag = true
                     for i=1, #magics, 1 do
-                        if magics[i].sequencia == s then
+                        if magics[i].sequencia == sequencia then
                             flag = false
                             break
                         end
                     end
                     if flag then
-                        local node = self.grimorio:append()
-                        node.sequencia = s
+                        -- Adiciona magia
+                        node = self.grimorio:append()
+                        node.sequencia = sequencia
+                        sequencia = split(sequencia, " ")
+                        -- Adiciona imagens
+                        if sequencia[1] ~= nil then
+                            node.signo1 = "/Ficha/images/signos/" .. sequencia[1] .. ".png"
+                        end
+                        if sequencia[2] ~= nil then
+                            node.signo2 = "/Ficha/images/signos/" .. sequencia[2] .. ".png"
+                        end
+                        if sequencia[3] ~= nil then
+                            node.signo3 = "/Ficha/images/signos/" .. sequencia[3] .. ".png"
+                        end
+                        if sequencia[4] ~= nil then
+                            node.signo4 = "/Ficha/images/signos/" .. sequencia[4] .. ".png"
+                        end
+                        if sequencia[5] ~= nil then
+                            node.signo5 = "/Ficha/images/signos/" .. sequencia[5] .. ".png"
+                        end
                         self.grimorio:sort()
                     else
                         showMessage("Mágica já escrita no Grimório.")
@@ -220,20 +241,20 @@
     <template name="button_Level">
         <button width="150" text="Ajustar Level de magia" margins="top=10, left=10">
             <event name="onClick">
-                Dialogs.choose("Escolha o Signo.", {"🔥 - Calor","⚡ - Disrupção","🎲 - Engano","🌓 - Equilíbrio","👊 - Força","💫 - Imaterial","🎱 - Material","☔ - Proteção"},
+                Dialogs.choose("Escolha o Signo.", {"1 - Calor","2 - Disrupção","3 - Engano","4 - Equilíbrio","5 - Força","6 - Imaterial","7 - Material","8 - Proteção"},
                     function(selected, selectedIndex, selectedText)
                         if selected == false then 
                             showMessage("Operação cancelada.")
                         else
-                            local sig = selectedIndex
+                            sig = selectedIndex
                             Dialogs.choose("Escolha o Level.", {"0","1","2","3","4","5","6"},
                                 function(selected2, selectedIndex2, selectedText2)
                                     if selected2 == false then 
                                         showMessage("Operação cancelada.")
                                     else
-                                        local level = selectedIndex2
-                                        local qnts = {4, 3, 5, 7, 9, 11, 100}
-                                        local choises = {}
+                                        level = selectedIndex2
+                                        qnts = {4, 3, 5, 7, 9, 11, 100}
+                                        choises = {}
                                         for i=0, qnts[level]-1, 1 do
                                             table.insert(choises, "" .. i)
                                         end
@@ -242,7 +263,7 @@
                                                 if selected3 == false then 
                                                     showMessage("Operação cancelada.")
                                                 else
-                                                    local text = selectedText2 .. ": " .. selectedText3 .. "/" .. qnts[level]
+                                                    text = selectedText2 .. ": " .. selectedText3 .. "/" .. qnts[level]
                                                     altLevel(sig, text)
                                                 end
                                             end
@@ -259,20 +280,34 @@
     <scrollBox align="client" margins="{left=5, top=5, bottom=5, right=5}" name="body">
         <edit field="admPermission" visible="false" width="0" height="0"/>
         <layout left="0" top="0" width="800" height="800" margins="{left = 5, right = 5, top = 5, bottom = 5}" name="layout1">
-            <!-- vida/escudos -->
-            <flowLayout align="top" height="150" margins="{left = 5, right = 5, top = 5, bottom = 5}" horzAlign="center">
-                <flowPart minWidth="300" maxWidth="425" height="25" vertAlign="center">
-                    <label align="left" text="Vida" width="100" height="25"/>
-                    <edit align="left" field="vidaAt" width="100" height="25" type="number"/>
-                    <label align="left" text="/" width="10" height="25" margins="left=5"/>
-                    <edit align="left" field="vidaMax" width="100" height="25" type="number"/>
-                </flowPart>
-                <flowPart minWidth="300" maxWidth="425" height="25" vertAlign="center">
-                    <label align="left" text="Escudo" width="100" height="25"/>
-                    <edit align="left" field="escudoAt" width="100" height="25" type="number"/>
-                    <label align="left" text="/" width="10" height="25" margins="left=5"/>
-                    <edit align="left" field="escudoMax" width="100" height="25" type="number"/>
-                </flowPart>
+            <!-- Escudo -->
+            <flowLayout align="top" width="150" horzAlign="center" autoHeight="true">
+                <layout width='150' height='150'>
+                    <imageCheckBox align="top" name="escudoAp" width='100' height="100" field="selected"
+                        checkedImage="images/ShieldOn.png" uncheckedImage="images/ShieldOff.png" autoChange="false">
+                        <event name='onClick'>
+                            if (selected == "" or selected == nil) then
+                                selected = self.grimorio.selectedNode
+                                if (selected == nil) then
+                                    showMessage("Escudo não encontrado.")
+                                else
+                                    self.escudoAp.checked = true
+                                    showMessage("Escudo aplicado.")
+                                end
+                            else
+                                self.magicDesc.node = selected
+                                showMessage("Escudo selecionado.")
+                            end
+                        </event>
+                    </imageCheckBox>
+                    <button align="top" text='Remover escudo' width='150'>
+                        <event name='onClick'>
+                            selected = ""
+                            self.escudoAp.checked = false
+                            showMessage("Escudo removido.")
+                        </event>
+                    </button>
+                </layout>
             </flowLayout>
             <!-- vigor/resetarvigor -->
             <flowLayout align="top" height="25" margins="{left = 5, right = 5, top = 5, bottom = 5}" horzAlign="center">
@@ -325,7 +360,7 @@
                                     <layout align="top" width="90" height="25" margins="top = 5">
                                         <button align="left" text="Rolar" width="60" margins="left=10">
                                             <event name="onClick">
-                                                local node = self.grimorio.selectedNode
+                                                node = self.grimorio.selectedNode
                                                 if node ~= nil then
                                                     trySpell()
                                                 end
@@ -336,7 +371,7 @@
                                     <layout align="top" width="90" height="25" margins="top = 5">
                                         <button align="left" text="Revelar Valores" width="180" margins="left=10">
                                             <event name="onClick">
-                                                local node = self.grimorio.selectedNode
+                                                node = self.grimorio.selectedNode
                                                 if node ~= nil then
                                                     if node.rolagem ~= nil then
                                                         revealResult(node.rolagem)
@@ -378,13 +413,13 @@
             <scrollBox align="top" height="755" margins="{top = 10}">
                 <recordList name="grimorio" field="magics" templateForm="ItemGrimorio" align="client" selectable="true">
                     <event name="onSelect">
-                        local node = self.grimorio.selectedNode
+                        node = self.grimorio.selectedNode
                         self.magicDesc.node = node
                     </event>
                     <event name="onCompare">
                         a = nodeA.sequencia or ""
                         b = nodeB.sequencia or ""
-                        return sortSig(a, b)
+                        --return sortSig(a, b)
                     </event>
                 </recordList>
             </scrollBox>
