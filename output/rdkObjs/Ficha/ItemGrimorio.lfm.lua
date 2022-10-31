@@ -34,9 +34,11 @@ local function constructNew_ItemGrimorio()
 
         function self:alternarVisibilidade()
             if self.cbxInvisivel.checked then
+                sheet.vis = "true"
                 NDB.setPermission(sheet, "group", "jogadores", "read", nil)
                 NDB.setPermission(sheet, "group", "espectadores", "read", nil)
             else
+                sheet.vis = "false"
                 NDB.setPermission(sheet, "group", "jogadores", "read", "deny")
                 NDB.setPermission(sheet, "group", "espectadores", "read", "deny")
             end
@@ -66,6 +68,13 @@ local function constructNew_ItemGrimorio()
     obj.edit1:setVisible(false);
     obj.edit1:setWidth(0);
     obj.edit1:setName("edit1");
+
+    obj.edit2 = GUI.fromHandle(_obj_newObject("edit"));
+    obj.edit2:setParent(obj);
+    obj.edit2:setField("vis");
+    obj.edit2:setVisible(false);
+    obj.edit2:setWidth(0);
+    obj.edit2:setName("edit2");
 
     obj.flowLayout1 = GUI.fromHandle(_obj_newObject("flowLayout"));
     obj.flowLayout1:setParent(obj);
@@ -114,13 +123,14 @@ local function constructNew_ItemGrimorio()
     obj.image5:setField("signo5");
     obj.image5:setName("image5");
 
-    obj.edit2 = GUI.fromHandle(_obj_newObject("edit"));
-    obj.edit2:setParent(obj);
-    obj.edit2:setAlign("left");
-    obj.edit2:setField("nomeMagia");
-    obj.edit2:setWidth(350);
-    obj.edit2:setMargins({left=10});
-    obj.edit2:setName("edit2");
+    obj.edit3 = GUI.fromHandle(_obj_newObject("edit"));
+    obj.edit3:setParent(obj);
+    obj.edit3:setAlign("left");
+    obj.edit3:setField("nomeMagia");
+    obj.edit3:setWidth(350);
+    obj.edit3:setMargins({left=10});
+    obj.edit3:setHint("Nome da Magia");
+    obj.edit3:setName("edit3");
 
     obj.button1 = GUI.fromHandle(_obj_newObject("button"));
     obj.button1:setParent(obj);
@@ -195,8 +205,9 @@ local function constructNew_ItemGrimorio()
         end;
 
         if self.image2 ~= nil then self.image2:destroy(); self.image2 = nil; end;
-        if self.image1 ~= nil then self.image1:destroy(); self.image1 = nil; end;
+        if self.image3 ~= nil then self.image3:destroy(); self.image3 = nil; end;
         if self.flowLayout1 ~= nil then self.flowLayout1:destroy(); self.flowLayout1 = nil; end;
+        if self.edit3 ~= nil then self.edit3:destroy(); self.edit3 = nil; end;
         if self.cbxInvisivel ~= nil then self.cbxInvisivel:destroy(); self.cbxInvisivel = nil; end;
         if self.edit2 ~= nil then self.edit2:destroy(); self.edit2 = nil; end;
         if self.button1 ~= nil then self.button1:destroy(); self.button1 = nil; end;
@@ -204,7 +215,7 @@ local function constructNew_ItemGrimorio()
         if self.edit1 ~= nil then self.edit1:destroy(); self.edit1 = nil; end;
         if self.image4 ~= nil then self.image4:destroy(); self.image4 = nil; end;
         if self.button2 ~= nil then self.button2:destroy(); self.button2 = nil; end;
-        if self.image3 ~= nil then self.image3:destroy(); self.image3 = nil; end;
+        if self.image1 ~= nil then self.image1:destroy(); self.image1 = nil; end;
         self:_oldLFMDestroy();
     end;
 

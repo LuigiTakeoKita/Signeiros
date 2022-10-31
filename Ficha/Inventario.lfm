@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form name="Inventario" align="client" theme="dark" margins="{top=1}">
-    <button align="top" text='Adicionar Item' width='100'>
-        <event name='onClick'>
+    <button align="top" text="Adicionar Item" width="100">
+        <event name="onClick">
             self.inventario:append()
         </event>
     </button>

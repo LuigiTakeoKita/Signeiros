@@ -26,7 +26,7 @@
             end
         end
    </script>
-    <event name='onNodeReady'>
+    <event name="onNodeReady">
         jogador = getCurrentJogador()
         self.adminTab.visible = jogador.isMestre
         self.anotacoes.visible = jogador.isMestre

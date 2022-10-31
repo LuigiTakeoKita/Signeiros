@@ -19,18 +19,18 @@
         end
     </script>
     <checkBox align="left" field="cbItem" width="20" margins="left=10">
-        <event name='onChange'>
+        <event name="onChange">
             changeArmor()
         </event>
     </checkBox>
     <edit align="left" field="name" width="200" margins="left=10"/>
     <edit align="left" field="value" width="50" margins="left=10" type="number" horzTextAlign="center">
-        <event name='onChange'>
+        <event name="onChange">
             changeArmor()
         </event>
     </edit>
-    <button align="left" text='Deletar Item' width='150' margins="left=10">
-        <event name='onClick'>
+    <button align="left" text="Deletar Item" width="150" margins="left=10">
+        <event name="onClick">
             if sheet ~= nil then 
                 Dialogs.confirmOkCancel("Deseja realmente deletar essa linha?\n\"" .. (sheet.name or "") .. "\"",
                 function (confirmado)

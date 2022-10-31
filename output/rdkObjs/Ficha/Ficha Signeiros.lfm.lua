@@ -719,7 +719,6 @@ local function constructNew_Ficha_Signeiros()
 
 
 
-        -- Verificar item oculto
         function searchList(addMode)
             magics = NDB.getChildNodes(sheet.magics)
             magicsInv = NDB.getChildNodes(sheet.magicsInv)
@@ -730,6 +729,10 @@ local function constructNew_Ficha_Signeiros()
                 for i=1, #magicsInv, 1 do
                     nodo = self.grimorio:append()
                     NDB.copy(nodo, magicsInv[i])
+                    if nodo.vis == "false" then
+                        NDB.setPermission(nodo, "group", "jogadores", "read", "deny")
+                        NDB.setPermission(nodo, "group", "espectadores", "read", "deny")
+                    end
                     NDB.deleteNode(magicsInv[i])
                 end
             else
@@ -749,6 +752,8 @@ local function constructNew_Ficha_Signeiros()
                     for i=1, #magics, 1 do
                         if string.find(magics[i].sequencia, sequencia) == nil then
                             nodo = self.grimorioInv:append()
+                            NDB.setPermission(magics[i], "group", "jogadores", "read", nil)
+                            NDB.setPermission(magics[i], "group", "espectadores", "read", nil)
                             NDB.copy(nodo, magics[i])
                             NDB.deleteNode(magics[i])
                         end
@@ -759,6 +764,10 @@ local function constructNew_Ficha_Signeiros()
                         if string.find(magicsInv[i].sequencia, sequencia) ~= nil then
                             nodo = self.grimorio:append()
                             NDB.copy(nodo, magicsInv[i])
+                            if magicsInv[i].vis == "false" then
+                                NDB.setPermission(nodo, "group", "jogadores", "read", "deny")
+                                NDB.setPermission(nodo, "group", "espectadores", "read", "deny")
+                            end
                             NDB.deleteNode(magicsInv[i])
                         end
                     end
@@ -782,6 +791,7 @@ local function constructNew_Ficha_Signeiros()
                     end
                 end
                 table.sort(sequencia)
+                -- Integra imagens nos botões corretos
                 if 5 >= #sequencia then
                     for i=1, #sequencia, 1 do
                         btns[i].src = "/Ficha/images/signos/" .. sequencia[i] .. ".png"
@@ -796,6 +806,7 @@ local function constructNew_Ficha_Signeiros()
             btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
             btns[btnNum].src = ""
             sequencia = {}
+            -- Criação da sequencia
             for i=1, #btns, 1 do
                 signo = getSigno(btns[i].src)
                 if signo ~= nil then 
@@ -803,6 +814,7 @@ local function constructNew_Ficha_Signeiros()
                 end
             end
             table.sort(sequencia)
+            -- Integra imagens nos botões corretos
             if 5 >= #sequencia then
                 for i=1, 5, 1 do
                     if sequencia[i] ~= nil then
@@ -1638,7 +1650,7 @@ local function constructNew_Ficha_Signeiros()
     obj._e_event3 = obj.escudoAp:addEventListener("onClick",
         function (_)
             if (selected == "" or selected == nil) then
-                                            selected = self.grimorio.selectedNode
+                                            selected = self.grimorio.selectedNode.sequencia
                                             if (selected == nil) then
                                                 showMessage("Escudo não encontrado.")
                                             else
@@ -1646,7 +1658,24 @@ local function constructNew_Ficha_Signeiros()
                                                 showMessage("Escudo aplicado.")
                                             end
                                         else
-                                            self.magicDesc.node = selected
+                                            magics = NDB.getChildNodes(sheet.magics)
+                                            magicsInv = NDB.getChildNodes(sheet.magicsInv)
+                                            selectedNode = nil
+                                            for i=1, #magics, 1 do
+                                                if magics[i].sequencia == selected then
+                                                    selectedNode = magics[i]
+                                                    break
+                                                end
+                                            end
+                                            if selectedNode == nil then
+                                                for i=1, #magicsInv, 1 do
+                                                    if magicsInv[i].sequencia == selected then
+                                                        selectedNode = magicsInv[i]
+                                                        break
+                                                    end
+                                                end
+                                            end
+                                            self.magicDesc.node = selectedNode
                                             showMessage("Escudo selecionado.")
                                         end
         end, obj);
@@ -1881,9 +1910,24 @@ local function constructNew_Ficha_Signeiros()
 
     obj._e_event27 = obj.grimorio:addEventListener("onCompare",
         function (_, nodeA, nodeB)
-            a = nodeA.sequencia or ""
-                                    b = nodeB.sequencia or ""
-                                    --return sortSig(a, b)
+            a = split(nodeA.sequencia or "", " ")
+                                    b = split(nodeB.sequencia or "", " ")
+                                    if #a > #b then
+                                        return 1
+                                    elseif #b > #a then
+                                        return -1
+                                    else
+                                        for i=1, #a, 1 do
+                                            if a[i] == "" or b[i] == "" then
+                                                return 0
+                                            end
+                                            if tonumber(a[i]) > tonumber(b[i]) then
+                                                return 1
+                                            elseif tonumber(b[i]) > tonumber(a[i]) then
+                                                return -1
+                                            end
+                                        end
+                                    end
         end, obj);
 
     obj._e_event28 = obj.button10:addEventListener("onClick",

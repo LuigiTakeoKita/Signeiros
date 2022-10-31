@@ -4,7 +4,6 @@
     <import file="Functions_Roll.lfm"/>
     <import file="Functions_Edit.lfm"/>
     <script>
-        -- Verificar item oculto
         function searchList(addMode)
             magics = NDB.getChildNodes(sheet.magics)
             magicsInv = NDB.getChildNodes(sheet.magicsInv)
@@ -15,6 +14,10 @@
                 for i=1, #magicsInv, 1 do
                     nodo = self.grimorio:append()
                     NDB.copy(nodo, magicsInv[i])
+                    if nodo.vis == "false" then
+                        NDB.setPermission(nodo, "group", "jogadores", "read", "deny")
+                        NDB.setPermission(nodo, "group", "espectadores", "read", "deny")
+                    end
                     NDB.deleteNode(magicsInv[i])
                 end
             else
@@ -34,6 +37,8 @@
                     for i=1, #magics, 1 do
                         if string.find(magics[i].sequencia, sequencia) == nil then
                             nodo = self.grimorioInv:append()
+                            NDB.setPermission(magics[i], "group", "jogadores", "read", nil)
+                            NDB.setPermission(magics[i], "group", "espectadores", "read", nil)
                             NDB.copy(nodo, magics[i])
                             NDB.deleteNode(magics[i])
                         end
@@ -44,6 +49,10 @@
                         if string.find(magicsInv[i].sequencia, sequencia) ~= nil then
                             nodo = self.grimorio:append()
                             NDB.copy(nodo, magicsInv[i])
+                            if magicsInv[i].vis == "false" then
+                                NDB.setPermission(nodo, "group", "jogadores", "read", "deny")
+                                NDB.setPermission(nodo, "group", "espectadores", "read", "deny")
+                            end
                             NDB.deleteNode(magicsInv[i])
                         end
                     end
@@ -67,6 +76,7 @@
                     end
                 end
                 table.sort(sequencia)
+                -- Integra imagens nos botões corretos
                 if 5 >= #sequencia then
                     for i=1, #sequencia, 1 do
                         btns[i].src = "/Ficha/images/signos/" .. sequencia[i] .. ".png"
@@ -81,6 +91,7 @@
             btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
             btns[btnNum].src = ""
             sequencia = {}
+            -- Criação da sequencia
             for i=1, #btns, 1 do
                 signo = getSigno(btns[i].src)
                 if signo ~= nil then 
@@ -88,6 +99,7 @@
                 end
             end
             table.sort(sequencia)
+            -- Integra imagens nos botões corretos
             if 5 >= #sequencia then
                 for i=1, 5, 1 do
                     if sequencia[i] ~= nil then
@@ -282,12 +294,12 @@
         <layout left="0" top="0" width="800" height="800" margins="{left = 5, right = 5, top = 5, bottom = 5}" name="layout1">
             <!-- Escudo -->
             <flowLayout align="top" width="150" horzAlign="center" autoHeight="true">
-                <layout width='150' height='150'>
-                    <imageCheckBox align="top" name="escudoAp" width='100' height="100" field="selected"
+                <layout width="150" height="150">
+                    <imageCheckBox align="top" name="escudoAp" width="100" height="100" field="selected"
                         checkedImage="images/ShieldOn.png" uncheckedImage="images/ShieldOff.png" autoChange="false">
-                        <event name='onClick'>
+                        <event name="onClick">
                             if (selected == "" or selected == nil) then
-                                selected = self.grimorio.selectedNode
+                                selected = self.grimorio.selectedNode.sequencia
                                 if (selected == nil) then
                                     showMessage("Escudo não encontrado.")
                                 else
@@ -295,13 +307,30 @@
                                     showMessage("Escudo aplicado.")
                                 end
                             else
-                                self.magicDesc.node = selected
+                                magics = NDB.getChildNodes(sheet.magics)
+                                magicsInv = NDB.getChildNodes(sheet.magicsInv)
+                                selectedNode = nil
+                                for i=1, #magics, 1 do
+                                    if magics[i].sequencia == selected then
+                                        selectedNode = magics[i]
+                                        break
+                                    end
+                                end
+                                if selectedNode == nil then
+                                    for i=1, #magicsInv, 1 do
+                                        if magicsInv[i].sequencia == selected then
+                                            selectedNode = magicsInv[i]
+                                            break
+                                        end
+                                    end
+                                end
+                                self.magicDesc.node = selectedNode
                                 showMessage("Escudo selecionado.")
                             end
                         </event>
                     </imageCheckBox>
-                    <button align="top" text='Remover escudo' width='150'>
-                        <event name='onClick'>
+                    <button align="top" text="Remover escudo" width="150">
+                        <event name="onClick">
                             selected = ""
                             self.escudoAp.checked = false
                             showMessage("Escudo removido.")
@@ -312,7 +341,7 @@
             <!-- vigor/resetarvigor -->
             <flowLayout align="top" height="25" margins="{left = 5, right = 5, top = 5, bottom = 5}" horzAlign="center">
                 <progressBar color="yellow" width="600" fieldMax="vigorMax" field="vigor" hitTest="true">
-                    <event name='onClick'>
+                    <event name="onClick">
                         showMessage("Vigor: " .. sheet.vigor .. "/" .. sheet.vigorMax)
                     </event>
                 </progressBar>
@@ -417,16 +446,31 @@
                         self.magicDesc.node = node
                     </event>
                     <event name="onCompare">
-                        a = nodeA.sequencia or ""
-                        b = nodeB.sequencia or ""
-                        --return sortSig(a, b)
+                        a = split(nodeA.sequencia or "", " ")
+                        b = split(nodeB.sequencia or "", " ")
+                        if #a > #b then
+                            return 1
+                        elseif #b > #a then
+                            return -1
+                        else
+                            for i=1, #a, 1 do
+                                if a[i] == "" or b[i] == "" then
+                                    return 0
+                                end
+                                if tonumber(a[i]) > tonumber(b[i]) then
+                                    return 1
+                                elseif tonumber(b[i]) > tonumber(a[i]) then
+                                    return -1
+                                end
+                            end
+                        end
                     </event>
                 </recordList>
             </scrollBox>
             <!-- Lista invisivel -->
             <recordList name="grimorioInv" field="magicsInv" templateForm="ItemGrimorio" width="0" height="0" visible="false"/>
         </layout>
-        <event name='onResize'>
+        <event name="onResize">
             resizeLayout()
         </event>
     </scrollBox>
