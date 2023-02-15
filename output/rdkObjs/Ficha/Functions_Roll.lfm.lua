@@ -86,11 +86,7 @@ local function constructNew_Functions_Roll()
         end
         function getSequencia()
             node = self.grimorio.selectedNode
-            res = split(node.sequencia, " ")
-            for i=1, #res, 1 do
-                res[i] = tonumber(res[i])
-            end
-            return res
+            return splitEmojis(node.sequencia)
         end
         function getLevel(magic)
             textSig = getText(magic)
@@ -100,7 +96,7 @@ local function constructNew_Functions_Roll()
         function hasLevel()
             sequencia = getSequencia()
             for i=1, #sequencia, 1 do
-                if #sequencia > getLevel(sequencia[i]) then
+                if #sequencia > getLevel(icons[sequencia[i]]) then
                     return false
                 end
             end
@@ -125,7 +121,7 @@ local function constructNew_Functions_Roll()
                 if rolagem.ops[i].tipo == "dado" then
                     item = rolagem.ops[i]
                     if item.resultados[1] == item.face then
-                        flag = addXP(1, sequencia[index])
+                        flag = addXP(1, icons[sequencia[index]])
                         if flag then
                             return
                         end
@@ -178,23 +174,49 @@ local function constructNew_Functions_Roll()
             end
             return msg
         end
-        function generateMsg(strRolagem)
-            node = self.grimorio.selectedNode
+        function generateMsg(strRolagem, node)
             rolagem = Firecast.interpretarRolagem(strRolagem)
             rolagem:rolarLocalmente()
             resultsStr, resultInt = valuesRolls(rolagem.ops)
             dano = node.dano or 0
             dmg = calUnidades(tonumber(dano), resultInt)
-            msg = (node.nomeMagia or "Sem Nome") .. "\n"..
+            msg = node.sequencia .. ": " .. (node.nomeMagia or "Sem Nome") .. "\n"..
                     "Dados(".. strRolagem .."): ".. resultsStr .. " = " .. rolagem.resultado .. "(".. round(resultInt) ..")" .. "\n" ..
                     "Dano(".. (dano) .."): ".. dmg .."\n" ..
                     "Unidades: " .. generateUnidades(node.unidades, resultInt)
             return msg, rolagem
         end
-        function revealResult(strRolagem)
-            msg, rolagem = generateMsg(strRolagem)
+        function hasPreparedMagic()
+            nodes = NDB.getChildNodes(sheet.magics)
+            for i=1, #nodes, 1 do
+                if nodes[i].rolagem ~= nil then
+                    return nodes[i]
+                end
+            end
+            return nil
+        end
+        function revealResult()
+            node = hasPreparedMagic()
+            if node ~= nil then
+                sequencia = splitEmojis(node.sequencia)
+            else
+                showMessage("Nenhuma magia preparada.")
+                return
+            end
+            qnt = #sequencia
+            msg, rolagem = generateMsg(node.rolagem, node)
+            node.rolagem = nil
             mesaDoPersonagem = Firecast.getMesaDe(sheet)
-            mesaDoPersonagem.chat:enviarMensagem(msg)
+            if qnt == 1 and getLevel(icons[sequencia[1]]) == 0 then
+                item = rolagem.ops[1]
+                if item.resultados[1] ~= item.face then
+                    mesaDoPersonagem.chat:enviarMensagem("Magia:" .. node.sequencia .. " falhou. Resultado: " .. item.resultados[1])
+                else
+                    mesaDoPersonagem.chat:enviarMensagem(msg)
+                end
+            else
+                mesaDoPersonagem.chat:enviarMensagem(msg)
+            end
             afterRoll(rolagem)
         end
         function generateRoll()
@@ -205,7 +227,7 @@ local function constructNew_Functions_Roll()
                 if i ~= 1 then
                     strRolagem = strRolagem .. "+"
                 end
-                level = getLevel(sequencia[i]) + 1
+                level = getLevel(icons[sequencia[i]]) + 1
                 strRolagem = strRolagem .. dices[level]
             end
             return strRolagem
@@ -213,36 +235,34 @@ local function constructNew_Functions_Roll()
         function roll()
             strRolagem = generateRoll()
             node = self.grimorio.selectedNode
+            if node.modoUltraSecreto == true then
+                msg, rolagem = generateMsg(strRolagem, node)
+                node.rolagemUltraSecreta = msg
+                return
+            end
             if node.modoSecreto == false or node.modoSecreto == nil then
+                node.rolagem = strRolagem
                 revealResult(strRolagem)
             else
                 node.rolagem = strRolagem
                 mesaDoPersonagem = Firecast.getMesaDe(sheet)
-                mesaDoPersonagem.chat:enviarMensagem("Magia preparada.")
+                mesaDoPersonagem.chat:enviarMensagem("Magia preparada: " .. node.sequencia)
                 showMessage("Rolagem preparada.")
             end
         end
-        function level0Roll()
-            strRolagem = generateRoll()
-            msg, rolagem = generateMsg(strRolagem)
-            item = rolagem.ops[1]
-            mesaDoPersonagem = Firecast.getMesaDe(sheet)
-            afterRoll(rolagem)
-            if item.resultados[1] == item.face then
-                mesaDoPersonagem.chat:enviarMensagem(msg)
+        function trySpell()
+            if hasPreparedMagic() ~= nil then
+                showMessage("Você já possui uma magia preparada, use-a antes.")
                 return
             end
-            mesaDoPersonagem.chat:enviarMensagem("Magia falhou. Resultado: " .. item.resultados[1])
-        end
-        function trySpell()
             sequencia = getSequencia()
             qnt = #sequencia
             if hasVigor(qnt) == false then
                 showMessage("Vigor não suficiente para executar a magia.")
                 return
             end
-            if qnt == 1 and getLevel(sequencia[1]) == 0 then
-                level0Roll()
+            if qnt == 1 and getLevel(icons[sequencia[1]]) == 0 then
+                roll()
                 return
             end
             if hasLevel() == false then

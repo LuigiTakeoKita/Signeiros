@@ -3,7 +3,7 @@
     <template name="labelCli">
         <label align="left" text="$(text)" width="90"/>
     </template>
-    <flowLayout align="client" orientation="horizontal" horzAlign="justify" margins="{left=20, top=20, bottom=20, right=20}">
+    <flowLayout align="top" orientation="horizontal" horzAlign="justify" margins="{left=20, top=20, bottom=20, right=20}" autoHeight="true" lineSpacing="5.0">
         <flowPart minWidth="100" maxWidth="500" height="25">
             <labelCli text="Nome"/>
             <edit align="client" field="nome"/>
@@ -66,13 +66,10 @@
             <label align="left" text="/" width="10" margins="left=5"/>
             <edit align="left" field="escudoMMax" width="100" type="number"/>
         </flowPart>
-        <flowLineBreak/>    
+        <flowLineBreak/>
         <flowPart minWidth="100" maxWidth="200" height="25">
             <labelCli text="História"/>
         </flowPart>
-        <flowLineBreak/>
-        <flowPart minWidth="100" maxWidth="2000" height="800">
-            <richEdit align="client" field="historia"/>
-        </flowPart>
     </flowLayout>
+    <richEdit align="client" field="historia"/>
 </form>

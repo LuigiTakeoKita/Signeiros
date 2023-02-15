@@ -63,21 +63,6 @@ local function constructNew_Functions_Edit()
             if table.unidades ~= nil then
                 node.unidades = table.unidades
             end
-            if table.signo1 ~= nil then
-                node.signo1 = table.signo1
-            end
-            if table.signo2 ~= nil then
-                node.signo2 = table.signo2
-            end
-            if table.signo3 ~= nil then
-                node.signo3 = table.signo3
-            end
-            if table.signo4 ~= nil then
-                node.signo4 = table.signo4
-            end
-            if table.signo5 ~= nil then
-                node.signo5 = table.signo5
-            end
         end
         function pasteAll()
             str = System.getClipboardText()

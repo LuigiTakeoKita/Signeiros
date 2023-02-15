@@ -22,15 +22,8 @@
     </script>
     <imageCheckBox name="cbxInvisivel" align="left" width="25" checkedImage="images/invisivel.png" uncheckedImage="images/visivel.png"
         autoChange="false" onClick="self:alternarVisibilidade();"/>
-    <edit field="sequencia" visible="false" width="0"/>
+    <edit align="left" field="sequencia" readOnly="true" width="100" margins="left=10"/>
     <edit field="vis" visible="false" width="0"/>
-    <flowLayout align="left" width="150" margins="left=10">
-        <image width="30" height="30" style="stretch" field="signo1"/>
-        <image width="30" height="30" style="stretch" field="signo2"/>
-        <image width="30" height="30" style="stretch" field="signo3"/>
-        <image width="30" height="30" style="stretch" field="signo4"/>
-        <image width="30" height="30" style="stretch" field="signo5"/>
-    </flowLayout>
     <edit align="left" field="nomeMagia" width="350" margins="left=10" hint="Nome da Magia" />
     <button align="left" text="Copiar Sequência" width="150" margins="left=10">
         <event name="onClick">

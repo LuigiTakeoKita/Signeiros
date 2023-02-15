@@ -33,10 +33,12 @@ local function constructNew_Info()
 
     obj.flowLayout1 = GUI.fromHandle(_obj_newObject("flowLayout"));
     obj.flowLayout1:setParent(obj);
-    obj.flowLayout1:setAlign("client");
+    obj.flowLayout1:setAlign("top");
     obj.flowLayout1:setOrientation("horizontal");
     obj.flowLayout1:setHorzAlign("justify");
     obj.flowLayout1:setMargins({left=20, top=20, bottom=20, right=20});
+    obj.flowLayout1:setAutoHeight(true);
+    obj.flowLayout1:setLineSpacing(5.0);
     obj.flowLayout1:setName("flowLayout1");
 
     obj.flowPart1 = GUI.fromHandle(_obj_newObject("flowPart"));
@@ -339,19 +341,8 @@ local function constructNew_Info()
     obj.label14:setWidth(90);
     obj.label14:setName("label14");
 
-    obj.flowLineBreak3 = GUI.fromHandle(_obj_newObject("flowLineBreak"));
-    obj.flowLineBreak3:setParent(obj.flowLayout1);
-    obj.flowLineBreak3:setName("flowLineBreak3");
-
-    obj.flowPart11 = GUI.fromHandle(_obj_newObject("flowPart"));
-    obj.flowPart11:setParent(obj.flowLayout1);
-    obj.flowPart11:setMinWidth(100);
-    obj.flowPart11:setMaxWidth(2000);
-    obj.flowPart11:setHeight(800);
-    obj.flowPart11:setName("flowPart11");
-
     obj.richEdit1 = GUI.fromHandle(_obj_newObject("richEdit"));
-    obj.richEdit1:setParent(obj.flowPart11);
+    obj.richEdit1:setParent(obj);
     obj.richEdit1:setAlign("client");
     obj.richEdit1:setField("historia");
     obj.richEdit1:setName("richEdit1");
@@ -398,7 +389,6 @@ local function constructNew_Info()
         if self.label4 ~= nil then self.label4:destroy(); self.label4 = nil; end;
         if self.label6 ~= nil then self.label6:destroy(); self.label6 = nil; end;
         if self.edit11 ~= nil then self.edit11:destroy(); self.edit11 = nil; end;
-        if self.flowLineBreak3 ~= nil then self.flowLineBreak3:destroy(); self.flowLineBreak3 = nil; end;
         if self.richEdit1 ~= nil then self.richEdit1:destroy(); self.richEdit1 = nil; end;
         if self.edit9 ~= nil then self.edit9:destroy(); self.edit9 = nil; end;
         if self.edit5 ~= nil then self.edit5:destroy(); self.edit5 = nil; end;
@@ -409,7 +399,6 @@ local function constructNew_Info()
         if self.edit13 ~= nil then self.edit13:destroy(); self.edit13 = nil; end;
         if self.edit7 ~= nil then self.edit7:destroy(); self.edit7 = nil; end;
         if self.flowPart7 ~= nil then self.flowPart7:destroy(); self.flowPart7 = nil; end;
-        if self.flowPart11 ~= nil then self.flowPart11:destroy(); self.flowPart11 = nil; end;
         if self.label2 ~= nil then self.label2:destroy(); self.label2 = nil; end;
         if self.edit3 ~= nil then self.edit3:destroy(); self.edit3 = nil; end;
         if self.flowLayout1 ~= nil then self.flowLayout1:destroy(); self.flowLayout1 = nil; end;
