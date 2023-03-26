@@ -25,7 +25,7 @@
         <flowPart minWidth="295" maxWidth="300" height="25" vertAlign="center" margins="{top=5}">
             <label align="left" text="Dano" width="75"/>
             <edit align="left" field="dano" width="100" type="number" hint="Valor de dano a ser calculado."/>
-            <button align="left" text="Aplicar Dano" width="100" margins="left=10">
+            <button align="left" text="Aplicar Dano" width="100" margins="left=10" name="btnDano">
                 <event name="onClick">
                     dano = (sheet.dano or 0)
                     valor =  dano - (sheet.armaduraAt or 0)

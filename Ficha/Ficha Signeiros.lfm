@@ -17,7 +17,10 @@
    <script>
         function getCurrentJogador()
             user = Firecast.getCurrentUser()
-            mesaDoPersonagem = Firecast.getMesaDe(sheet);
+            mesaDoPersonagem = Firecast.getMesaDe(sheet)
+            if mesaDoPersonagem == nil then
+                return nil
+            end
             jogadores = mesaDoPersonagem.jogadores
             for i = 1, #jogadores, 1 do
                     if jogadores[i].login == user.login then
@@ -25,11 +28,42 @@
                     end
             end
         end
+        function enableButtons(condition)
+            btns = {self.btnAName1, self.btnAName2, self.btnAName3, self.btnAName4, self.btnAName5, self.btnAName6, self.btnAName7, self.btnAName8}
+            for i=1, #btns, 1 do
+                btns[i].enabled = condition
+            end
+            btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
+            for i=1, #btns, 1 do
+                btns[i].enabled = condition
+            end
+            btns = {self.btnDano, self.escudoAp, self.btnEscudo, self.VigorBar, self.VigorBtn, self.btnRolar, self.cbModosecreto, self.cbModoUsecreto, self.btnRevelar}
+            for i=1, #btns, 1 do
+                btns[i].enabled = condition
+            end
+        end
+        function isDono()
+            personagem = Firecast.getPersonagemDe(sheet)
+            if (personagem ~= nil) then
+                mesa = personagem.mesa
+                if (personagem.dono == mesa.meuJogador) then
+                    return true
+                end
+            end
+            return false
+        end
    </script>
     <event name="onNodeReady">
         jogador = getCurrentJogador()
-        self.adminTab.visible = jogador.isMestre
-        self.anotacoes.visible = jogador.isMestre
+        if jogador == nil then
+            self.adminTab.visible = false
+            self.anotacoes.visible = false
+            enableButtons(false)
+        else
+            self.adminTab.visible = jogador.isMestre 
+            self.anotacoes.visible = jogador.isMestre or isDono()
+            enableButtons(jogador.isMestre or isDono())
+        end
         if sheet.level1 == nil then
             sheet.vigor = 15
             sheet.vigorMax = 15

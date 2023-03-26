@@ -300,6 +300,7 @@ local function constructNew_Grimorio()
             if node.modoUltraSecreto == true then
                 msg, rolagem = generateMsg(strRolagem, node)
                 node.rolagemUltraSecreta = msg
+                afterRoll(rolagem)
                 return
             end
             if node.modoSecreto == false or node.modoSecreto == nil then
@@ -532,6 +533,7 @@ local function constructNew_Grimorio()
             self.popupText.text = text
             self.popupMsg:show()
         end
+        
     
 
 
@@ -612,12 +614,12 @@ local function constructNew_Grimorio()
     obj.escudoAp:setImageUnchecked("/Ficha/images/ShieldOff.png");
     obj.escudoAp:setAutoChange(false);
 
-    obj.button1 = GUI.fromHandle(_obj_newObject("button"));
-    obj.button1:setParent(obj.layout2);
-    obj.button1:setAlign("top");
-    obj.button1:setText("Remover escudo");
-    obj.button1:setWidth(150);
-    obj.button1:setName("button1");
+    obj.btnEscudo = GUI.fromHandle(_obj_newObject("button"));
+    obj.btnEscudo:setParent(obj.layout2);
+    obj.btnEscudo:setAlign("top");
+    obj.btnEscudo:setText("Remover escudo");
+    obj.btnEscudo:setWidth(150);
+    obj.btnEscudo:setName("btnEscudo");
 
     obj.flowLayout3 = GUI.fromHandle(_obj_newObject("flowLayout"));
     obj.flowLayout3:setParent(obj.layout1);
@@ -627,21 +629,21 @@ local function constructNew_Grimorio()
     obj.flowLayout3:setHorzAlign("center");
     obj.flowLayout3:setName("flowLayout3");
 
-    obj.progressBar1 = GUI.fromHandle(_obj_newObject("progressBar"));
-    obj.progressBar1:setParent(obj.flowLayout3);
-    obj.progressBar1:setColor("yellow");
-    obj.progressBar1:setWidth(600);
-    obj.progressBar1:setFieldMax("vigorMax");
-    obj.progressBar1:setField("vigor");
-    obj.progressBar1:setHitTest(true);
-    obj.progressBar1:setName("progressBar1");
+    obj.VigorBar = GUI.fromHandle(_obj_newObject("progressBar"));
+    obj.VigorBar:setParent(obj.flowLayout3);
+    obj.VigorBar:setColor("yellow");
+    obj.VigorBar:setWidth(600);
+    obj.VigorBar:setFieldMax("vigorMax");
+    obj.VigorBar:setField("vigor");
+    obj.VigorBar:setHitTest(true);
+    obj.VigorBar:setName("VigorBar");
 
-    obj.button2 = GUI.fromHandle(_obj_newObject("button"));
-    obj.button2:setParent(obj.flowLayout3);
-    obj.button2:setText("Restaurar Vigor");
-    obj.button2:setWidth(100);
-    obj.button2:setMargins({left=10});
-    obj.button2:setName("button2");
+    obj.VigorBtn = GUI.fromHandle(_obj_newObject("button"));
+    obj.VigorBtn:setParent(obj.flowLayout3);
+    obj.VigorBtn:setText("Restaurar Vigor");
+    obj.VigorBtn:setWidth(100);
+    obj.VigorBtn:setMargins({left=10});
+    obj.VigorBtn:setName("VigorBtn");
 
     obj.layout3 = GUI.fromHandle(_obj_newObject("layout"));
     obj.layout3:setParent(obj.layout1);
@@ -665,14 +667,14 @@ local function constructNew_Grimorio()
     obj.layout4:setMargins({left=5});
     obj.layout4:setName("layout4");
 
-    obj.button3 = GUI.fromHandle(_obj_newObject("button"));
-    obj.button3:setParent(obj.layout4);
-    obj.button3:setAlign("top");
-    obj.button3:setText("🔥");
-    obj.button3:setHeight(60);
-    obj.button3:setHint("Calor");
-    obj.button3:setFontSize(30);
-    obj.button3:setName("button3");
+    obj.btnAName1 = GUI.fromHandle(_obj_newObject("button"));
+    obj.btnAName1:setParent(obj.layout4);
+    obj.btnAName1:setAlign("top");
+    obj.btnAName1:setText("🔥");
+    obj.btnAName1:setHeight(60);
+    obj.btnAName1:setHint("Calor");
+    obj.btnAName1:setFontSize(30);
+    obj.btnAName1:setName("btnAName1");
 
     obj.label2 = GUI.fromHandle(_obj_newObject("label"));
     obj.label2:setParent(obj.layout4);
@@ -691,14 +693,14 @@ local function constructNew_Grimorio()
     obj.layout5:setMargins({left=5});
     obj.layout5:setName("layout5");
 
-    obj.button4 = GUI.fromHandle(_obj_newObject("button"));
-    obj.button4:setParent(obj.layout5);
-    obj.button4:setAlign("top");
-    obj.button4:setText("⚡");
-    obj.button4:setHeight(60);
-    obj.button4:setHint("Disrupção");
-    obj.button4:setFontSize(30);
-    obj.button4:setName("button4");
+    obj.btnAName2 = GUI.fromHandle(_obj_newObject("button"));
+    obj.btnAName2:setParent(obj.layout5);
+    obj.btnAName2:setAlign("top");
+    obj.btnAName2:setText("⚡");
+    obj.btnAName2:setHeight(60);
+    obj.btnAName2:setHint("Disrupção");
+    obj.btnAName2:setFontSize(30);
+    obj.btnAName2:setName("btnAName2");
 
     obj.label3 = GUI.fromHandle(_obj_newObject("label"));
     obj.label3:setParent(obj.layout5);
@@ -717,14 +719,14 @@ local function constructNew_Grimorio()
     obj.layout6:setMargins({left=5});
     obj.layout6:setName("layout6");
 
-    obj.button5 = GUI.fromHandle(_obj_newObject("button"));
-    obj.button5:setParent(obj.layout6);
-    obj.button5:setAlign("top");
-    obj.button5:setText("🎲");
-    obj.button5:setHeight(60);
-    obj.button5:setHint("Engano");
-    obj.button5:setFontSize(30);
-    obj.button5:setName("button5");
+    obj.btnAName3 = GUI.fromHandle(_obj_newObject("button"));
+    obj.btnAName3:setParent(obj.layout6);
+    obj.btnAName3:setAlign("top");
+    obj.btnAName3:setText("🎲");
+    obj.btnAName3:setHeight(60);
+    obj.btnAName3:setHint("Engano");
+    obj.btnAName3:setFontSize(30);
+    obj.btnAName3:setName("btnAName3");
 
     obj.label4 = GUI.fromHandle(_obj_newObject("label"));
     obj.label4:setParent(obj.layout6);
@@ -743,14 +745,14 @@ local function constructNew_Grimorio()
     obj.layout7:setMargins({left=5});
     obj.layout7:setName("layout7");
 
-    obj.button6 = GUI.fromHandle(_obj_newObject("button"));
-    obj.button6:setParent(obj.layout7);
-    obj.button6:setAlign("top");
-    obj.button6:setText("🌓");
-    obj.button6:setHeight(60);
-    obj.button6:setHint("Equilíbrio");
-    obj.button6:setFontSize(30);
-    obj.button6:setName("button6");
+    obj.btnAName4 = GUI.fromHandle(_obj_newObject("button"));
+    obj.btnAName4:setParent(obj.layout7);
+    obj.btnAName4:setAlign("top");
+    obj.btnAName4:setText("🌓");
+    obj.btnAName4:setHeight(60);
+    obj.btnAName4:setHint("Equilíbrio");
+    obj.btnAName4:setFontSize(30);
+    obj.btnAName4:setName("btnAName4");
 
     obj.label5 = GUI.fromHandle(_obj_newObject("label"));
     obj.label5:setParent(obj.layout7);
@@ -769,14 +771,14 @@ local function constructNew_Grimorio()
     obj.layout8:setMargins({left=5});
     obj.layout8:setName("layout8");
 
-    obj.button7 = GUI.fromHandle(_obj_newObject("button"));
-    obj.button7:setParent(obj.layout8);
-    obj.button7:setAlign("top");
-    obj.button7:setText("👊");
-    obj.button7:setHeight(60);
-    obj.button7:setHint("Força");
-    obj.button7:setFontSize(30);
-    obj.button7:setName("button7");
+    obj.btnAName5 = GUI.fromHandle(_obj_newObject("button"));
+    obj.btnAName5:setParent(obj.layout8);
+    obj.btnAName5:setAlign("top");
+    obj.btnAName5:setText("👊");
+    obj.btnAName5:setHeight(60);
+    obj.btnAName5:setHint("Força");
+    obj.btnAName5:setFontSize(30);
+    obj.btnAName5:setName("btnAName5");
 
     obj.label6 = GUI.fromHandle(_obj_newObject("label"));
     obj.label6:setParent(obj.layout8);
@@ -795,14 +797,14 @@ local function constructNew_Grimorio()
     obj.layout9:setMargins({left=5});
     obj.layout9:setName("layout9");
 
-    obj.button8 = GUI.fromHandle(_obj_newObject("button"));
-    obj.button8:setParent(obj.layout9);
-    obj.button8:setAlign("top");
-    obj.button8:setText("💫");
-    obj.button8:setHeight(60);
-    obj.button8:setHint("Imaterial");
-    obj.button8:setFontSize(30);
-    obj.button8:setName("button8");
+    obj.btnAName6 = GUI.fromHandle(_obj_newObject("button"));
+    obj.btnAName6:setParent(obj.layout9);
+    obj.btnAName6:setAlign("top");
+    obj.btnAName6:setText("💫");
+    obj.btnAName6:setHeight(60);
+    obj.btnAName6:setHint("Imaterial");
+    obj.btnAName6:setFontSize(30);
+    obj.btnAName6:setName("btnAName6");
 
     obj.label7 = GUI.fromHandle(_obj_newObject("label"));
     obj.label7:setParent(obj.layout9);
@@ -821,14 +823,14 @@ local function constructNew_Grimorio()
     obj.layout10:setMargins({left=5});
     obj.layout10:setName("layout10");
 
-    obj.button9 = GUI.fromHandle(_obj_newObject("button"));
-    obj.button9:setParent(obj.layout10);
-    obj.button9:setAlign("top");
-    obj.button9:setText("🎱");
-    obj.button9:setHeight(60);
-    obj.button9:setHint("Material");
-    obj.button9:setFontSize(30);
-    obj.button9:setName("button9");
+    obj.btnAName7 = GUI.fromHandle(_obj_newObject("button"));
+    obj.btnAName7:setParent(obj.layout10);
+    obj.btnAName7:setAlign("top");
+    obj.btnAName7:setText("🎱");
+    obj.btnAName7:setHeight(60);
+    obj.btnAName7:setHint("Material");
+    obj.btnAName7:setFontSize(30);
+    obj.btnAName7:setName("btnAName7");
 
     obj.label8 = GUI.fromHandle(_obj_newObject("label"));
     obj.label8:setParent(obj.layout10);
@@ -847,14 +849,14 @@ local function constructNew_Grimorio()
     obj.layout11:setMargins({left=5});
     obj.layout11:setName("layout11");
 
-    obj.button10 = GUI.fromHandle(_obj_newObject("button"));
-    obj.button10:setParent(obj.layout11);
-    obj.button10:setAlign("top");
-    obj.button10:setText("☔");
-    obj.button10:setHeight(60);
-    obj.button10:setHint("Proteção");
-    obj.button10:setFontSize(30);
-    obj.button10:setName("button10");
+    obj.btnAName8 = GUI.fromHandle(_obj_newObject("button"));
+    obj.btnAName8:setParent(obj.layout11);
+    obj.btnAName8:setAlign("top");
+    obj.btnAName8:setText("☔");
+    obj.btnAName8:setHeight(60);
+    obj.btnAName8:setHint("Proteção");
+    obj.btnAName8:setFontSize(30);
+    obj.btnAName8:setName("btnAName8");
 
     obj.label9 = GUI.fromHandle(_obj_newObject("label"));
     obj.label9:setParent(obj.layout11);
@@ -940,19 +942,19 @@ local function constructNew_Grimorio()
     obj.adminTab:setHorzAlign("center");
     obj.adminTab:setName("adminTab");
 
-    obj.button11 = GUI.fromHandle(_obj_newObject("button"));
-    obj.button11:setParent(obj.adminTab);
-    obj.button11:setWidth(150);
-    obj.button11:setText("Adicionar Magia");
-    obj.button11:setMargins({top=10});
-    obj.button11:setName("button11");
+    obj.button1 = GUI.fromHandle(_obj_newObject("button"));
+    obj.button1:setParent(obj.adminTab);
+    obj.button1:setWidth(150);
+    obj.button1:setText("Adicionar Magia");
+    obj.button1:setMargins({top=10});
+    obj.button1:setName("button1");
 
-    obj.button12 = GUI.fromHandle(_obj_newObject("button"));
-    obj.button12:setParent(obj.adminTab);
-    obj.button12:setWidth(150);
-    obj.button12:setText("Ajustar Level de magia");
-    obj.button12:setMargins({top=10, left=10});
-    obj.button12:setName("button12");
+    obj.button2 = GUI.fromHandle(_obj_newObject("button"));
+    obj.button2:setParent(obj.adminTab);
+    obj.button2:setWidth(150);
+    obj.button2:setText("Ajustar Level de magia");
+    obj.button2:setMargins({top=10, left=10});
+    obj.button2:setName("button2");
 
     obj.layout13 = GUI.fromHandle(_obj_newObject("layout"));
     obj.layout13:setParent(obj.layout1);
@@ -1071,21 +1073,21 @@ local function constructNew_Grimorio()
     obj.layout20:setMargins({top = 5});
     obj.layout20:setName("layout20");
 
-    obj.button13 = GUI.fromHandle(_obj_newObject("button"));
-    obj.button13:setParent(obj.layout20);
-    obj.button13:setAlign("left");
-    obj.button13:setText("Rolar");
-    obj.button13:setWidth(60);
-    obj.button13:setMargins({left=10});
-    obj.button13:setName("button13");
+    obj.btnRolar = GUI.fromHandle(_obj_newObject("button"));
+    obj.btnRolar:setParent(obj.layout20);
+    obj.btnRolar:setAlign("left");
+    obj.btnRolar:setText("Rolar");
+    obj.btnRolar:setWidth(60);
+    obj.btnRolar:setMargins({left=10});
+    obj.btnRolar:setName("btnRolar");
 
-    obj.checkBox1 = GUI.fromHandle(_obj_newObject("checkBox"));
-    obj.checkBox1:setParent(obj.layout20);
-    obj.checkBox1:setAlign("left");
-    obj.checkBox1:setField("modoSecreto");
-    obj.checkBox1:setText("Modo Secreto");
-    obj.checkBox1:setMargins({left = 5});
-    obj.checkBox1:setName("checkBox1");
+    obj.cbModosecreto = GUI.fromHandle(_obj_newObject("checkBox"));
+    obj.cbModosecreto:setParent(obj.layout20);
+    obj.cbModosecreto:setAlign("left");
+    obj.cbModosecreto:setField("modoSecreto");
+    obj.cbModosecreto:setText("Modo Secreto");
+    obj.cbModosecreto:setMargins({left = 5});
+    obj.cbModosecreto:setName("cbModosecreto");
 
     obj.layout21 = GUI.fromHandle(_obj_newObject("layout"));
     obj.layout21:setParent(obj.layout19);
@@ -1095,13 +1097,13 @@ local function constructNew_Grimorio()
     obj.layout21:setMargins({top = 5});
     obj.layout21:setName("layout21");
 
-    obj.checkBox2 = GUI.fromHandle(_obj_newObject("checkBox"));
-    obj.checkBox2:setParent(obj.layout21);
-    obj.checkBox2:setAlign("left");
-    obj.checkBox2:setField("modoUltraSecreto");
-    obj.checkBox2:setText("Modo Ultra Secreto");
-    obj.checkBox2:setMargins({left = 10});
-    obj.checkBox2:setName("checkBox2");
+    obj.cbModoUsecreto = GUI.fromHandle(_obj_newObject("checkBox"));
+    obj.cbModoUsecreto:setParent(obj.layout21);
+    obj.cbModoUsecreto:setAlign("left");
+    obj.cbModoUsecreto:setField("modoUltraSecreto");
+    obj.cbModoUsecreto:setText("Modo Ultra Secreto");
+    obj.cbModoUsecreto:setMargins({left = 10});
+    obj.cbModoUsecreto:setName("cbModoUsecreto");
 
     obj.layout22 = GUI.fromHandle(_obj_newObject("layout"));
     obj.layout22:setParent(obj.layout19);
@@ -1111,13 +1113,13 @@ local function constructNew_Grimorio()
     obj.layout22:setMargins({top = 5});
     obj.layout22:setName("layout22");
 
-    obj.button14 = GUI.fromHandle(_obj_newObject("button"));
-    obj.button14:setParent(obj.layout22);
-    obj.button14:setAlign("left");
-    obj.button14:setText("Revelar Valores");
-    obj.button14:setWidth(180);
-    obj.button14:setMargins({left=10});
-    obj.button14:setName("button14");
+    obj.btnRevelar = GUI.fromHandle(_obj_newObject("button"));
+    obj.btnRevelar:setParent(obj.layout22);
+    obj.btnRevelar:setAlign("left");
+    obj.btnRevelar:setText("Revelar Valores");
+    obj.btnRevelar:setWidth(180);
+    obj.btnRevelar:setMargins({left=10});
+    obj.btnRevelar:setName("btnRevelar");
 
     obj.label13 = GUI.fromHandle(_obj_newObject("label"));
     obj.label13:setParent(obj.rectangle1);
@@ -1137,7 +1139,7 @@ local function constructNew_Grimorio()
     obj.flowLayout6 = GUI.fromHandle(_obj_newObject("flowLayout"));
     obj.flowLayout6:setParent(obj.flowLayout1);
     obj.flowLayout6:setAlign("client");
-    obj.flowLayout6:setWidth(1000);
+    obj.flowLayout6:setWidth(900);
     obj.flowLayout6:setMargins({left = 5, right = 5, top = 5, bottom = 5});
     obj.flowLayout6:setAutoHeight(true);
     obj.flowLayout6:setName("flowLayout6");
@@ -1145,7 +1147,7 @@ local function constructNew_Grimorio()
     obj.flowPart1 = GUI.fromHandle(_obj_newObject("flowPart"));
     obj.flowPart1:setParent(obj.flowLayout6);
     obj.flowPart1:setMinWidth(500);
-    obj.flowPart1:setMaxWidth(3000);
+    obj.flowPart1:setMaxWidth(900);
     obj.flowPart1:setHeight(30);
     obj.flowPart1:setName("flowPart1");
 
@@ -1158,25 +1160,25 @@ local function constructNew_Grimorio()
     lfm_setPropAsString(obj.label14, "fontStyle",  "bold");
     obj.label14:setName("label14");
 
-    obj.button15 = GUI.fromHandle(_obj_newObject("button"));
-    obj.button15:setParent(obj.flowPart1);
-    obj.button15:setAlign("left");
-    obj.button15:setLeft(10);
-    obj.button15:setText("Copiar Grimório");
-    obj.button15:setWidth(150);
-    obj.button15:setHeight(25);
-    obj.button15:setMargins({left = 10});
-    obj.button15:setName("button15");
+    obj.button3 = GUI.fromHandle(_obj_newObject("button"));
+    obj.button3:setParent(obj.flowPart1);
+    obj.button3:setAlign("left");
+    obj.button3:setLeft(10);
+    obj.button3:setText("Copiar Grimório");
+    obj.button3:setWidth(150);
+    obj.button3:setHeight(25);
+    obj.button3:setMargins({left = 10});
+    obj.button3:setName("button3");
 
-    obj.button16 = GUI.fromHandle(_obj_newObject("button"));
-    obj.button16:setParent(obj.flowPart1);
-    obj.button16:setAlign("left");
-    obj.button16:setLeft(10);
-    obj.button16:setText("Colar no Grimório");
-    obj.button16:setWidth(150);
-    obj.button16:setHeight(25);
-    obj.button16:setMargins({left = 10});
-    obj.button16:setName("button16");
+    obj.button4 = GUI.fromHandle(_obj_newObject("button"));
+    obj.button4:setParent(obj.flowPart1);
+    obj.button4:setAlign("left");
+    obj.button4:setLeft(10);
+    obj.button4:setText("Colar no Grimório");
+    obj.button4:setWidth(150);
+    obj.button4:setHeight(25);
+    obj.button4:setMargins({left = 10});
+    obj.button4:setName("button4");
 
     obj.flowLineBreak1 = GUI.fromHandle(_obj_newObject("flowLineBreak"));
     obj.flowLineBreak1:setParent(obj.flowLayout6);
@@ -1185,14 +1187,24 @@ local function constructNew_Grimorio()
     obj.flowPart2 = GUI.fromHandle(_obj_newObject("flowPart"));
     obj.flowPart2:setParent(obj.flowLayout6);
     obj.flowPart2:setMinWidth(500);
-    obj.flowPart2:setMaxWidth(3000);
+    obj.flowPart2:setMaxWidth(900);
     obj.flowPart2:setHeight(755);
     obj.flowPart2:setName("flowPart2");
 
+    obj.rectangle2 = GUI.fromHandle(_obj_newObject("rectangle"));
+    obj.rectangle2:setParent(obj.flowPart2);
+    obj.rectangle2:setColor("#505050");
+    obj.rectangle2:setStrokeColor("black");
+    obj.rectangle2:setStrokeSize(2);
+    obj.rectangle2:setAlign("top");
+    obj.rectangle2:setHeight(500);
+    obj.rectangle2:setMargins({top = 10, right=5});
+    obj.rectangle2:setName("rectangle2");
+
     obj.scrollBox1 = GUI.fromHandle(_obj_newObject("scrollBox"));
-    obj.scrollBox1:setParent(obj.flowPart2);
+    obj.scrollBox1:setParent(obj.rectangle2);
     obj.scrollBox1:setAlign("client");
-    obj.scrollBox1:setMargins({top = 10});
+    obj.scrollBox1:setMargins({left=5, top=5, right=5, bottom=5});
     obj.scrollBox1:setName("scrollBox1");
 
     obj.grimorio = GUI.fromHandle(_obj_newObject("recordList"));
@@ -1203,14 +1215,28 @@ local function constructNew_Grimorio()
     obj.grimorio:setAlign("client");
     obj.grimorio:setSelectable(true);
 
+    obj.rectangle3 = GUI.fromHandle(_obj_newObject("rectangle"));
+    obj.rectangle3:setParent(obj.flowPart2);
+    obj.rectangle3:setColor("#505050");
+    obj.rectangle3:setStrokeColor("black");
+    obj.rectangle3:setStrokeSize(2);
+    obj.rectangle3:setAlign("top");
+    obj.rectangle3:setHeight(235);
+    obj.rectangle3:setMargins({top = 10, right=5});
+    obj.rectangle3:setName("rectangle3");
+
+    obj.scrollBox2 = GUI.fromHandle(_obj_newObject("scrollBox"));
+    obj.scrollBox2:setParent(obj.rectangle3);
+    obj.scrollBox2:setAlign("client");
+    obj.scrollBox2:setMargins({left=5, top=5, right=5, bottom=5});
+    obj.scrollBox2:setName("scrollBox2");
+
     obj.grimorioInv = GUI.fromHandle(_obj_newObject("recordList"));
-    obj.grimorioInv:setParent(obj.flowLayout6);
+    obj.grimorioInv:setParent(obj.scrollBox2);
     obj.grimorioInv:setName("grimorioInv");
     obj.grimorioInv:setField("magicsInv");
     obj.grimorioInv:setTemplateForm("ItemGrimorio");
-    obj.grimorioInv:setWidth(0);
-    obj.grimorioInv:setHeight(0);
-    obj.grimorioInv:setVisible(false);
+    obj.grimorioInv:setAlign("client");
 
     obj._e_event0 = obj.escudoAp:addEventListener("onClick",
         function (_)
@@ -1246,19 +1272,19 @@ local function constructNew_Grimorio()
                                             end
         end, obj);
 
-    obj._e_event1 = obj.button1:addEventListener("onClick",
+    obj._e_event1 = obj.btnEscudo:addEventListener("onClick",
         function (_)
             selected = ""
                                             self.escudoAp.checked = false
                                             popupShow("Escudo removido.")
         end, obj);
 
-    obj._e_event2 = obj.progressBar1:addEventListener("onClick",
+    obj._e_event2 = obj.VigorBar:addEventListener("onClick",
         function (_)
             popupShow("Vigor: " .. sheet.vigor .. "/" .. sheet.vigorMax)
         end, obj);
 
-    obj._e_event3 = obj.button2:addEventListener("onClick",
+    obj._e_event3 = obj.VigorBtn:addEventListener("onClick",
         function (_)
             Dialogs.confirmOkCancel("Deseja resetar o vigor(".. sheet.vigorMax ..")?",
                                         function (confirmado)
@@ -1268,49 +1294,49 @@ local function constructNew_Grimorio()
                                         end)
         end, obj);
 
-    obj._e_event4 = obj.button3:addEventListener("onClick",
+    obj._e_event4 = obj.btnAName1:addEventListener("onClick",
         function (_)
             sig = "🔥"
                                     addSig(sig)
         end, obj);
 
-    obj._e_event5 = obj.button4:addEventListener("onClick",
+    obj._e_event5 = obj.btnAName2:addEventListener("onClick",
         function (_)
             sig = "⚡"
                                     addSig(sig)
         end, obj);
 
-    obj._e_event6 = obj.button5:addEventListener("onClick",
+    obj._e_event6 = obj.btnAName3:addEventListener("onClick",
         function (_)
             sig = "🎲"
                                     addSig(sig)
         end, obj);
 
-    obj._e_event7 = obj.button6:addEventListener("onClick",
+    obj._e_event7 = obj.btnAName4:addEventListener("onClick",
         function (_)
             sig = "🌓"
                                     addSig(sig)
         end, obj);
 
-    obj._e_event8 = obj.button7:addEventListener("onClick",
+    obj._e_event8 = obj.btnAName5:addEventListener("onClick",
         function (_)
             sig = "👊"
                                     addSig(sig)
         end, obj);
 
-    obj._e_event9 = obj.button8:addEventListener("onClick",
+    obj._e_event9 = obj.btnAName6:addEventListener("onClick",
         function (_)
             sig = "💫"
                                     addSig(sig)
         end, obj);
 
-    obj._e_event10 = obj.button9:addEventListener("onClick",
+    obj._e_event10 = obj.btnAName7:addEventListener("onClick",
         function (_)
             sig = "🎱"
                                     addSig(sig)
         end, obj);
 
-    obj._e_event11 = obj.button10:addEventListener("onClick",
+    obj._e_event11 = obj.btnAName8:addEventListener("onClick",
         function (_)
             sig = "☔"
                                     addSig(sig)
@@ -1346,7 +1372,7 @@ local function constructNew_Grimorio()
                                     removeSig(btnNum)
         end, obj);
 
-    obj._e_event17 = obj.button11:addEventListener("onClick",
+    obj._e_event17 = obj.button1:addEventListener("onClick",
         function (_)
             btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
                             sequencia = ""
@@ -1376,7 +1402,7 @@ local function constructNew_Grimorio()
                             end
         end, obj);
 
-    obj._e_event18 = obj.button12:addEventListener("onClick",
+    obj._e_event18 = obj.button2:addEventListener("onClick",
         function (_)
             Dialogs.choose("Escolha o Signo.", {"🔥 - Calor","⚡ - Disrupção","🎲 - Engano","🌓 - Equilíbrio","👊 - Força","💫 - Imaterial","🎱 - Material","☔ - Proteção"},
                                 function(selected, selectedIndex, selectedText)
@@ -1413,7 +1439,7 @@ local function constructNew_Grimorio()
                             )
         end, obj);
 
-    obj._e_event19 = obj.button13:addEventListener("onClick",
+    obj._e_event19 = obj.btnRolar:addEventListener("onClick",
         function (_)
             node = self.grimorio.selectedNode
                                                             if node ~= nil then
@@ -1421,17 +1447,17 @@ local function constructNew_Grimorio()
                                                             end
         end, obj);
 
-    obj._e_event20 = obj.button14:addEventListener("onClick",
+    obj._e_event20 = obj.btnRevelar:addEventListener("onClick",
         function (_)
             revealResult()
         end, obj);
 
-    obj._e_event21 = obj.button15:addEventListener("onClick",
+    obj._e_event21 = obj.button3:addEventListener("onClick",
         function (_)
             copyAll()
         end, obj);
 
-    obj._e_event22 = obj.button16:addEventListener("onClick",
+    obj._e_event22 = obj.button4:addEventListener("onClick",
         function (_)
             pasteAll()
                                         self.grimorio:sort()
@@ -1440,17 +1466,24 @@ local function constructNew_Grimorio()
     obj._e_event23 = obj.grimorio:addEventListener("onSelect",
         function (_)
             node = self.grimorio.selectedNode
-                                            self.magicDesc.node = node
+                                                self.magicDesc.node = node
         end, obj);
 
     obj._e_event24 = obj.grimorio:addEventListener("onCompare",
         function (_, nodeA, nodeB)
             a = nodeA.sequencia or ""
-                                            b = nodeB.sequencia or ""
-                                            return sortSig(a, b)
+                                                b = nodeB.sequencia or ""
+                                                return sortSig(a, b)
+        end, obj);
+
+    obj._e_event25 = obj.grimorioInv:addEventListener("onSelect",
+        function (_)
+            node = self.grimorioInv.selectedNode
+                                                self.magicDesc.node = node
         end, obj);
 
     function obj:_releaseEvents()
+        __o_rrpgObjs.removeEventListenerById(self._e_event25);
         __o_rrpgObjs.removeEventListenerById(self._e_event24);
         __o_rrpgObjs.removeEventListenerById(self._e_event23);
         __o_rrpgObjs.removeEventListenerById(self._e_event22);
@@ -1487,52 +1520,53 @@ local function constructNew_Grimorio()
           self:setNodeDatabase(nil);
         end;
 
+        if self.VigorBar ~= nil then self.VigorBar:destroy(); self.VigorBar = nil; end;
         if self.Functions_Edit ~= nil then self.Functions_Edit:destroy(); self.Functions_Edit = nil; end;
         if self.button4 ~= nil then self.button4:destroy(); self.button4 = nil; end;
         if self.label14 ~= nil then self.label14:destroy(); self.label14 = nil; end;
         if self.button3 ~= nil then self.button3:destroy(); self.button3 = nil; end;
         if self.label1 ~= nil then self.label1:destroy(); self.label1 = nil; end;
         if self.layout4 ~= nil then self.layout4:destroy(); self.layout4 = nil; end;
-        if self.button15 ~= nil then self.button15:destroy(); self.button15 = nil; end;
         if self.layout15 ~= nil then self.layout15:destroy(); self.layout15 = nil; end;
         if self.layout10 ~= nil then self.layout10:destroy(); self.layout10 = nil; end;
-        if self.button7 ~= nil then self.button7:destroy(); self.button7 = nil; end;
         if self.Functions_Roll ~= nil then self.Functions_Roll:destroy(); self.Functions_Roll = nil; end;
         if self.flowLayout3 ~= nil then self.flowLayout3:destroy(); self.flowLayout3 = nil; end;
         if self.flowLayout4 ~= nil then self.flowLayout4:destroy(); self.flowLayout4 = nil; end;
+        if self.btnRevelar ~= nil then self.btnRevelar:destroy(); self.btnRevelar = nil; end;
         if self.layout5 ~= nil then self.layout5:destroy(); self.layout5 = nil; end;
         if self.popupMsg ~= nil then self.popupMsg:destroy(); self.popupMsg = nil; end;
         if self.layout17 ~= nil then self.layout17:destroy(); self.layout17 = nil; end;
         if self.layout20 ~= nil then self.layout20:destroy(); self.layout20 = nil; end;
-        if self.button11 ~= nil then self.button11:destroy(); self.button11 = nil; end;
         if self.flowLayout1 ~= nil then self.flowLayout1:destroy(); self.flowLayout1 = nil; end;
         if self.layout18 ~= nil then self.layout18:destroy(); self.layout18 = nil; end;
         if self.btn2 ~= nil then self.btn2:destroy(); self.btn2 = nil; end;
-        if self.button12 ~= nil then self.button12:destroy(); self.button12 = nil; end;
-        if self.button6 ~= nil then self.button6:destroy(); self.button6 = nil; end;
         if self.flowPart1 ~= nil then self.flowPart1:destroy(); self.flowPart1 = nil; end;
-        if self.button16 ~= nil then self.button16:destroy(); self.button16 = nil; end;
-        if self.button5 ~= nil then self.button5:destroy(); self.button5 = nil; end;
-        if self.button2 ~= nil then self.button2:destroy(); self.button2 = nil; end;
+        if self.rectangle2 ~= nil then self.rectangle2:destroy(); self.rectangle2 = nil; end;
+        if self.rectangle3 ~= nil then self.rectangle3:destroy(); self.rectangle3 = nil; end;
+        if self.btnEscudo ~= nil then self.btnEscudo:destroy(); self.btnEscudo = nil; end;
         if self.flowLayout5 ~= nil then self.flowLayout5:destroy(); self.flowLayout5 = nil; end;
+        if self.button2 ~= nil then self.button2:destroy(); self.button2 = nil; end;
         if self.flowPart2 ~= nil then self.flowPart2:destroy(); self.flowPart2 = nil; end;
         if self.layout13 ~= nil then self.layout13:destroy(); self.layout13 = nil; end;
         if self.flowLayout2 ~= nil then self.flowLayout2:destroy(); self.flowLayout2 = nil; end;
         if self.layout3 ~= nil then self.layout3:destroy(); self.layout3 = nil; end;
-        if self.label13 ~= nil then self.label13:destroy(); self.label13 = nil; end;
+        if self.btnAName8 ~= nil then self.btnAName8:destroy(); self.btnAName8 = nil; end;
         if self.popupText ~= nil then self.popupText:destroy(); self.popupText = nil; end;
         if self.layout8 ~= nil then self.layout8:destroy(); self.layout8 = nil; end;
         if self.layout1 ~= nil then self.layout1:destroy(); self.layout1 = nil; end;
-        if self.label10 ~= nil then self.label10:destroy(); self.label10 = nil; end;
-        if self.button10 ~= nil then self.button10:destroy(); self.button10 = nil; end;
-        if self.layout2 ~= nil then self.layout2:destroy(); self.layout2 = nil; end;
+        if self.btnAName7 ~= nil then self.btnAName7:destroy(); self.btnAName7 = nil; end;
         if self.rectangle1 ~= nil then self.rectangle1:destroy(); self.rectangle1 = nil; end;
+        if self.layout2 ~= nil then self.layout2:destroy(); self.layout2 = nil; end;
+        if self.label10 ~= nil then self.label10:destroy(); self.label10 = nil; end;
+        if self.cbModoUsecreto ~= nil then self.cbModoUsecreto:destroy(); self.cbModoUsecreto = nil; end;
+        if self.label13 ~= nil then self.label13:destroy(); self.label13 = nil; end;
         if self.grimorio ~= nil then self.grimorio:destroy(); self.grimorio = nil; end;
-        if self.checkBox2 ~= nil then self.checkBox2:destroy(); self.checkBox2 = nil; end;
+        if self.VigorBtn ~= nil then self.VigorBtn:destroy(); self.VigorBtn = nil; end;
         if self.layout12 ~= nil then self.layout12:destroy(); self.layout12 = nil; end;
         if self.btn4 ~= nil then self.btn4:destroy(); self.btn4 = nil; end;
-        if self.button1 ~= nil then self.button1:destroy(); self.button1 = nil; end;
         if self.adminTab ~= nil then self.adminTab:destroy(); self.adminTab = nil; end;
+        if self.btnAName6 ~= nil then self.btnAName6:destroy(); self.btnAName6 = nil; end;
+        if self.button1 ~= nil then self.button1:destroy(); self.button1 = nil; end;
         if self.label8 ~= nil then self.label8:destroy(); self.label8 = nil; end;
         if self.layout11 ~= nil then self.layout11:destroy(); self.layout11 = nil; end;
         if self.label11 ~= nil then self.label11:destroy(); self.label11 = nil; end;
@@ -1542,37 +1576,39 @@ local function constructNew_Grimorio()
         if self.layout9 ~= nil then self.layout9:destroy(); self.layout9 = nil; end;
         if self.textEditor1 ~= nil then self.textEditor1:destroy(); self.textEditor1 = nil; end;
         if self.flowLayout6 ~= nil then self.flowLayout6:destroy(); self.flowLayout6 = nil; end;
-        if self.button9 ~= nil then self.button9:destroy(); self.button9 = nil; end;
-        if self.escudoAp ~= nil then self.escudoAp:destroy(); self.escudoAp = nil; end;
+        if self.btnAName1 ~= nil then self.btnAName1:destroy(); self.btnAName1 = nil; end;
         if self.btn1 ~= nil then self.btn1:destroy(); self.btn1 = nil; end;
-        if self.button13 ~= nil then self.button13:destroy(); self.button13 = nil; end;
+        if self.escudoAp ~= nil then self.escudoAp:destroy(); self.escudoAp = nil; end;
+        if self.btnAName4 ~= nil then self.btnAName4:destroy(); self.btnAName4 = nil; end;
+        if self.btnRolar ~= nil then self.btnRolar:destroy(); self.btnRolar = nil; end;
         if self.textEditor2 ~= nil then self.textEditor2:destroy(); self.textEditor2 = nil; end;
         if self.body ~= nil then self.body:destroy(); self.body = nil; end;
         if self.label7 ~= nil then self.label7:destroy(); self.label7 = nil; end;
-        if self.button8 ~= nil then self.button8:destroy(); self.button8 = nil; end;
+        if self.btnAName2 ~= nil then self.btnAName2:destroy(); self.btnAName2 = nil; end;
         if self.label2 ~= nil then self.label2:destroy(); self.label2 = nil; end;
         if self.edit3 ~= nil then self.edit3:destroy(); self.edit3 = nil; end;
+        if self.scrollBox2 ~= nil then self.scrollBox2:destroy(); self.scrollBox2 = nil; end;
         if self.layout6 ~= nil then self.layout6:destroy(); self.layout6 = nil; end;
         if self.label5 ~= nil then self.label5:destroy(); self.label5 = nil; end;
         if self.label12 ~= nil then self.label12:destroy(); self.label12 = nil; end;
         if self.magicDesc ~= nil then self.magicDesc:destroy(); self.magicDesc = nil; end;
-        if self.progressBar1 ~= nil then self.progressBar1:destroy(); self.progressBar1 = nil; end;
         if self.btn3 ~= nil then self.btn3:destroy(); self.btn3 = nil; end;
         if self.layout22 ~= nil then self.layout22:destroy(); self.layout22 = nil; end;
         if self.layout14 ~= nil then self.layout14:destroy(); self.layout14 = nil; end;
+        if self.cbModosecreto ~= nil then self.cbModosecreto:destroy(); self.cbModosecreto = nil; end;
         if self.layout16 ~= nil then self.layout16:destroy(); self.layout16 = nil; end;
         if self.layout21 ~= nil then self.layout21:destroy(); self.layout21 = nil; end;
-        if self.button14 ~= nil then self.button14:destroy(); self.button14 = nil; end;
-        if self.btn5 ~= nil then self.btn5:destroy(); self.btn5 = nil; end;
         if self.grimorioInv ~= nil then self.grimorioInv:destroy(); self.grimorioInv = nil; end;
+        if self.btnAName3 ~= nil then self.btnAName3:destroy(); self.btnAName3 = nil; end;
+        if self.btn5 ~= nil then self.btn5:destroy(); self.btn5 = nil; end;
         if self.Functions ~= nil then self.Functions:destroy(); self.Functions = nil; end;
         if self.edit2 ~= nil then self.edit2:destroy(); self.edit2 = nil; end;
         if self.label9 ~= nil then self.label9:destroy(); self.label9 = nil; end;
         if self.layout19 ~= nil then self.layout19:destroy(); self.layout19 = nil; end;
-        if self.checkBox1 ~= nil then self.checkBox1:destroy(); self.checkBox1 = nil; end;
         if self.scrollBox1 ~= nil then self.scrollBox1:destroy(); self.scrollBox1 = nil; end;
         if self.edit1 ~= nil then self.edit1:destroy(); self.edit1 = nil; end;
         if self.layout7 ~= nil then self.layout7:destroy(); self.layout7 = nil; end;
+        if self.btnAName5 ~= nil then self.btnAName5:destroy(); self.btnAName5 = nil; end;
         if self.flowLineBreak1 ~= nil then self.flowLineBreak1:destroy(); self.flowLineBreak1 = nil; end;
         self:_oldLFMDestroy();
     end;

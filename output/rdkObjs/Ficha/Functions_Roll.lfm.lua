@@ -238,6 +238,7 @@ local function constructNew_Functions_Roll()
             if node.modoUltraSecreto == true then
                 msg, rolagem = generateMsg(strRolagem, node)
                 node.rolagemUltraSecreta = msg
+                afterRoll(rolagem)
                 return
             end
             if node.modoSecreto == false or node.modoSecreto == nil then

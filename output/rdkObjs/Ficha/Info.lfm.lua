@@ -152,13 +152,13 @@ local function constructNew_Info()
     obj.edit5:setHint("Valor de dano a ser calculado.");
     obj.edit5:setName("edit5");
 
-    obj.button1 = GUI.fromHandle(_obj_newObject("button"));
-    obj.button1:setParent(obj.flowPart5);
-    obj.button1:setAlign("left");
-    obj.button1:setText("Aplicar Dano");
-    obj.button1:setWidth(100);
-    obj.button1:setMargins({left=10});
-    obj.button1:setName("button1");
+    obj.btnDano = GUI.fromHandle(_obj_newObject("button"));
+    obj.btnDano:setParent(obj.flowPart5);
+    obj.btnDano:setAlign("left");
+    obj.btnDano:setText("Aplicar Dano");
+    obj.btnDano:setWidth(100);
+    obj.btnDano:setMargins({left=10});
+    obj.btnDano:setName("btnDano");
 
     obj.flowPart6 = GUI.fromHandle(_obj_newObject("flowPart"));
     obj.flowPart6:setParent(obj.flowLayout1);
@@ -347,7 +347,7 @@ local function constructNew_Info()
     obj.richEdit1:setField("historia");
     obj.richEdit1:setName("richEdit1");
 
-    obj._e_event0 = obj.button1:addEventListener("onClick",
+    obj._e_event0 = obj.btnDano:addEventListener("onClick",
         function (_)
             dano = (sheet.dano or 0)
                                 valor =  dano - (sheet.armaduraAt or 0)
@@ -378,7 +378,7 @@ local function constructNew_Info()
 
         if self.label14 ~= nil then self.label14:destroy(); self.label14 = nil; end;
         if self.flowPart3 ~= nil then self.flowPart3:destroy(); self.flowPart3 = nil; end;
-        if self.button1 ~= nil then self.button1:destroy(); self.button1 = nil; end;
+        if self.richEdit1 ~= nil then self.richEdit1:destroy(); self.richEdit1 = nil; end;
         if self.flowPart8 ~= nil then self.flowPart8:destroy(); self.flowPart8 = nil; end;
         if self.label1 ~= nil then self.label1:destroy(); self.label1 = nil; end;
         if self.edit4 ~= nil then self.edit4:destroy(); self.edit4 = nil; end;
@@ -389,7 +389,6 @@ local function constructNew_Info()
         if self.label4 ~= nil then self.label4:destroy(); self.label4 = nil; end;
         if self.label6 ~= nil then self.label6:destroy(); self.label6 = nil; end;
         if self.edit11 ~= nil then self.edit11:destroy(); self.edit11 = nil; end;
-        if self.richEdit1 ~= nil then self.richEdit1:destroy(); self.richEdit1 = nil; end;
         if self.edit9 ~= nil then self.edit9:destroy(); self.edit9 = nil; end;
         if self.edit5 ~= nil then self.edit5:destroy(); self.edit5 = nil; end;
         if self.edit6 ~= nil then self.edit6:destroy(); self.edit6 = nil; end;
@@ -412,11 +411,12 @@ local function constructNew_Info()
         if self.flowPart6 ~= nil then self.flowPart6:destroy(); self.flowPart6 = nil; end;
         if self.edit2 ~= nil then self.edit2:destroy(); self.edit2 = nil; end;
         if self.label9 ~= nil then self.label9:destroy(); self.label9 = nil; end;
-        if self.edit10 ~= nil then self.edit10:destroy(); self.edit10 = nil; end;
+        if self.btnDano ~= nil then self.btnDano:destroy(); self.btnDano = nil; end;
         if self.label10 ~= nil then self.label10:destroy(); self.label10 = nil; end;
-        if self.label13 ~= nil then self.label13:destroy(); self.label13 = nil; end;
+        if self.edit10 ~= nil then self.edit10:destroy(); self.edit10 = nil; end;
         if self.edit1 ~= nil then self.edit1:destroy(); self.edit1 = nil; end;
         if self.flowLineBreak1 ~= nil then self.flowLineBreak1:destroy(); self.flowLineBreak1 = nil; end;
+        if self.label13 ~= nil then self.label13:destroy(); self.label13 = nil; end;
         if self.flowLineBreak2 ~= nil then self.flowLineBreak2:destroy(); self.flowLineBreak2 = nil; end;
         self:_oldLFMDestroy();
     end;

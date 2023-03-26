@@ -142,18 +142,21 @@
             self.popupText.text = text
             self.popupMsg:show()
         end
+        
     </script>
     <template name="select_magia">
-        <!--
+        <!-- 
             icons = {"🔥","⚡","🎲","🌓","👊","💫","🎱","☔"}
             hints = {"Calor", "Disrupção", "Engano", "Equilíbrio", "Força", "Imaterial", "Material", "Proteção"}
+            usable = false
             for i=1, #hints, 1 do
                 ic = icons[i]
                 h = hints[i]
                 index = i
+                btnAName = "btnAName" .. i
         -->
             <layout width="70" height="85" margins="left=5">
-                <button align="top" text="$(ic)" height="60" hint="$(h)" fontSize="30">
+                <button align="top" text="$(ic)" height="60" hint="$(h)" fontSize="30" name="$(btnAName)">
                     <event name="onClick">
                         sig = "$(ic)"
                         addSig(sig)
@@ -300,7 +303,7 @@
                                 end
                             </event>
                         </imageCheckBox>
-                        <button align="top" text="Remover escudo" width="150">
+                        <button align="top" text="Remover escudo" width="150" name="btnEscudo">
                             <event name="onClick">
                                 selected = ""
                                 self.escudoAp.checked = false
@@ -311,12 +314,12 @@
                 </flowLayout>
                 <!-- vigor/resetarvigor -->
                 <flowLayout align="top" height="25" margins="{left = 5, right = 5, top = 5, bottom = 5}" horzAlign="center">
-                    <progressBar color="yellow" width="600" fieldMax="vigorMax" field="vigor" hitTest="true">
+                    <progressBar color="yellow" width="600" fieldMax="vigorMax" field="vigor" hitTest="true" name="VigorBar">
                         <event name="onClick">
                             popupShow("Vigor: " .. sheet.vigor .. "/" .. sheet.vigorMax)
                         </event>
                     </progressBar>
-                    <button text="Restaurar Vigor" width="100" margins="left=10">
+                    <button text="Restaurar Vigor" width="100" margins="left=10" name="VigorBtn">
                         <event name="onClick">
                             Dialogs.confirmOkCancel("Deseja resetar o vigor(".. sheet.vigorMax ..")?",
                             function (confirmado)
@@ -361,7 +364,7 @@
                                 </layout>
                                 <layout align="right" width="200">
                                     <layout align="top" width="90" height="25" margins="top = 5">
-                                        <button align="left" text="Rolar" width="60" margins="left=10">
+                                        <button align="left" text="Rolar" width="60" margins="left=10" name="btnRolar">
                                             <event name="onClick">
                                                 node = self.grimorio.selectedNode
                                                 if node ~= nil then
@@ -369,13 +372,13 @@
                                                 end
                                             </event>
                                         </button>
-                                        <checkBox align="left" field="modoSecreto" text="Modo Secreto" margins="left = 5"/>
+                                        <checkBox align="left" field="modoSecreto" text="Modo Secreto" margins="left = 5" name="cbModosecreto"/>
                                     </layout>
                                     <layout align="top" width="90" height="25" margins="top = 5">
-                                        <checkBox align="left" field="modoUltraSecreto" text="Modo Ultra Secreto" margins="left = 10"/>
+                                        <checkBox align="left" field="modoUltraSecreto" text="Modo Ultra Secreto" margins="left = 10" name="cbModoUsecreto"/>
                                     </layout>
                                     <layout align="top" width="90" height="25" margins="top = 5">
-                                        <button align="left" text="Revelar Valores" width="180" margins="left=10">
+                                        <button align="left" text="Revelar Valores" width="180" margins="left=10" name="btnRevelar">
                                             <event name="onClick">
                                                 revealResult()
                                             </event>
@@ -390,9 +393,9 @@
                 </layout>
             </layout>
             <!-- Grimorio -->
-            <flowLayout align="client" width="1000" margins="{left = 5, right = 5, top = 5, bottom = 5}" autoHeight="true">
+            <flowLayout align="client" width="900" margins="{left = 5, right = 5, top = 5, bottom = 5}" autoHeight="true">
                 <!-- Grimorio head -->
-                <flowPart minWidth="500" maxWidth="3000" height="30">
+                <flowPart minWidth="500" maxWidth="900" height="30">
                     <label align="left" text="Grimório" width="100" height="25" fontStyle="bold"/>
                     <button align="left" left="10" text="Copiar Grimório" width="150" height="25" margins="left = 10">
                         <event name="onCLick">
@@ -407,24 +410,35 @@
                     </button>
                 </flowPart>
                 <flowLineBreak/>
-                <!-- lista -->
-                <flowPart minWidth="500" maxWidth="3000" height="755">
-                    <scrollBox align="client" margins="{top = 10}">
-                        <recordList name="grimorio" field="magics" templateForm="ItemGrimorio" align="client" selectable="true">
-                            <event name="onSelect">
-                                node = self.grimorio.selectedNode
-                                self.magicDesc.node = node
-                            </event>
-                            <event name="onCompare">
-                                a = nodeA.sequencia or ""
-                                b = nodeB.sequencia or ""
-                                return sortSig(a, b)
-                            </event>
-                        </recordList>
-                    </scrollBox>
+                <flowPart minWidth="500" maxWidth="900" height="755">
+                    <!-- lista -->
+                    <rectangle color="#505050" strokeColor="black" strokeSize="2" align="top" height="500" margins="{top = 10, right=5}">
+                        <scrollBox align="client" margins="{left=5, top=5, right=5, bottom=5}">
+                            <recordList name="grimorio" field="magics" templateForm="ItemGrimorio" align="client" selectable="true">
+                                <event name="onSelect">
+                                    node = self.grimorio.selectedNode
+                                    self.magicDesc.node = node
+                                </event>
+                                <event name="onCompare">
+                                    a = nodeA.sequencia or ""
+                                    b = nodeB.sequencia or ""
+                                    return sortSig(a, b)
+                                </event>
+                            </recordList>
+                        </scrollBox>
+                    </rectangle>
+                    <!-- Lista invisivel -->
+                    <rectangle color="#505050" strokeColor="black" strokeSize="2" align="top" height="235" margins="{top = 10, right=5}">
+                        <scrollBox align="client" margins="{left=5, top=5, right=5, bottom=5}">
+                            <recordList name="grimorioInv" field="magicsInv" templateForm="ItemGrimorio" align="client">
+                                <event name="onSelect">
+                                    node = self.grimorioInv.selectedNode
+                                    self.magicDesc.node = node
+                                </event>
+                            </recordList>
+                        </scrollBox>
+                    </rectangle>
                 </flowPart>
-                <!-- Lista invisivel -->
-                <recordList name="grimorioInv" field="magicsInv" templateForm="ItemGrimorio" width="0" height="0" visible="false"/>
             </flowLayout>
         </flowLayout>
     </scrollBox>
