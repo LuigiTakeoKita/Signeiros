@@ -262,7 +262,7 @@ local function constructNew_Grimorio()
             if node ~= nil then
                 sequencia = splitEmojis(node.sequencia)
             else
-                showMessage("Nenhuma magia preparada.")
+                popupShow("Nenhuma magia preparada.")
                 return
             end
             qnt = #sequencia
@@ -279,6 +279,7 @@ local function constructNew_Grimorio()
             else
                 mesaDoPersonagem.chat:enviarMensagem(msg)
             end
+            popupShow("Rolagem realizada.")
             afterRoll(rolagem)
         end
         function generateRoll()
@@ -301,27 +302,28 @@ local function constructNew_Grimorio()
                 msg, rolagem = generateMsg(strRolagem, node)
                 node.rolagemUltraSecreta = msg
                 afterRoll(rolagem)
+                popupShow("Rolagem Ultra Secreta realizada.")
                 return
             end
             if node.modoSecreto == false or node.modoSecreto == nil then
                 node.rolagem = strRolagem
-                revealResult(strRolagem)
+                revealResult()
             else
                 node.rolagem = strRolagem
                 mesaDoPersonagem = Firecast.getMesaDe(sheet)
                 mesaDoPersonagem.chat:enviarMensagem("Magia preparada: " .. node.sequencia)
-                showMessage("Rolagem preparada.")
+                popupShow("Rolagem preparada.")
             end
         end
         function trySpell()
             if hasPreparedMagic() ~= nil then
-                showMessage("Você já possui uma magia preparada, use-a antes.")
+                popupShow("Você já possui uma magia preparada, use-a antes.")
                 return
             end
             sequencia = getSequencia()
             qnt = #sequencia
             if hasVigor(qnt) == false then
-                showMessage("Vigor não suficiente para executar a magia.")
+                popupShow("Vigor não suficiente para executar a magia.")
                 return
             end
             if qnt == 1 and getLevel(icons[sequencia[1]]) == 0 then
@@ -329,7 +331,7 @@ local function constructNew_Grimorio()
                 return
             end
             if hasLevel() == false then
-                showMessage("Você não possui level nos Signos necessário para executar a magia.")
+                popupShow("Você não possui level nos Signos necessário para executar a magia.")
                 return
             end
             roll()
@@ -398,12 +400,41 @@ local function constructNew_Grimorio()
         function orderSig(a, b)
             return icons[b] > icons[a]
         end
+        function getBtn(num)
+            if num == 1 then return sheet.btn1 or ""
+            elseif num == 2 then return sheet.btn2 or ""
+            elseif num == 3 then return sheet.btn3 or ""
+            elseif num == 4 then return sheet.btn4 or ""
+            elseif num == 5 then return sheet.btn5 or ""
+            else return ""
+            end
+        end
+        function setBtn(num, text)
+            if num == 1 then sheet.btn1 = text
+            elseif num == 2 then sheet.btn2 = text
+            elseif num == 3 then sheet.btn3 = text
+            elseif num == 4 then sheet.btn4 = text
+            elseif num == 5 then sheet.btn5 = text
+            else return ""
+            end
+        end
+        function createSequencia()
+            sequencia = {}
+            -- Criação da sequencia
+            for i=1, 5, 1 do
+                if getBtn(i) == "" then
+                    break
+                else
+                    table.insert(sequencia, getBtn(i))
+                end
+            end
+            return sequencia
+        end
         function searchList(addMode)
             magics = NDB.getChildNodes(sheet.magics)
             magicsInv = NDB.getChildNodes(sheet.magicsInv)
-            btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
             -- Nenhun Signo selecionado
-            if btns[1].src == "" then
+            if getBtn(1) == "" then
                 -- Passa todos as magias da lista invisivel para o grimorio
                 for i=1, #magicsInv, 1 do
                     nodo = self.grimorio:append()
@@ -415,15 +446,7 @@ local function constructNew_Grimorio()
                     NDB.deleteNode(magicsInv[i])
                 end
             else
-                sequencia = {}
-                -- Criação da sequencia
-                for i=1, #btns, 1 do
-                    if btns[i].text == "" then
-                        break
-                    else
-                        table.insert(sequencia, btns[i].text)
-                    end
-                end
+                sequencia = createSequencia()
                 -- Ordenar e juntar
                 table.sort(sequencia, orderSig)
                 sequencia = table.concat(sequencia, "")
@@ -457,47 +480,37 @@ local function constructNew_Grimorio()
             self.grimorio:sort()
         end
         function addSig(sig)
-            btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
-            sequencia = {sig}
             -- É o primeiro
-            if btns[1] == "" then
-                btns[1].text = sig
+            if getBtn(1) == "" then
+                setBtn(1, sig)
+                searchList(true)
             else
-                -- Cria sequencia
-                for i=1, #btns, 1 do
-                    if btns[i].text == "" then
-                        break
-                    else
-                        table.insert(sequencia, btns[i].text)
-                    end
-                end
+                sequencia = createSequencia()
+                table.insert(sequencia, sig)
                 table.sort(sequencia, orderSig)
                 -- Integra imagens nos botões corretos
                 if 5 >= #sequencia then
                     for i=1, #sequencia, 1 do
-                        btns[i].text = sequencia[i]
+                        setBtn(i, sequencia[i])
                     end
+                    searchList(true)
                 end
-            end
-            if 6 > #sequencia then 
-                searchList(true)
             end
         end
         function removeSig(btnNum)
-            btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
-            btns[btnNum].text = ""
+            setBtn(btnNum, "")
             sequencia = {}
             -- Criação da sequencia
-            for i=1, #btns, 1 do
-                if btns[i].text ~= "" then
-                    table.insert(sequencia, btns[i].text)
+            for i=1, 5, 1 do
+                if getBtn(i) ~= "" then
+                    table.insert(sequencia, getBtn(i))
                 end
             end
             table.sort(sequencia, orderSig)
             -- Integra emojis nos botões corretos
             if 5 >= #sequencia then
                 for i=1, 5, 1 do
-                    btns[i].text = sequencia[i]
+                    setBtn(i, sequencia[i])
                 end
             end
             searchList(false)
@@ -532,8 +545,7 @@ local function constructNew_Grimorio()
         function popupShow(text)
             self.popupText.text = text
             self.popupMsg:show()
-        end
-        
+        end     
     
 
 
@@ -585,7 +597,7 @@ local function constructNew_Grimorio()
     obj.layout1 = GUI.fromHandle(_obj_newObject("layout"));
     obj.layout1:setParent(obj.flowLayout1);
     obj.layout1:setWidth(800);
-    obj.layout1:setHeight(800);
+    obj.layout1:setHeight(840);
     obj.layout1:setMargins({left = 5, right = 5, top = 5, bottom = 5});
     obj.layout1:setName("layout1");
 
@@ -648,7 +660,7 @@ local function constructNew_Grimorio()
     obj.layout3 = GUI.fromHandle(_obj_newObject("layout"));
     obj.layout3:setParent(obj.layout1);
     obj.layout3:setAlign("top");
-    obj.layout3:setHeight(300);
+    obj.layout3:setHeight(295);
     obj.layout3:setMargins({left = 5, right = 5, top = 5, bottom = 5});
     obj.layout3:setName("layout3");
 
@@ -872,66 +884,130 @@ local function constructNew_Grimorio()
     obj.layout12:setParent(obj.layout3);
     obj.layout12:setAlign("top");
     obj.layout12:setWidth(850);
-    obj.layout12:setHeight(340);
+    obj.layout12:setHeight(200);
     obj.layout12:setMargins({top=10});
     obj.layout12:setName("layout12");
 
     obj.flowLayout5 = GUI.fromHandle(_obj_newObject("flowLayout"));
     obj.flowLayout5:setParent(obj.layout12);
     obj.flowLayout5:setAlign("top");
-    obj.flowLayout5:setHeight(50);
+    obj.flowLayout5:setHeight(165);
     obj.flowLayout5:setHorzAlign("center");
+    obj.flowLayout5:setLineSpacing(5);
+    obj.flowLayout5:setMargins({bottom=5});
     obj.flowLayout5:setName("flowLayout5");
 
+    obj.flowLayout6 = GUI.fromHandle(_obj_newObject("flowLayout"));
+    obj.flowLayout6:setParent(obj.flowLayout5);
+    obj.flowLayout6:setWidth(850);
+    obj.flowLayout6:setHorzAlign("center");
+    obj.flowLayout6:setName("flowLayout6");
+
     obj.btn1 = GUI.fromHandle(_obj_newObject("button"));
-    obj.btn1:setParent(obj.flowLayout5);
-    obj.btn1:setAlign("left");
-    obj.btn1:setText("");
+    obj.btn1:setParent(obj.flowLayout6);
     obj.btn1:setWidth(50);
     obj.btn1:setHeight(50);
     obj.btn1:setName("btn1");
     obj.btn1:setMargins({left=5});
     obj.btn1:setFontSize(20);
 
+    obj.label10 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label10:setParent(obj.btn1);
+    obj.label10:setAlign("client");
+    obj.label10:setField("btn1");
+    obj.label10:setFontSize(30);
+    obj.label10:setHorzTextAlign("center");
+    obj.label10:setName("label10");
+
+    obj.flowLineBreak1 = GUI.fromHandle(_obj_newObject("flowLineBreak"));
+    obj.flowLineBreak1:setParent(obj.flowLayout5);
+    obj.flowLineBreak1:setName("flowLineBreak1");
+
+    obj.flowLayout7 = GUI.fromHandle(_obj_newObject("flowLayout"));
+    obj.flowLayout7:setParent(obj.flowLayout5);
+    obj.flowLayout7:setWidth(850);
+    obj.flowLayout7:setHorzAlign("center");
+    obj.flowLayout7:setName("flowLayout7");
+
     obj.btn2 = GUI.fromHandle(_obj_newObject("button"));
-    obj.btn2:setParent(obj.flowLayout5);
-    obj.btn2:setAlign("left");
-    obj.btn2:setText("");
+    obj.btn2:setParent(obj.flowLayout7);
     obj.btn2:setWidth(50);
     obj.btn2:setHeight(50);
     obj.btn2:setName("btn2");
     obj.btn2:setMargins({left=5});
     obj.btn2:setFontSize(20);
 
+    obj.label11 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label11:setParent(obj.btn2);
+    obj.label11:setAlign("client");
+    obj.label11:setField("btn2");
+    obj.label11:setFontSize(30);
+    obj.label11:setHorzTextAlign("center");
+    obj.label11:setName("label11");
+
+    obj.label12 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label12:setParent(obj.flowLayout7);
+    obj.label12:setWidth(50);
+    obj.label12:setText("");
+    obj.label12:setName("label12");
+
     obj.btn3 = GUI.fromHandle(_obj_newObject("button"));
-    obj.btn3:setParent(obj.flowLayout5);
-    obj.btn3:setAlign("left");
-    obj.btn3:setText("");
+    obj.btn3:setParent(obj.flowLayout7);
     obj.btn3:setWidth(50);
     obj.btn3:setHeight(50);
     obj.btn3:setName("btn3");
     obj.btn3:setMargins({left=5});
     obj.btn3:setFontSize(20);
 
+    obj.label13 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label13:setParent(obj.btn3);
+    obj.label13:setAlign("client");
+    obj.label13:setField("btn3");
+    obj.label13:setFontSize(30);
+    obj.label13:setHorzTextAlign("center");
+    obj.label13:setName("label13");
+
+    obj.flowLineBreak2 = GUI.fromHandle(_obj_newObject("flowLineBreak"));
+    obj.flowLineBreak2:setParent(obj.flowLayout5);
+    obj.flowLineBreak2:setName("flowLineBreak2");
+
+    obj.flowLayout8 = GUI.fromHandle(_obj_newObject("flowLayout"));
+    obj.flowLayout8:setParent(obj.flowLayout5);
+    obj.flowLayout8:setWidth(850);
+    obj.flowLayout8:setHorzAlign("center");
+    obj.flowLayout8:setName("flowLayout8");
+
     obj.btn4 = GUI.fromHandle(_obj_newObject("button"));
-    obj.btn4:setParent(obj.flowLayout5);
-    obj.btn4:setAlign("left");
-    obj.btn4:setText("");
+    obj.btn4:setParent(obj.flowLayout8);
     obj.btn4:setWidth(50);
     obj.btn4:setHeight(50);
     obj.btn4:setName("btn4");
     obj.btn4:setMargins({left=5});
     obj.btn4:setFontSize(20);
 
+    obj.label14 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label14:setParent(obj.btn4);
+    obj.label14:setAlign("client");
+    obj.label14:setField("btn4");
+    obj.label14:setFontSize(30);
+    obj.label14:setHorzTextAlign("center");
+    obj.label14:setName("label14");
+
     obj.btn5 = GUI.fromHandle(_obj_newObject("button"));
-    obj.btn5:setParent(obj.flowLayout5);
-    obj.btn5:setAlign("left");
-    obj.btn5:setText("");
+    obj.btn5:setParent(obj.flowLayout8);
     obj.btn5:setWidth(50);
     obj.btn5:setHeight(50);
     obj.btn5:setName("btn5");
     obj.btn5:setMargins({left=5});
     obj.btn5:setFontSize(20);
+
+    obj.label15 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label15:setParent(obj.btn5);
+    obj.label15:setAlign("client");
+    obj.label15:setField("btn5");
+    obj.label15:setFontSize(30);
+    obj.label15:setHorzTextAlign("center");
+    obj.label15:setName("label15");
 
     obj.adminTab = GUI.fromHandle(_obj_newObject("flowLayout"));
     obj.adminTab:setParent(obj.layout12);
@@ -946,14 +1022,13 @@ local function constructNew_Grimorio()
     obj.button1:setParent(obj.adminTab);
     obj.button1:setWidth(150);
     obj.button1:setText("Adicionar Magia");
-    obj.button1:setMargins({top=10});
     obj.button1:setName("button1");
 
     obj.button2 = GUI.fromHandle(_obj_newObject("button"));
     obj.button2:setParent(obj.adminTab);
     obj.button2:setWidth(150);
     obj.button2:setText("Ajustar Level de magia");
-    obj.button2:setMargins({top=10, left=10});
+    obj.button2:setMargins({left=10});
     obj.button2:setName("button2");
 
     obj.layout13 = GUI.fromHandle(_obj_newObject("layout"));
@@ -996,12 +1071,12 @@ local function constructNew_Grimorio()
     obj.layout16:setMargins({top = 5});
     obj.layout16:setName("layout16");
 
-    obj.label10 = GUI.fromHandle(_obj_newObject("label"));
-    obj.label10:setParent(obj.layout16);
-    obj.label10:setAlign("left");
-    obj.label10:setText("Dano");
-    obj.label10:setMargins({left = 5});
-    obj.label10:setName("label10");
+    obj.label16 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label16:setParent(obj.layout16);
+    obj.label16:setAlign("left");
+    obj.label16:setText("Dano");
+    obj.label16:setMargins({left = 5});
+    obj.label16:setName("label16");
 
     obj.edit2 = GUI.fromHandle(_obj_newObject("edit"));
     obj.edit2:setParent(obj.layout16);
@@ -1020,12 +1095,12 @@ local function constructNew_Grimorio()
     obj.layout17:setMargins({top = 5});
     obj.layout17:setName("layout17");
 
-    obj.label11 = GUI.fromHandle(_obj_newObject("label"));
-    obj.label11:setParent(obj.layout17);
-    obj.label11:setAlign("left");
-    obj.label11:setText("Unidade");
-    obj.label11:setMargins({left = 5});
-    obj.label11:setName("label11");
+    obj.label17 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label17:setParent(obj.layout17);
+    obj.label17:setAlign("left");
+    obj.label17:setText("Unidade");
+    obj.label17:setMargins({left = 5});
+    obj.label17:setName("label17");
 
     obj.edit3 = GUI.fromHandle(_obj_newObject("edit"));
     obj.edit3:setParent(obj.layout17);
@@ -1042,13 +1117,13 @@ local function constructNew_Grimorio()
     obj.layout18:setMargins({top = 5});
     obj.layout18:setName("layout18");
 
-    obj.label12 = GUI.fromHandle(_obj_newObject("label"));
-    obj.label12:setParent(obj.layout18);
-    obj.label12:setAlign("left");
-    obj.label12:setHeight(55);
-    obj.label12:setText("Ultra Secreto");
-    obj.label12:setMargins({left = 5});
-    obj.label12:setName("label12");
+    obj.label18 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label18:setParent(obj.layout18);
+    obj.label18:setAlign("left");
+    obj.label18:setHeight(55);
+    obj.label18:setText("Ultra Secreto");
+    obj.label18:setMargins({left = 5});
+    obj.label18:setName("label18");
 
     obj.textEditor1 = GUI.fromHandle(_obj_newObject("textEditor"));
     obj.textEditor1:setParent(obj.layout18);
@@ -1121,12 +1196,12 @@ local function constructNew_Grimorio()
     obj.btnRevelar:setMargins({left=10});
     obj.btnRevelar:setName("btnRevelar");
 
-    obj.label13 = GUI.fromHandle(_obj_newObject("label"));
-    obj.label13:setParent(obj.rectangle1);
-    obj.label13:setAlign("bottom");
-    obj.label13:setText("Descrição");
-    obj.label13:setMargins({left = 5});
-    obj.label13:setName("label13");
+    obj.label19 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label19:setParent(obj.rectangle1);
+    obj.label19:setAlign("bottom");
+    obj.label19:setText("Descrição");
+    obj.label19:setMargins({left = 5});
+    obj.label19:setName("label19");
 
     obj.textEditor2 = GUI.fromHandle(_obj_newObject("textEditor"));
     obj.textEditor2:setParent(obj.rectangle1);
@@ -1136,29 +1211,29 @@ local function constructNew_Grimorio()
     obj.textEditor2:setMargins({top = 5});
     obj.textEditor2:setName("textEditor2");
 
-    obj.flowLayout6 = GUI.fromHandle(_obj_newObject("flowLayout"));
-    obj.flowLayout6:setParent(obj.flowLayout1);
-    obj.flowLayout6:setAlign("client");
-    obj.flowLayout6:setWidth(900);
-    obj.flowLayout6:setMargins({left = 5, right = 5, top = 5, bottom = 5});
-    obj.flowLayout6:setAutoHeight(true);
-    obj.flowLayout6:setName("flowLayout6");
+    obj.flowLayout9 = GUI.fromHandle(_obj_newObject("flowLayout"));
+    obj.flowLayout9:setParent(obj.flowLayout1);
+    obj.flowLayout9:setAlign("client");
+    obj.flowLayout9:setWidth(900);
+    obj.flowLayout9:setMargins({left = 5, right = 5, top = 5, bottom = 5});
+    obj.flowLayout9:setAutoHeight(true);
+    obj.flowLayout9:setName("flowLayout9");
 
     obj.flowPart1 = GUI.fromHandle(_obj_newObject("flowPart"));
-    obj.flowPart1:setParent(obj.flowLayout6);
+    obj.flowPart1:setParent(obj.flowLayout9);
     obj.flowPart1:setMinWidth(500);
     obj.flowPart1:setMaxWidth(900);
     obj.flowPart1:setHeight(30);
     obj.flowPart1:setName("flowPart1");
 
-    obj.label14 = GUI.fromHandle(_obj_newObject("label"));
-    obj.label14:setParent(obj.flowPart1);
-    obj.label14:setAlign("left");
-    obj.label14:setText("Grimório");
-    obj.label14:setWidth(100);
-    obj.label14:setHeight(25);
-    lfm_setPropAsString(obj.label14, "fontStyle",  "bold");
-    obj.label14:setName("label14");
+    obj.label20 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label20:setParent(obj.flowPart1);
+    obj.label20:setAlign("left");
+    obj.label20:setText("Grimório");
+    obj.label20:setWidth(100);
+    obj.label20:setHeight(25);
+    lfm_setPropAsString(obj.label20, "fontStyle",  "bold");
+    obj.label20:setName("label20");
 
     obj.button3 = GUI.fromHandle(_obj_newObject("button"));
     obj.button3:setParent(obj.flowPart1);
@@ -1180,15 +1255,15 @@ local function constructNew_Grimorio()
     obj.button4:setMargins({left = 10});
     obj.button4:setName("button4");
 
-    obj.flowLineBreak1 = GUI.fromHandle(_obj_newObject("flowLineBreak"));
-    obj.flowLineBreak1:setParent(obj.flowLayout6);
-    obj.flowLineBreak1:setName("flowLineBreak1");
+    obj.flowLineBreak3 = GUI.fromHandle(_obj_newObject("flowLineBreak"));
+    obj.flowLineBreak3:setParent(obj.flowLayout9);
+    obj.flowLineBreak3:setName("flowLineBreak3");
 
     obj.flowPart2 = GUI.fromHandle(_obj_newObject("flowPart"));
-    obj.flowPart2:setParent(obj.flowLayout6);
+    obj.flowPart2:setParent(obj.flowLayout9);
     obj.flowPart2:setMinWidth(500);
     obj.flowPart2:setMaxWidth(900);
-    obj.flowPart2:setHeight(755);
+    obj.flowPart2:setHeight(810);
     obj.flowPart2:setName("flowPart2");
 
     obj.rectangle2 = GUI.fromHandle(_obj_newObject("rectangle"));
@@ -1221,7 +1296,7 @@ local function constructNew_Grimorio()
     obj.rectangle3:setStrokeColor("black");
     obj.rectangle3:setStrokeSize(2);
     obj.rectangle3:setAlign("top");
-    obj.rectangle3:setHeight(235);
+    obj.rectangle3:setHeight(275);
     obj.rectangle3:setMargins({top = 10, right=5});
     obj.rectangle3:setName("rectangle3");
 
@@ -1290,6 +1365,7 @@ local function constructNew_Grimorio()
                                         function (confirmado)
                                             if confirmado then
                                                 sheet.vigor = sheet.vigorMax
+                                                popupShow("Vigor restaurado.")
                                             end
                                         end)
         end, obj);
@@ -1345,39 +1421,38 @@ local function constructNew_Grimorio()
     obj._e_event12 = obj.btn1:addEventListener("onClick",
         function (_)
             btnNum = 1
-                                    removeSig(btnNum)
+                            removeSig(btnNum)
         end, obj);
 
     obj._e_event13 = obj.btn2:addEventListener("onClick",
         function (_)
             btnNum = 2
-                                    removeSig(btnNum)
+                            removeSig(btnNum)
         end, obj);
 
     obj._e_event14 = obj.btn3:addEventListener("onClick",
         function (_)
             btnNum = 3
-                                    removeSig(btnNum)
+                            removeSig(btnNum)
         end, obj);
 
     obj._e_event15 = obj.btn4:addEventListener("onClick",
         function (_)
             btnNum = 4
-                                    removeSig(btnNum)
+                            removeSig(btnNum)
         end, obj);
 
     obj._e_event16 = obj.btn5:addEventListener("onClick",
         function (_)
             btnNum = 5
-                                    removeSig(btnNum)
+                            removeSig(btnNum)
         end, obj);
 
     obj._e_event17 = obj.button1:addEventListener("onClick",
         function (_)
-            btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
-                            sequencia = ""
+            sequencia = ""
                             for i=1, 5, 1 do
-                                sequencia = sequencia .. btns[i].text
+                                sequencia = sequencia .. getBtn(i)
                             end
                             if sequencia == "" then
                                 popupShow("Nenhum Signo na magia.")
@@ -1396,6 +1471,7 @@ local function constructNew_Grimorio()
                                     node = self.grimorio:append()
                                     node.sequencia = sequencia
                                     self.grimorio:sort()
+                                    popupShow("Mágica adicionada no Grimório.")
                                 else
                                     popupShow("Mágica já escrita no Grimório.")
                                 end
@@ -1521,95 +1597,106 @@ local function constructNew_Grimorio()
         end;
 
         if self.VigorBar ~= nil then self.VigorBar:destroy(); self.VigorBar = nil; end;
-        if self.Functions_Edit ~= nil then self.Functions_Edit:destroy(); self.Functions_Edit = nil; end;
-        if self.button4 ~= nil then self.button4:destroy(); self.button4 = nil; end;
         if self.label14 ~= nil then self.label14:destroy(); self.label14 = nil; end;
-        if self.button3 ~= nil then self.button3:destroy(); self.button3 = nil; end;
-        if self.label1 ~= nil then self.label1:destroy(); self.label1 = nil; end;
-        if self.layout4 ~= nil then self.layout4:destroy(); self.layout4 = nil; end;
         if self.layout15 ~= nil then self.layout15:destroy(); self.layout15 = nil; end;
         if self.layout10 ~= nil then self.layout10:destroy(); self.layout10 = nil; end;
-        if self.Functions_Roll ~= nil then self.Functions_Roll:destroy(); self.Functions_Roll = nil; end;
         if self.flowLayout3 ~= nil then self.flowLayout3:destroy(); self.flowLayout3 = nil; end;
-        if self.flowLayout4 ~= nil then self.flowLayout4:destroy(); self.flowLayout4 = nil; end;
         if self.btnRevelar ~= nil then self.btnRevelar:destroy(); self.btnRevelar = nil; end;
-        if self.layout5 ~= nil then self.layout5:destroy(); self.layout5 = nil; end;
-        if self.popupMsg ~= nil then self.popupMsg:destroy(); self.popupMsg = nil; end;
         if self.layout17 ~= nil then self.layout17:destroy(); self.layout17 = nil; end;
-        if self.layout20 ~= nil then self.layout20:destroy(); self.layout20 = nil; end;
         if self.flowLayout1 ~= nil then self.flowLayout1:destroy(); self.flowLayout1 = nil; end;
-        if self.layout18 ~= nil then self.layout18:destroy(); self.layout18 = nil; end;
         if self.btn2 ~= nil then self.btn2:destroy(); self.btn2 = nil; end;
         if self.flowPart1 ~= nil then self.flowPart1:destroy(); self.flowPart1 = nil; end;
-        if self.rectangle2 ~= nil then self.rectangle2:destroy(); self.rectangle2 = nil; end;
-        if self.rectangle3 ~= nil then self.rectangle3:destroy(); self.rectangle3 = nil; end;
-        if self.btnEscudo ~= nil then self.btnEscudo:destroy(); self.btnEscudo = nil; end;
         if self.flowLayout5 ~= nil then self.flowLayout5:destroy(); self.flowLayout5 = nil; end;
         if self.button2 ~= nil then self.button2:destroy(); self.button2 = nil; end;
         if self.flowPart2 ~= nil then self.flowPart2:destroy(); self.flowPart2 = nil; end;
         if self.layout13 ~= nil then self.layout13:destroy(); self.layout13 = nil; end;
-        if self.flowLayout2 ~= nil then self.flowLayout2:destroy(); self.flowLayout2 = nil; end;
         if self.layout3 ~= nil then self.layout3:destroy(); self.layout3 = nil; end;
-        if self.btnAName8 ~= nil then self.btnAName8:destroy(); self.btnAName8 = nil; end;
-        if self.popupText ~= nil then self.popupText:destroy(); self.popupText = nil; end;
+        if self.label13 ~= nil then self.label13:destroy(); self.label13 = nil; end;
         if self.layout8 ~= nil then self.layout8:destroy(); self.layout8 = nil; end;
+        if self.cbModoUsecreto ~= nil then self.cbModoUsecreto:destroy(); self.cbModoUsecreto = nil; end;
         if self.layout1 ~= nil then self.layout1:destroy(); self.layout1 = nil; end;
         if self.btnAName7 ~= nil then self.btnAName7:destroy(); self.btnAName7 = nil; end;
         if self.rectangle1 ~= nil then self.rectangle1:destroy(); self.rectangle1 = nil; end;
-        if self.layout2 ~= nil then self.layout2:destroy(); self.layout2 = nil; end;
-        if self.label10 ~= nil then self.label10:destroy(); self.label10 = nil; end;
-        if self.cbModoUsecreto ~= nil then self.cbModoUsecreto:destroy(); self.cbModoUsecreto = nil; end;
-        if self.label13 ~= nil then self.label13:destroy(); self.label13 = nil; end;
         if self.grimorio ~= nil then self.grimorio:destroy(); self.grimorio = nil; end;
         if self.VigorBtn ~= nil then self.VigorBtn:destroy(); self.VigorBtn = nil; end;
         if self.layout12 ~= nil then self.layout12:destroy(); self.layout12 = nil; end;
-        if self.btn4 ~= nil then self.btn4:destroy(); self.btn4 = nil; end;
-        if self.adminTab ~= nil then self.adminTab:destroy(); self.adminTab = nil; end;
-        if self.btnAName6 ~= nil then self.btnAName6:destroy(); self.btnAName6 = nil; end;
         if self.button1 ~= nil then self.button1:destroy(); self.button1 = nil; end;
         if self.label8 ~= nil then self.label8:destroy(); self.label8 = nil; end;
-        if self.layout11 ~= nil then self.layout11:destroy(); self.layout11 = nil; end;
-        if self.label11 ~= nil then self.label11:destroy(); self.label11 = nil; end;
-        if self.label3 ~= nil then self.label3:destroy(); self.label3 = nil; end;
         if self.label4 ~= nil then self.label4:destroy(); self.label4 = nil; end;
         if self.label6 ~= nil then self.label6:destroy(); self.label6 = nil; end;
         if self.layout9 ~= nil then self.layout9:destroy(); self.layout9 = nil; end;
-        if self.textEditor1 ~= nil then self.textEditor1:destroy(); self.textEditor1 = nil; end;
-        if self.flowLayout6 ~= nil then self.flowLayout6:destroy(); self.flowLayout6 = nil; end;
         if self.btnAName1 ~= nil then self.btnAName1:destroy(); self.btnAName1 = nil; end;
-        if self.btn1 ~= nil then self.btn1:destroy(); self.btn1 = nil; end;
-        if self.escudoAp ~= nil then self.escudoAp:destroy(); self.escudoAp = nil; end;
-        if self.btnAName4 ~= nil then self.btnAName4:destroy(); self.btnAName4 = nil; end;
         if self.btnRolar ~= nil then self.btnRolar:destroy(); self.btnRolar = nil; end;
+        if self.btnAName4 ~= nil then self.btnAName4:destroy(); self.btnAName4 = nil; end;
         if self.textEditor2 ~= nil then self.textEditor2:destroy(); self.textEditor2 = nil; end;
+        if self.label15 ~= nil then self.label15:destroy(); self.label15 = nil; end;
         if self.body ~= nil then self.body:destroy(); self.body = nil; end;
-        if self.label7 ~= nil then self.label7:destroy(); self.label7 = nil; end;
-        if self.btnAName2 ~= nil then self.btnAName2:destroy(); self.btnAName2 = nil; end;
-        if self.label2 ~= nil then self.label2:destroy(); self.label2 = nil; end;
-        if self.edit3 ~= nil then self.edit3:destroy(); self.edit3 = nil; end;
         if self.scrollBox2 ~= nil then self.scrollBox2:destroy(); self.scrollBox2 = nil; end;
-        if self.layout6 ~= nil then self.layout6:destroy(); self.layout6 = nil; end;
-        if self.label5 ~= nil then self.label5:destroy(); self.label5 = nil; end;
         if self.label12 ~= nil then self.label12:destroy(); self.label12 = nil; end;
         if self.magicDesc ~= nil then self.magicDesc:destroy(); self.magicDesc = nil; end;
         if self.btn3 ~= nil then self.btn3:destroy(); self.btn3 = nil; end;
+        if self.flowLayout7 ~= nil then self.flowLayout7:destroy(); self.flowLayout7 = nil; end;
+        if self.grimorioInv ~= nil then self.grimorioInv:destroy(); self.grimorioInv = nil; end;
+        if self.btnAName3 ~= nil then self.btnAName3:destroy(); self.btnAName3 = nil; end;
+        if self.label16 ~= nil then self.label16:destroy(); self.label16 = nil; end;
+        if self.flowLayout9 ~= nil then self.flowLayout9:destroy(); self.flowLayout9 = nil; end;
+        if self.layout19 ~= nil then self.layout19:destroy(); self.layout19 = nil; end;
+        if self.edit2 ~= nil then self.edit2:destroy(); self.edit2 = nil; end;
+        if self.label9 ~= nil then self.label9:destroy(); self.label9 = nil; end;
+        if self.edit1 ~= nil then self.edit1:destroy(); self.edit1 = nil; end;
+        if self.btnAName5 ~= nil then self.btnAName5:destroy(); self.btnAName5 = nil; end;
+        if self.flowLineBreak1 ~= nil then self.flowLineBreak1:destroy(); self.flowLineBreak1 = nil; end;
+        if self.Functions_Edit ~= nil then self.Functions_Edit:destroy(); self.Functions_Edit = nil; end;
+        if self.button4 ~= nil then self.button4:destroy(); self.button4 = nil; end;
+        if self.button3 ~= nil then self.button3:destroy(); self.button3 = nil; end;
+        if self.label1 ~= nil then self.label1:destroy(); self.label1 = nil; end;
+        if self.layout4 ~= nil then self.layout4:destroy(); self.layout4 = nil; end;
+        if self.flowLineBreak3 ~= nil then self.flowLineBreak3:destroy(); self.flowLineBreak3 = nil; end;
+        if self.Functions_Roll ~= nil then self.Functions_Roll:destroy(); self.Functions_Roll = nil; end;
+        if self.label17 ~= nil then self.label17:destroy(); self.label17 = nil; end;
+        if self.flowLayout4 ~= nil then self.flowLayout4:destroy(); self.flowLayout4 = nil; end;
+        if self.layout5 ~= nil then self.layout5:destroy(); self.layout5 = nil; end;
+        if self.popupMsg ~= nil then self.popupMsg:destroy(); self.popupMsg = nil; end;
+        if self.layout20 ~= nil then self.layout20:destroy(); self.layout20 = nil; end;
+        if self.layout18 ~= nil then self.layout18:destroy(); self.layout18 = nil; end;
+        if self.rectangle2 ~= nil then self.rectangle2:destroy(); self.rectangle2 = nil; end;
+        if self.rectangle3 ~= nil then self.rectangle3:destroy(); self.rectangle3 = nil; end;
+        if self.btnEscudo ~= nil then self.btnEscudo:destroy(); self.btnEscudo = nil; end;
+        if self.flowLayout2 ~= nil then self.flowLayout2:destroy(); self.flowLayout2 = nil; end;
+        if self.btnAName8 ~= nil then self.btnAName8:destroy(); self.btnAName8 = nil; end;
+        if self.popupText ~= nil then self.popupText:destroy(); self.popupText = nil; end;
+        if self.label10 ~= nil then self.label10:destroy(); self.label10 = nil; end;
+        if self.label19 ~= nil then self.label19:destroy(); self.label19 = nil; end;
+        if self.layout2 ~= nil then self.layout2:destroy(); self.layout2 = nil; end;
+        if self.btn4 ~= nil then self.btn4:destroy(); self.btn4 = nil; end;
+        if self.adminTab ~= nil then self.adminTab:destroy(); self.adminTab = nil; end;
+        if self.btnAName6 ~= nil then self.btnAName6:destroy(); self.btnAName6 = nil; end;
+        if self.layout11 ~= nil then self.layout11:destroy(); self.layout11 = nil; end;
+        if self.label11 ~= nil then self.label11:destroy(); self.label11 = nil; end;
+        if self.label3 ~= nil then self.label3:destroy(); self.label3 = nil; end;
+        if self.label20 ~= nil then self.label20:destroy(); self.label20 = nil; end;
+        if self.textEditor1 ~= nil then self.textEditor1:destroy(); self.textEditor1 = nil; end;
+        if self.flowLayout6 ~= nil then self.flowLayout6:destroy(); self.flowLayout6 = nil; end;
+        if self.btn1 ~= nil then self.btn1:destroy(); self.btn1 = nil; end;
+        if self.escudoAp ~= nil then self.escudoAp:destroy(); self.escudoAp = nil; end;
+        if self.label7 ~= nil then self.label7:destroy(); self.label7 = nil; end;
+        if self.label18 ~= nil then self.label18:destroy(); self.label18 = nil; end;
+        if self.btnAName2 ~= nil then self.btnAName2:destroy(); self.btnAName2 = nil; end;
+        if self.label2 ~= nil then self.label2:destroy(); self.label2 = nil; end;
+        if self.edit3 ~= nil then self.edit3:destroy(); self.edit3 = nil; end;
+        if self.layout6 ~= nil then self.layout6:destroy(); self.layout6 = nil; end;
+        if self.label5 ~= nil then self.label5:destroy(); self.label5 = nil; end;
         if self.layout22 ~= nil then self.layout22:destroy(); self.layout22 = nil; end;
         if self.layout14 ~= nil then self.layout14:destroy(); self.layout14 = nil; end;
         if self.cbModosecreto ~= nil then self.cbModosecreto:destroy(); self.cbModosecreto = nil; end;
         if self.layout16 ~= nil then self.layout16:destroy(); self.layout16 = nil; end;
         if self.layout21 ~= nil then self.layout21:destroy(); self.layout21 = nil; end;
-        if self.grimorioInv ~= nil then self.grimorioInv:destroy(); self.grimorioInv = nil; end;
-        if self.btnAName3 ~= nil then self.btnAName3:destroy(); self.btnAName3 = nil; end;
         if self.btn5 ~= nil then self.btn5:destroy(); self.btn5 = nil; end;
         if self.Functions ~= nil then self.Functions:destroy(); self.Functions = nil; end;
-        if self.edit2 ~= nil then self.edit2:destroy(); self.edit2 = nil; end;
-        if self.label9 ~= nil then self.label9:destroy(); self.label9 = nil; end;
-        if self.layout19 ~= nil then self.layout19:destroy(); self.layout19 = nil; end;
+        if self.flowLineBreak2 ~= nil then self.flowLineBreak2:destroy(); self.flowLineBreak2 = nil; end;
         if self.scrollBox1 ~= nil then self.scrollBox1:destroy(); self.scrollBox1 = nil; end;
-        if self.edit1 ~= nil then self.edit1:destroy(); self.edit1 = nil; end;
         if self.layout7 ~= nil then self.layout7:destroy(); self.layout7 = nil; end;
-        if self.btnAName5 ~= nil then self.btnAName5:destroy(); self.btnAName5 = nil; end;
-        if self.flowLineBreak1 ~= nil then self.flowLineBreak1:destroy(); self.flowLineBreak1 = nil; end;
+        if self.flowLayout8 ~= nil then self.flowLayout8:destroy(); self.flowLayout8 = nil; end;
         self:_oldLFMDestroy();
     end;
 

@@ -7,12 +7,41 @@
         function orderSig(a, b)
             return icons[b] > icons[a]
         end
+        function getBtn(num)
+            if num == 1 then return sheet.btn1 or ""
+            elseif num == 2 then return sheet.btn2 or ""
+            elseif num == 3 then return sheet.btn3 or ""
+            elseif num == 4 then return sheet.btn4 or ""
+            elseif num == 5 then return sheet.btn5 or ""
+            else return ""
+            end
+        end
+        function setBtn(num, text)
+            if num == 1 then sheet.btn1 = text
+            elseif num == 2 then sheet.btn2 = text
+            elseif num == 3 then sheet.btn3 = text
+            elseif num == 4 then sheet.btn4 = text
+            elseif num == 5 then sheet.btn5 = text
+            else return ""
+            end
+        end
+        function createSequencia()
+            sequencia = {}
+            -- Criação da sequencia
+            for i=1, 5, 1 do
+                if getBtn(i) == "" then
+                    break
+                else
+                    table.insert(sequencia, getBtn(i))
+                end
+            end
+            return sequencia
+        end
         function searchList(addMode)
             magics = NDB.getChildNodes(sheet.magics)
             magicsInv = NDB.getChildNodes(sheet.magicsInv)
-            btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
             -- Nenhun Signo selecionado
-            if btns[1].src == "" then
+            if getBtn(1) == "" then
                 -- Passa todos as magias da lista invisivel para o grimorio
                 for i=1, #magicsInv, 1 do
                     nodo = self.grimorio:append()
@@ -24,15 +53,7 @@
                     NDB.deleteNode(magicsInv[i])
                 end
             else
-                sequencia = {}
-                -- Criação da sequencia
-                for i=1, #btns, 1 do
-                    if btns[i].text == "" then
-                        break
-                    else
-                        table.insert(sequencia, btns[i].text)
-                    end
-                end
+                sequencia = createSequencia()
                 -- Ordenar e juntar
                 table.sort(sequencia, orderSig)
                 sequencia = table.concat(sequencia, "")
@@ -66,47 +87,37 @@
             self.grimorio:sort()
         end
         function addSig(sig)
-            btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
-            sequencia = {sig}
             -- É o primeiro
-            if btns[1] == "" then
-                btns[1].text = sig
+            if getBtn(1) == "" then
+                setBtn(1, sig)
+                searchList(true)
             else
-                -- Cria sequencia
-                for i=1, #btns, 1 do
-                    if btns[i].text == "" then
-                        break
-                    else
-                        table.insert(sequencia, btns[i].text)
-                    end
-                end
+                sequencia = createSequencia()
+                table.insert(sequencia, sig)
                 table.sort(sequencia, orderSig)
                 -- Integra imagens nos botões corretos
                 if 5 >= #sequencia then
                     for i=1, #sequencia, 1 do
-                        btns[i].text = sequencia[i]
+                        setBtn(i, sequencia[i])
                     end
+                    searchList(true)
                 end
-            end
-            if 6 > #sequencia then 
-                searchList(true)
             end
         end
         function removeSig(btnNum)
-            btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
-            btns[btnNum].text = ""
+            setBtn(btnNum, "")
             sequencia = {}
             -- Criação da sequencia
-            for i=1, #btns, 1 do
-                if btns[i].text ~= "" then
-                    table.insert(sequencia, btns[i].text)
+            for i=1, 5, 1 do
+                if getBtn(i) ~= "" then
+                    table.insert(sequencia, getBtn(i))
                 end
             end
             table.sort(sequencia, orderSig)
             -- Integra emojis nos botões corretos
             if 5 >= #sequencia then
                 for i=1, 5, 1 do
-                    btns[i].text = sequencia[i]
+                    setBtn(i, sequencia[i])
                 end
             end
             searchList(false)
@@ -141,8 +152,7 @@
         function popupShow(text)
             self.popupText.text = text
             self.popupMsg:show()
-        end
-        
+        end     
     </script>
     <template name="select_magia">
         <!-- 
@@ -169,30 +179,41 @@
         -->
     </template>
     <template name="magic_display">
-        <flowLayout align="top" height="50" horzAlign="center">
-            <!-- 
-                for i=1, 5, 1 do
-                    btn = "btn" .. i
-                    num = i
-            -->
-                <button align="left" text="" width="50" height="50" name="$(btn)" margins="left=5" fontSize="20">
-                    <event name="onCLick">
-                        btnNum = $(num)
-                        removeSig(btnNum)
-                    </event>
-                </button>
-            <!-- 
-                end
-            -->
+        <flowLayout align="top" height="165" horzAlign="center" lineSpacing="5" margins="bottom=5">
+            <flowLayout width="850" horzAlign="center">
+                <display_button number="1"/>
+            </flowLayout>
+            <flowLineBreak/>
+            <flowLayout width="850" horzAlign="center">
+                <display_button number="2"/>
+                <label width="50" text=""/>
+                <display_button number="3"/>
+            </flowLayout>
+            <flowLineBreak/>
+            <flowLayout width="850" horzAlign="center">
+                <display_button number="4"/>
+                <display_button number="5"/>
+            </flowLayout>
         </flowLayout>
     </template>
+    <template name="display_button">
+        <!-- 
+            btn = "btn" .. number
+         -->
+        <button width="50" height="50" name="$(btn)" margins="left=5" fontSize="20">
+            <label align="client" field="$(btn)" fontSize="30" horzTextAlign="center"/>
+            <event name="onCLick">
+                btnNum = $(number)
+                removeSig(btnNum)
+            </event>
+        </button>
+    </template>
     <template name="button_addMagic">
-        <button width="150" text="Adicionar Magia" margins="top=10">
+        <button width="150" text="Adicionar Magia">
             <event name="onClick">
-                btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
                 sequencia = ""
                 for i=1, 5, 1 do
-                    sequencia = sequencia .. btns[i].text
+                    sequencia = sequencia .. getBtn(i)
                 end
                 if sequencia == "" then
                     popupShow("Nenhum Signo na magia.")
@@ -211,6 +232,7 @@
                         node = self.grimorio:append()
                         node.sequencia = sequencia
                         self.grimorio:sort()
+                        popupShow("Mágica adicionada no Grimório.")
                     else
                         popupShow("Mágica já escrita no Grimório.")
                     end
@@ -219,7 +241,7 @@
         </button>
     </template>
     <template name="button_Level">
-        <button width="150" text="Ajustar Level de magia" margins="top=10, left=10">
+        <button width="150" text="Ajustar Level de magia" margins="left=10">
             <event name="onClick">
                 Dialogs.choose("Escolha o Signo.", {"🔥 - Calor","⚡ - Disrupção","🎲 - Engano","🌓 - Equilíbrio","👊 - Força","💫 - Imaterial","🎱 - Material","☔ - Proteção"},
                     function(selected, selectedIndex, selectedText)
@@ -264,7 +286,7 @@
     <scrollBox align="client" margins="{left=5, top=5, bottom=5, right=5}" name="body">
         <label align="top" width="0" text=""/>
         <flowLayout align="top" orientation="horizontal" horzAlign="justify" autoHeight="true">
-            <layout width="800" height="800" margins="{left = 5, right = 5, top = 5, bottom = 5}">
+            <layout width="800" height="840" margins="{left = 5, right = 5, top = 5, bottom = 5}">
                 <!-- Escudo -->
                 <flowLayout align="top" width="150" horzAlign="center" autoHeight="true">
                     <layout width="150" height="150">
@@ -325,17 +347,18 @@
                             function (confirmado)
                                 if confirmado then
                                     sheet.vigor = sheet.vigorMax
+                                    popupShow("Vigor restaurado.")
                                 end
                             end)
                         </event>
                     </button>
                 </flowLayout>
                 <!-- magia -->
-                <layout align="top" height="300" margins="{left = 5, right = 5, top = 5, bottom = 5}">
+                <layout align="top" height="295" margins="{left = 5, right = 5, top = 5, bottom = 5}">
                     <flowLayout align="top" width="850" height="85" horzAlign="center">
                         <select_magia/>
                     </flowLayout>
-                    <layout align="top" width="850" height="340" margins="top=10">
+                    <layout align="top" width="850" height="200" margins="top=10">
                         <magic_display/>
                         <flowLayout align="top" width="850" height="35" margins="{left = 5, right = 5, top = 5, bottom = 5}" horzAlign="center" name="adminTab">
                             <button_addMagic/>
@@ -410,7 +433,7 @@
                     </button>
                 </flowPart>
                 <flowLineBreak/>
-                <flowPart minWidth="500" maxWidth="900" height="755">
+                <flowPart minWidth="500" maxWidth="900" height="810">
                     <!-- lista -->
                     <rectangle color="#505050" strokeColor="black" strokeSize="2" align="top" height="500" margins="{top = 10, right=5}">
                         <scrollBox align="client" margins="{left=5, top=5, right=5, bottom=5}">
@@ -428,7 +451,7 @@
                         </scrollBox>
                     </rectangle>
                     <!-- Lista invisivel -->
-                    <rectangle color="#505050" strokeColor="black" strokeSize="2" align="top" height="235" margins="{top = 10, right=5}">
+                    <rectangle color="#505050" strokeColor="black" strokeSize="2" align="top" height="275" margins="{top = 10, right=5}">
                         <scrollBox align="client" margins="{left=5, top=5, right=5, bottom=5}">
                             <recordList name="grimorioInv" field="magicsInv" templateForm="ItemGrimorio" align="client">
                                 <event name="onSelect">

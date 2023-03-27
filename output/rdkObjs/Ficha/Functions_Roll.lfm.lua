@@ -200,7 +200,7 @@ local function constructNew_Functions_Roll()
             if node ~= nil then
                 sequencia = splitEmojis(node.sequencia)
             else
-                showMessage("Nenhuma magia preparada.")
+                popupShow("Nenhuma magia preparada.")
                 return
             end
             qnt = #sequencia
@@ -217,6 +217,7 @@ local function constructNew_Functions_Roll()
             else
                 mesaDoPersonagem.chat:enviarMensagem(msg)
             end
+            popupShow("Rolagem realizada.")
             afterRoll(rolagem)
         end
         function generateRoll()
@@ -239,27 +240,28 @@ local function constructNew_Functions_Roll()
                 msg, rolagem = generateMsg(strRolagem, node)
                 node.rolagemUltraSecreta = msg
                 afterRoll(rolagem)
+                popupShow("Rolagem Ultra Secreta realizada.")
                 return
             end
             if node.modoSecreto == false or node.modoSecreto == nil then
                 node.rolagem = strRolagem
-                revealResult(strRolagem)
+                revealResult()
             else
                 node.rolagem = strRolagem
                 mesaDoPersonagem = Firecast.getMesaDe(sheet)
                 mesaDoPersonagem.chat:enviarMensagem("Magia preparada: " .. node.sequencia)
-                showMessage("Rolagem preparada.")
+                popupShow("Rolagem preparada.")
             end
         end
         function trySpell()
             if hasPreparedMagic() ~= nil then
-                showMessage("Você já possui uma magia preparada, use-a antes.")
+                popupShow("Você já possui uma magia preparada, use-a antes.")
                 return
             end
             sequencia = getSequencia()
             qnt = #sequencia
             if hasVigor(qnt) == false then
-                showMessage("Vigor não suficiente para executar a magia.")
+                popupShow("Vigor não suficiente para executar a magia.")
                 return
             end
             if qnt == 1 and getLevel(icons[sequencia[1]]) == 0 then
@@ -267,7 +269,7 @@ local function constructNew_Functions_Roll()
                 return
             end
             if hasLevel() == false then
-                showMessage("Você não possui level nos Signos necessário para executar a magia.")
+                popupShow("Você não possui level nos Signos necessário para executar a magia.")
                 return
             end
             roll()

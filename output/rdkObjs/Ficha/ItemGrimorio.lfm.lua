@@ -129,6 +129,7 @@ local function constructNew_ItemGrimorio()
     obj._e_event2 = obj.button1:addEventListener("onClick",
         function (_)
             System.setClipboardText(tableToStr(sheet))
+                        popupShow("Mágica copiada.")
         end, obj);
 
     obj._e_event3 = obj.button2:addEventListener("onClick",

@@ -28,6 +28,7 @@
     <button align="left" text="Copiar Sequência" width="150" margins="left=10">
         <event name="onClick">
             System.setClipboardText(tableToStr(sheet))
+            popupShow("Mágica copiada.")
         </event>
     </button>
     <button align="left" text="Deletar Item" width="150" margins="left=10">

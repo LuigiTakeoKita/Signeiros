@@ -609,7 +609,7 @@ local function constructNew_Ficha_Signeiros()
             if node ~= nil then
                 sequencia = splitEmojis(node.sequencia)
             else
-                showMessage("Nenhuma magia preparada.")
+                popupShow("Nenhuma magia preparada.")
                 return
             end
             qnt = #sequencia
@@ -626,6 +626,7 @@ local function constructNew_Ficha_Signeiros()
             else
                 mesaDoPersonagem.chat:enviarMensagem(msg)
             end
+            popupShow("Rolagem realizada.")
             afterRoll(rolagem)
         end
         function generateRoll()
@@ -648,27 +649,28 @@ local function constructNew_Ficha_Signeiros()
                 msg, rolagem = generateMsg(strRolagem, node)
                 node.rolagemUltraSecreta = msg
                 afterRoll(rolagem)
+                popupShow("Rolagem Ultra Secreta realizada.")
                 return
             end
             if node.modoSecreto == false or node.modoSecreto == nil then
                 node.rolagem = strRolagem
-                revealResult(strRolagem)
+                revealResult()
             else
                 node.rolagem = strRolagem
                 mesaDoPersonagem = Firecast.getMesaDe(sheet)
                 mesaDoPersonagem.chat:enviarMensagem("Magia preparada: " .. node.sequencia)
-                showMessage("Rolagem preparada.")
+                popupShow("Rolagem preparada.")
             end
         end
         function trySpell()
             if hasPreparedMagic() ~= nil then
-                showMessage("Você já possui uma magia preparada, use-a antes.")
+                popupShow("Você já possui uma magia preparada, use-a antes.")
                 return
             end
             sequencia = getSequencia()
             qnt = #sequencia
             if hasVigor(qnt) == false then
-                showMessage("Vigor não suficiente para executar a magia.")
+                popupShow("Vigor não suficiente para executar a magia.")
                 return
             end
             if qnt == 1 and getLevel(icons[sequencia[1]]) == 0 then
@@ -676,7 +678,7 @@ local function constructNew_Ficha_Signeiros()
                 return
             end
             if hasLevel() == false then
-                showMessage("Você não possui level nos Signos necessário para executar a magia.")
+                popupShow("Você não possui level nos Signos necessário para executar a magia.")
                 return
             end
             roll()
@@ -745,12 +747,41 @@ local function constructNew_Ficha_Signeiros()
         function orderSig(a, b)
             return icons[b] > icons[a]
         end
+        function getBtn(num)
+            if num == 1 then return sheet.btn1 or ""
+            elseif num == 2 then return sheet.btn2 or ""
+            elseif num == 3 then return sheet.btn3 or ""
+            elseif num == 4 then return sheet.btn4 or ""
+            elseif num == 5 then return sheet.btn5 or ""
+            else return ""
+            end
+        end
+        function setBtn(num, text)
+            if num == 1 then sheet.btn1 = text
+            elseif num == 2 then sheet.btn2 = text
+            elseif num == 3 then sheet.btn3 = text
+            elseif num == 4 then sheet.btn4 = text
+            elseif num == 5 then sheet.btn5 = text
+            else return ""
+            end
+        end
+        function createSequencia()
+            sequencia = {}
+            -- Criação da sequencia
+            for i=1, 5, 1 do
+                if getBtn(i) == "" then
+                    break
+                else
+                    table.insert(sequencia, getBtn(i))
+                end
+            end
+            return sequencia
+        end
         function searchList(addMode)
             magics = NDB.getChildNodes(sheet.magics)
             magicsInv = NDB.getChildNodes(sheet.magicsInv)
-            btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
             -- Nenhun Signo selecionado
-            if btns[1].src == "" then
+            if getBtn(1) == "" then
                 -- Passa todos as magias da lista invisivel para o grimorio
                 for i=1, #magicsInv, 1 do
                     nodo = self.grimorio:append()
@@ -762,15 +793,7 @@ local function constructNew_Ficha_Signeiros()
                     NDB.deleteNode(magicsInv[i])
                 end
             else
-                sequencia = {}
-                -- Criação da sequencia
-                for i=1, #btns, 1 do
-                    if btns[i].text == "" then
-                        break
-                    else
-                        table.insert(sequencia, btns[i].text)
-                    end
-                end
+                sequencia = createSequencia()
                 -- Ordenar e juntar
                 table.sort(sequencia, orderSig)
                 sequencia = table.concat(sequencia, "")
@@ -804,47 +827,37 @@ local function constructNew_Ficha_Signeiros()
             self.grimorio:sort()
         end
         function addSig(sig)
-            btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
-            sequencia = {sig}
             -- É o primeiro
-            if btns[1] == "" then
-                btns[1].text = sig
+            if getBtn(1) == "" then
+                setBtn(1, sig)
+                searchList(true)
             else
-                -- Cria sequencia
-                for i=1, #btns, 1 do
-                    if btns[i].text == "" then
-                        break
-                    else
-                        table.insert(sequencia, btns[i].text)
-                    end
-                end
+                sequencia = createSequencia()
+                table.insert(sequencia, sig)
                 table.sort(sequencia, orderSig)
                 -- Integra imagens nos botões corretos
                 if 5 >= #sequencia then
                     for i=1, #sequencia, 1 do
-                        btns[i].text = sequencia[i]
+                        setBtn(i, sequencia[i])
                     end
+                    searchList(true)
                 end
-            end
-            if 6 > #sequencia then 
-                searchList(true)
             end
         end
         function removeSig(btnNum)
-            btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
-            btns[btnNum].text = ""
+            setBtn(btnNum, "")
             sequencia = {}
             -- Criação da sequencia
-            for i=1, #btns, 1 do
-                if btns[i].text ~= "" then
-                    table.insert(sequencia, btns[i].text)
+            for i=1, 5, 1 do
+                if getBtn(i) ~= "" then
+                    table.insert(sequencia, getBtn(i))
                 end
             end
             table.sort(sequencia, orderSig)
             -- Integra emojis nos botões corretos
             if 5 >= #sequencia then
                 for i=1, 5, 1 do
-                    btns[i].text = sequencia[i]
+                    setBtn(i, sequencia[i])
                 end
             end
             searchList(false)
@@ -879,8 +892,7 @@ local function constructNew_Ficha_Signeiros()
         function popupShow(text)
             self.popupText.text = text
             self.popupMsg:show()
-        end
-        
+        end     
     
 
 
@@ -932,7 +944,7 @@ local function constructNew_Ficha_Signeiros()
     obj.layout1 = GUI.fromHandle(_obj_newObject("layout"));
     obj.layout1:setParent(obj.flowLayout2);
     obj.layout1:setWidth(800);
-    obj.layout1:setHeight(800);
+    obj.layout1:setHeight(840);
     obj.layout1:setMargins({left = 5, right = 5, top = 5, bottom = 5});
     obj.layout1:setName("layout1");
 
@@ -995,7 +1007,7 @@ local function constructNew_Ficha_Signeiros()
     obj.layout3 = GUI.fromHandle(_obj_newObject("layout"));
     obj.layout3:setParent(obj.layout1);
     obj.layout3:setAlign("top");
-    obj.layout3:setHeight(300);
+    obj.layout3:setHeight(295);
     obj.layout3:setMargins({left = 5, right = 5, top = 5, bottom = 5});
     obj.layout3:setName("layout3");
 
@@ -1219,66 +1231,130 @@ local function constructNew_Ficha_Signeiros()
     obj.layout12:setParent(obj.layout3);
     obj.layout12:setAlign("top");
     obj.layout12:setWidth(850);
-    obj.layout12:setHeight(340);
+    obj.layout12:setHeight(200);
     obj.layout12:setMargins({top=10});
     obj.layout12:setName("layout12");
 
     obj.flowLayout6 = GUI.fromHandle(_obj_newObject("flowLayout"));
     obj.flowLayout6:setParent(obj.layout12);
     obj.flowLayout6:setAlign("top");
-    obj.flowLayout6:setHeight(50);
+    obj.flowLayout6:setHeight(165);
     obj.flowLayout6:setHorzAlign("center");
+    obj.flowLayout6:setLineSpacing(5);
+    obj.flowLayout6:setMargins({bottom=5});
     obj.flowLayout6:setName("flowLayout6");
 
+    obj.flowLayout7 = GUI.fromHandle(_obj_newObject("flowLayout"));
+    obj.flowLayout7:setParent(obj.flowLayout6);
+    obj.flowLayout7:setWidth(850);
+    obj.flowLayout7:setHorzAlign("center");
+    obj.flowLayout7:setName("flowLayout7");
+
     obj.btn1 = GUI.fromHandle(_obj_newObject("button"));
-    obj.btn1:setParent(obj.flowLayout6);
-    obj.btn1:setAlign("left");
-    obj.btn1:setText("");
+    obj.btn1:setParent(obj.flowLayout7);
     obj.btn1:setWidth(50);
     obj.btn1:setHeight(50);
     obj.btn1:setName("btn1");
     obj.btn1:setMargins({left=5});
     obj.btn1:setFontSize(20);
 
+    obj.label24 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label24:setParent(obj.btn1);
+    obj.label24:setAlign("client");
+    obj.label24:setField("btn1");
+    obj.label24:setFontSize(30);
+    obj.label24:setHorzTextAlign("center");
+    obj.label24:setName("label24");
+
+    obj.flowLineBreak3 = GUI.fromHandle(_obj_newObject("flowLineBreak"));
+    obj.flowLineBreak3:setParent(obj.flowLayout6);
+    obj.flowLineBreak3:setName("flowLineBreak3");
+
+    obj.flowLayout8 = GUI.fromHandle(_obj_newObject("flowLayout"));
+    obj.flowLayout8:setParent(obj.flowLayout6);
+    obj.flowLayout8:setWidth(850);
+    obj.flowLayout8:setHorzAlign("center");
+    obj.flowLayout8:setName("flowLayout8");
+
     obj.btn2 = GUI.fromHandle(_obj_newObject("button"));
-    obj.btn2:setParent(obj.flowLayout6);
-    obj.btn2:setAlign("left");
-    obj.btn2:setText("");
+    obj.btn2:setParent(obj.flowLayout8);
     obj.btn2:setWidth(50);
     obj.btn2:setHeight(50);
     obj.btn2:setName("btn2");
     obj.btn2:setMargins({left=5});
     obj.btn2:setFontSize(20);
 
+    obj.label25 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label25:setParent(obj.btn2);
+    obj.label25:setAlign("client");
+    obj.label25:setField("btn2");
+    obj.label25:setFontSize(30);
+    obj.label25:setHorzTextAlign("center");
+    obj.label25:setName("label25");
+
+    obj.label26 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label26:setParent(obj.flowLayout8);
+    obj.label26:setWidth(50);
+    obj.label26:setText("");
+    obj.label26:setName("label26");
+
     obj.btn3 = GUI.fromHandle(_obj_newObject("button"));
-    obj.btn3:setParent(obj.flowLayout6);
-    obj.btn3:setAlign("left");
-    obj.btn3:setText("");
+    obj.btn3:setParent(obj.flowLayout8);
     obj.btn3:setWidth(50);
     obj.btn3:setHeight(50);
     obj.btn3:setName("btn3");
     obj.btn3:setMargins({left=5});
     obj.btn3:setFontSize(20);
 
+    obj.label27 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label27:setParent(obj.btn3);
+    obj.label27:setAlign("client");
+    obj.label27:setField("btn3");
+    obj.label27:setFontSize(30);
+    obj.label27:setHorzTextAlign("center");
+    obj.label27:setName("label27");
+
+    obj.flowLineBreak4 = GUI.fromHandle(_obj_newObject("flowLineBreak"));
+    obj.flowLineBreak4:setParent(obj.flowLayout6);
+    obj.flowLineBreak4:setName("flowLineBreak4");
+
+    obj.flowLayout9 = GUI.fromHandle(_obj_newObject("flowLayout"));
+    obj.flowLayout9:setParent(obj.flowLayout6);
+    obj.flowLayout9:setWidth(850);
+    obj.flowLayout9:setHorzAlign("center");
+    obj.flowLayout9:setName("flowLayout9");
+
     obj.btn4 = GUI.fromHandle(_obj_newObject("button"));
-    obj.btn4:setParent(obj.flowLayout6);
-    obj.btn4:setAlign("left");
-    obj.btn4:setText("");
+    obj.btn4:setParent(obj.flowLayout9);
     obj.btn4:setWidth(50);
     obj.btn4:setHeight(50);
     obj.btn4:setName("btn4");
     obj.btn4:setMargins({left=5});
     obj.btn4:setFontSize(20);
 
+    obj.label28 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label28:setParent(obj.btn4);
+    obj.label28:setAlign("client");
+    obj.label28:setField("btn4");
+    obj.label28:setFontSize(30);
+    obj.label28:setHorzTextAlign("center");
+    obj.label28:setName("label28");
+
     obj.btn5 = GUI.fromHandle(_obj_newObject("button"));
-    obj.btn5:setParent(obj.flowLayout6);
-    obj.btn5:setAlign("left");
-    obj.btn5:setText("");
+    obj.btn5:setParent(obj.flowLayout9);
     obj.btn5:setWidth(50);
     obj.btn5:setHeight(50);
     obj.btn5:setName("btn5");
     obj.btn5:setMargins({left=5});
     obj.btn5:setFontSize(20);
+
+    obj.label29 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label29:setParent(obj.btn5);
+    obj.label29:setAlign("client");
+    obj.label29:setField("btn5");
+    obj.label29:setFontSize(30);
+    obj.label29:setHorzTextAlign("center");
+    obj.label29:setName("label29");
 
     obj.adminTab = GUI.fromHandle(_obj_newObject("flowLayout"));
     obj.adminTab:setParent(obj.layout12);
@@ -1293,14 +1369,13 @@ local function constructNew_Ficha_Signeiros()
     obj.button1:setParent(obj.adminTab);
     obj.button1:setWidth(150);
     obj.button1:setText("Adicionar Magia");
-    obj.button1:setMargins({top=10});
     obj.button1:setName("button1");
 
     obj.button2 = GUI.fromHandle(_obj_newObject("button"));
     obj.button2:setParent(obj.adminTab);
     obj.button2:setWidth(150);
     obj.button2:setText("Ajustar Level de magia");
-    obj.button2:setMargins({top=10, left=10});
+    obj.button2:setMargins({left=10});
     obj.button2:setName("button2");
 
     obj.layout13 = GUI.fromHandle(_obj_newObject("layout"));
@@ -1343,12 +1418,12 @@ local function constructNew_Ficha_Signeiros()
     obj.layout16:setMargins({top = 5});
     obj.layout16:setName("layout16");
 
-    obj.label24 = GUI.fromHandle(_obj_newObject("label"));
-    obj.label24:setParent(obj.layout16);
-    obj.label24:setAlign("left");
-    obj.label24:setText("Dano");
-    obj.label24:setMargins({left = 5});
-    obj.label24:setName("label24");
+    obj.label30 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label30:setParent(obj.layout16);
+    obj.label30:setAlign("left");
+    obj.label30:setText("Dano");
+    obj.label30:setMargins({left = 5});
+    obj.label30:setName("label30");
 
     obj.edit15 = GUI.fromHandle(_obj_newObject("edit"));
     obj.edit15:setParent(obj.layout16);
@@ -1367,12 +1442,12 @@ local function constructNew_Ficha_Signeiros()
     obj.layout17:setMargins({top = 5});
     obj.layout17:setName("layout17");
 
-    obj.label25 = GUI.fromHandle(_obj_newObject("label"));
-    obj.label25:setParent(obj.layout17);
-    obj.label25:setAlign("left");
-    obj.label25:setText("Unidade");
-    obj.label25:setMargins({left = 5});
-    obj.label25:setName("label25");
+    obj.label31 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label31:setParent(obj.layout17);
+    obj.label31:setAlign("left");
+    obj.label31:setText("Unidade");
+    obj.label31:setMargins({left = 5});
+    obj.label31:setName("label31");
 
     obj.edit16 = GUI.fromHandle(_obj_newObject("edit"));
     obj.edit16:setParent(obj.layout17);
@@ -1389,13 +1464,13 @@ local function constructNew_Ficha_Signeiros()
     obj.layout18:setMargins({top = 5});
     obj.layout18:setName("layout18");
 
-    obj.label26 = GUI.fromHandle(_obj_newObject("label"));
-    obj.label26:setParent(obj.layout18);
-    obj.label26:setAlign("left");
-    obj.label26:setHeight(55);
-    obj.label26:setText("Ultra Secreto");
-    obj.label26:setMargins({left = 5});
-    obj.label26:setName("label26");
+    obj.label32 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label32:setParent(obj.layout18);
+    obj.label32:setAlign("left");
+    obj.label32:setHeight(55);
+    obj.label32:setText("Ultra Secreto");
+    obj.label32:setMargins({left = 5});
+    obj.label32:setName("label32");
 
     obj.textEditor1 = GUI.fromHandle(_obj_newObject("textEditor"));
     obj.textEditor1:setParent(obj.layout18);
@@ -1468,12 +1543,12 @@ local function constructNew_Ficha_Signeiros()
     obj.btnRevelar:setMargins({left=10});
     obj.btnRevelar:setName("btnRevelar");
 
-    obj.label27 = GUI.fromHandle(_obj_newObject("label"));
-    obj.label27:setParent(obj.rectangle1);
-    obj.label27:setAlign("bottom");
-    obj.label27:setText("Descrição");
-    obj.label27:setMargins({left = 5});
-    obj.label27:setName("label27");
+    obj.label33 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label33:setParent(obj.rectangle1);
+    obj.label33:setAlign("bottom");
+    obj.label33:setText("Descrição");
+    obj.label33:setMargins({left = 5});
+    obj.label33:setName("label33");
 
     obj.textEditor2 = GUI.fromHandle(_obj_newObject("textEditor"));
     obj.textEditor2:setParent(obj.rectangle1);
@@ -1483,29 +1558,29 @@ local function constructNew_Ficha_Signeiros()
     obj.textEditor2:setMargins({top = 5});
     obj.textEditor2:setName("textEditor2");
 
-    obj.flowLayout7 = GUI.fromHandle(_obj_newObject("flowLayout"));
-    obj.flowLayout7:setParent(obj.flowLayout2);
-    obj.flowLayout7:setAlign("client");
-    obj.flowLayout7:setWidth(900);
-    obj.flowLayout7:setMargins({left = 5, right = 5, top = 5, bottom = 5});
-    obj.flowLayout7:setAutoHeight(true);
-    obj.flowLayout7:setName("flowLayout7");
+    obj.flowLayout10 = GUI.fromHandle(_obj_newObject("flowLayout"));
+    obj.flowLayout10:setParent(obj.flowLayout2);
+    obj.flowLayout10:setAlign("client");
+    obj.flowLayout10:setWidth(900);
+    obj.flowLayout10:setMargins({left = 5, right = 5, top = 5, bottom = 5});
+    obj.flowLayout10:setAutoHeight(true);
+    obj.flowLayout10:setName("flowLayout10");
 
     obj.flowPart11 = GUI.fromHandle(_obj_newObject("flowPart"));
-    obj.flowPart11:setParent(obj.flowLayout7);
+    obj.flowPart11:setParent(obj.flowLayout10);
     obj.flowPart11:setMinWidth(500);
     obj.flowPart11:setMaxWidth(900);
     obj.flowPart11:setHeight(30);
     obj.flowPart11:setName("flowPart11");
 
-    obj.label28 = GUI.fromHandle(_obj_newObject("label"));
-    obj.label28:setParent(obj.flowPart11);
-    obj.label28:setAlign("left");
-    obj.label28:setText("Grimório");
-    obj.label28:setWidth(100);
-    obj.label28:setHeight(25);
-    lfm_setPropAsString(obj.label28, "fontStyle",  "bold");
-    obj.label28:setName("label28");
+    obj.label34 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label34:setParent(obj.flowPart11);
+    obj.label34:setAlign("left");
+    obj.label34:setText("Grimório");
+    obj.label34:setWidth(100);
+    obj.label34:setHeight(25);
+    lfm_setPropAsString(obj.label34, "fontStyle",  "bold");
+    obj.label34:setName("label34");
 
     obj.button3 = GUI.fromHandle(_obj_newObject("button"));
     obj.button3:setParent(obj.flowPart11);
@@ -1527,15 +1602,15 @@ local function constructNew_Ficha_Signeiros()
     obj.button4:setMargins({left = 10});
     obj.button4:setName("button4");
 
-    obj.flowLineBreak3 = GUI.fromHandle(_obj_newObject("flowLineBreak"));
-    obj.flowLineBreak3:setParent(obj.flowLayout7);
-    obj.flowLineBreak3:setName("flowLineBreak3");
+    obj.flowLineBreak5 = GUI.fromHandle(_obj_newObject("flowLineBreak"));
+    obj.flowLineBreak5:setParent(obj.flowLayout10);
+    obj.flowLineBreak5:setName("flowLineBreak5");
 
     obj.flowPart12 = GUI.fromHandle(_obj_newObject("flowPart"));
-    obj.flowPart12:setParent(obj.flowLayout7);
+    obj.flowPart12:setParent(obj.flowLayout10);
     obj.flowPart12:setMinWidth(500);
     obj.flowPart12:setMaxWidth(900);
-    obj.flowPart12:setHeight(755);
+    obj.flowPart12:setHeight(810);
     obj.flowPart12:setName("flowPart12");
 
     obj.rectangle2 = GUI.fromHandle(_obj_newObject("rectangle"));
@@ -1568,7 +1643,7 @@ local function constructNew_Ficha_Signeiros()
     obj.rectangle3:setStrokeColor("black");
     obj.rectangle3:setStrokeSize(2);
     obj.rectangle3:setAlign("top");
-    obj.rectangle3:setHeight(235);
+    obj.rectangle3:setHeight(275);
     obj.rectangle3:setMargins({top = 10, right=5});
     obj.rectangle3:setName("rectangle3");
 
@@ -1775,6 +1850,7 @@ local function constructNew_Ficha_Signeiros()
                                         function (confirmado)
                                             if confirmado then
                                                 sheet.vigor = sheet.vigorMax
+                                                popupShow("Vigor restaurado.")
                                             end
                                         end)
         end, obj);
@@ -1830,39 +1906,38 @@ local function constructNew_Ficha_Signeiros()
     obj._e_event14 = obj.btn1:addEventListener("onClick",
         function (_)
             btnNum = 1
-                                    removeSig(btnNum)
+                            removeSig(btnNum)
         end, obj);
 
     obj._e_event15 = obj.btn2:addEventListener("onClick",
         function (_)
             btnNum = 2
-                                    removeSig(btnNum)
+                            removeSig(btnNum)
         end, obj);
 
     obj._e_event16 = obj.btn3:addEventListener("onClick",
         function (_)
             btnNum = 3
-                                    removeSig(btnNum)
+                            removeSig(btnNum)
         end, obj);
 
     obj._e_event17 = obj.btn4:addEventListener("onClick",
         function (_)
             btnNum = 4
-                                    removeSig(btnNum)
+                            removeSig(btnNum)
         end, obj);
 
     obj._e_event18 = obj.btn5:addEventListener("onClick",
         function (_)
             btnNum = 5
-                                    removeSig(btnNum)
+                            removeSig(btnNum)
         end, obj);
 
     obj._e_event19 = obj.button1:addEventListener("onClick",
         function (_)
-            btns = {self.btn1, self.btn2, self.btn3, self.btn4, self.btn5}
-                            sequencia = ""
+            sequencia = ""
                             for i=1, 5, 1 do
-                                sequencia = sequencia .. btns[i].text
+                                sequencia = sequencia .. getBtn(i)
                             end
                             if sequencia == "" then
                                 popupShow("Nenhum Signo na magia.")
@@ -1881,6 +1956,7 @@ local function constructNew_Ficha_Signeiros()
                                     node = self.grimorio:append()
                                     node.sequencia = sequencia
                                     self.grimorio:sort()
+                                    popupShow("Mágica adicionada no Grimório.")
                                 else
                                     popupShow("Mágica já escrita no Grimório.")
                                 end
@@ -2014,6 +2090,7 @@ local function constructNew_Ficha_Signeiros()
         end;
 
         if self.VigorBar ~= nil then self.VigorBar:destroy(); self.VigorBar = nil; end;
+        if self.label33 ~= nil then self.label33:destroy(); self.label33 = nil; end;
         if self.label14 ~= nil then self.label14:destroy(); self.label14 = nil; end;
         if self.tab3 ~= nil then self.tab3:destroy(); self.tab3 = nil; end;
         if self.flowPart8 ~= nil then self.flowPart8:destroy(); self.flowPart8 = nil; end;
@@ -2036,18 +2113,19 @@ local function constructNew_Ficha_Signeiros()
         if self.flowPart2 ~= nil then self.flowPart2:destroy(); self.flowPart2 = nil; end;
         if self.label22 ~= nil then self.label22:destroy(); self.label22 = nil; end;
         if self.button2 ~= nil then self.button2:destroy(); self.button2 = nil; end;
-        if self.layout13 ~= nil then self.layout13:destroy(); self.layout13 = nil; end;
-        if self.layout3 ~= nil then self.layout3:destroy(); self.layout3 = nil; end;
         if self.label24 ~= nil then self.label24:destroy(); self.label24 = nil; end;
+        if self.layout3 ~= nil then self.layout3:destroy(); self.layout3 = nil; end;
+        if self.layout13 ~= nil then self.layout13:destroy(); self.layout13 = nil; end;
         if self.label13 ~= nil then self.label13:destroy(); self.label13 = nil; end;
         if self.layout8 ~= nil then self.layout8:destroy(); self.layout8 = nil; end;
         if self.btnDano ~= nil then self.btnDano:destroy(); self.btnDano = nil; end;
         if self.tab2 ~= nil then self.tab2:destroy(); self.tab2 = nil; end;
         if self.layout1 ~= nil then self.layout1:destroy(); self.layout1 = nil; end;
         if self.btnAName7 ~= nil then self.btnAName7:destroy(); self.btnAName7 = nil; end;
-        if self.rectangle1 ~= nil then self.rectangle1:destroy(); self.rectangle1 = nil; end;
-        if self.cbModoUsecreto ~= nil then self.cbModoUsecreto:destroy(); self.cbModoUsecreto = nil; end;
         if self.label27 ~= nil then self.label27:destroy(); self.label27 = nil; end;
+        if self.rectangle1 ~= nil then self.rectangle1:destroy(); self.rectangle1 = nil; end;
+        if self.label32 ~= nil then self.label32:destroy(); self.label32 = nil; end;
+        if self.cbModoUsecreto ~= nil then self.cbModoUsecreto:destroy(); self.cbModoUsecreto = nil; end;
         if self.grimorio ~= nil then self.grimorio:destroy(); self.grimorio = nil; end;
         if self.VigorBtn ~= nil then self.VigorBtn:destroy(); self.VigorBtn = nil; end;
         if self.inventario ~= nil then self.inventario:destroy(); self.inventario = nil; end;
@@ -2063,12 +2141,14 @@ local function constructNew_Ficha_Signeiros()
         if self.layout9 ~= nil then self.layout9:destroy(); self.layout9 = nil; end;
         if self.Info ~= nil then self.Info:destroy(); self.Info = nil; end;
         if self.btnAName1 ~= nil then self.btnAName1:destroy(); self.btnAName1 = nil; end;
+        if self.label31 ~= nil then self.label31:destroy(); self.label31 = nil; end;
         if self.edit5 ~= nil then self.edit5:destroy(); self.edit5 = nil; end;
         if self.btnAName4 ~= nil then self.btnAName4:destroy(); self.btnAName4 = nil; end;
         if self.btnRolar ~= nil then self.btnRolar:destroy(); self.btnRolar = nil; end;
         if self.textEditor2 ~= nil then self.textEditor2:destroy(); self.textEditor2 = nil; end;
         if self.label15 ~= nil then self.label15:destroy(); self.label15 = nil; end;
         if self.body ~= nil then self.body:destroy(); self.body = nil; end;
+        if self.label34 ~= nil then self.label34:destroy(); self.label34 = nil; end;
         if self.flowPart12 ~= nil then self.flowPart12:destroy(); self.flowPart12 = nil; end;
         if self.scrollBox2 ~= nil then self.scrollBox2:destroy(); self.scrollBox2 = nil; end;
         if self.label12 ~= nil then self.label12:destroy(); self.label12 = nil; end;
@@ -2079,16 +2159,18 @@ local function constructNew_Ficha_Signeiros()
         if self.flowPart4 ~= nil then self.flowPart4:destroy(); self.flowPart4 = nil; end;
         if self.btnAName3 ~= nil then self.btnAName3:destroy(); self.btnAName3 = nil; end;
         if self.label16 ~= nil then self.label16:destroy(); self.label16 = nil; end;
-        if self.grimorioInv ~= nil then self.grimorioInv:destroy(); self.grimorioInv = nil; end;
+        if self.flowLayout9 ~= nil then self.flowLayout9:destroy(); self.flowLayout9 = nil; end;
         if self.layout19 ~= nil then self.layout19:destroy(); self.layout19 = nil; end;
         if self.edit2 ~= nil then self.edit2:destroy(); self.edit2 = nil; end;
         if self.label9 ~= nil then self.label9:destroy(); self.label9 = nil; end;
         if self.edit10 ~= nil then self.edit10:destroy(); self.edit10 = nil; end;
-        if self.edit16 ~= nil then self.edit16:destroy(); self.edit16 = nil; end;
         if self.label28 ~= nil then self.label28:destroy(); self.label28 = nil; end;
+        if self.edit16 ~= nil then self.edit16:destroy(); self.edit16 = nil; end;
         if self.edit1 ~= nil then self.edit1:destroy(); self.edit1 = nil; end;
         if self.flowLineBreak1 ~= nil then self.flowLineBreak1:destroy(); self.flowLineBreak1 = nil; end;
         if self.btnAName5 ~= nil then self.btnAName5:destroy(); self.btnAName5 = nil; end;
+        if self.flowLayout10 ~= nil then self.flowLayout10:destroy(); self.flowLayout10 = nil; end;
+        if self.grimorioInv ~= nil then self.grimorioInv:destroy(); self.grimorioInv = nil; end;
         if self.Functions_Edit ~= nil then self.Functions_Edit:destroy(); self.Functions_Edit = nil; end;
         if self.button4 ~= nil then self.button4:destroy(); self.button4 = nil; end;
         if self.tab4 ~= nil then self.tab4:destroy(); self.tab4 = nil; end;
@@ -2098,6 +2180,7 @@ local function constructNew_Ficha_Signeiros()
         if self.flowLineBreak3 ~= nil then self.flowLineBreak3:destroy(); self.flowLineBreak3 = nil; end;
         if self.Functions_Roll ~= nil then self.Functions_Roll:destroy(); self.Functions_Roll = nil; end;
         if self.label17 ~= nil then self.label17:destroy(); self.label17 = nil; end;
+        if self.flowLineBreak5 ~= nil then self.flowLineBreak5:destroy(); self.flowLineBreak5 = nil; end;
         if self.Anotacoes ~= nil then self.Anotacoes:destroy(); self.Anotacoes = nil; end;
         if self.flowLayout4 ~= nil then self.flowLayout4:destroy(); self.flowLayout4 = nil; end;
         if self.flowPart5 ~= nil then self.flowPart5:destroy(); self.flowPart5 = nil; end;
@@ -2109,6 +2192,7 @@ local function constructNew_Ficha_Signeiros()
         if self.flowPart11 ~= nil then self.flowPart11:destroy(); self.flowPart11 = nil; end;
         if self.layout18 ~= nil then self.layout18:destroy(); self.layout18 = nil; end;
         if self.Inventario ~= nil then self.Inventario:destroy(); self.Inventario = nil; end;
+        if self.label29 ~= nil then self.label29:destroy(); self.label29 = nil; end;
         if self.rectangle2 ~= nil then self.rectangle2:destroy(); self.rectangle2 = nil; end;
         if self.rectangle3 ~= nil then self.rectangle3:destroy(); self.rectangle3 = nil; end;
         if self.btnEscudo ~= nil then self.btnEscudo:destroy(); self.btnEscudo = nil; end;
@@ -2119,6 +2203,7 @@ local function constructNew_Ficha_Signeiros()
         if self.flowLayout2 ~= nil then self.flowLayout2:destroy(); self.flowLayout2 = nil; end;
         if self.btnAName8 ~= nil then self.btnAName8:destroy(); self.btnAName8 = nil; end;
         if self.popupText ~= nil then self.popupText:destroy(); self.popupText = nil; end;
+        if self.label30 ~= nil then self.label30:destroy(); self.label30 = nil; end;
         if self.label10 ~= nil then self.label10:destroy(); self.label10 = nil; end;
         if self.label19 ~= nil then self.label19:destroy(); self.label19 = nil; end;
         if self.layout2 ~= nil then self.layout2:destroy(); self.layout2 = nil; end;
@@ -2153,11 +2238,13 @@ local function constructNew_Ficha_Signeiros()
         if self.layout21 ~= nil then self.layout21:destroy(); self.layout21 = nil; end;
         if self.anotacoes ~= nil then self.anotacoes:destroy(); self.anotacoes = nil; end;
         if self.tab1 ~= nil then self.tab1:destroy(); self.tab1 = nil; end;
+        if self.flowLineBreak4 ~= nil then self.flowLineBreak4:destroy(); self.flowLineBreak4 = nil; end;
         if self.btn5 ~= nil then self.btn5:destroy(); self.btn5 = nil; end;
         if self.Functions ~= nil then self.Functions:destroy(); self.Functions = nil; end;
         if self.flowLineBreak2 ~= nil then self.flowLineBreak2:destroy(); self.flowLineBreak2 = nil; end;
         if self.scrollBox1 ~= nil then self.scrollBox1:destroy(); self.scrollBox1 = nil; end;
         if self.layout7 ~= nil then self.layout7:destroy(); self.layout7 = nil; end;
+        if self.flowLayout8 ~= nil then self.flowLayout8:destroy(); self.flowLayout8 = nil; end;
         self:_oldLFMDestroy();
     end;
 
