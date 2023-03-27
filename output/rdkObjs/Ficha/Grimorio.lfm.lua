@@ -83,6 +83,12 @@ local function constructNew_Grimorio()
         function trim(s)
             return (s:gsub("^%s*(.-)%s*$", "%1"))
         end
+        function mergeTables(t1, t2)
+            for key, value in pairs(t2) do
+	            t1[key] = value
+            end 
+            return t1
+        end
     
 
 
@@ -349,7 +355,10 @@ local function constructNew_Grimorio()
 
         function copyAll()
             magics = NDB.getChildNodes(sheet.magics)
+            magicsInv = NDB.getChildNodes(sheet.magicsInv)
+            magics = mergeTables(magics, magicsInv)
             System.setClipboardText(tableToStr(magics))
+            popupShow("Grimório copiado.")
         end
         function inGrimorio(sequencia)
             magics = NDB.getChildNodes(sheet.magics)
@@ -392,6 +401,7 @@ local function constructNew_Grimorio()
             else
                 paste(str)
             end
+            popupShow("Mágia inserida no grimmório.")
         end
     
 

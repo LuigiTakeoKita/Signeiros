@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form name="Ficha_Signeiros" formType="sheetTemplate" dataType="Signeiros.Ficha" title="Ficha Signeiros" align="client" theme="dark">
+<form name="Ficha_Signeiros" formType="sheetTemplate" dataType="Signeiros.Ficha" title="Ficha Signeiros" align="client" theme="dark" lockWhileNodeIsLoading="true">
     <tabControl align="client">
         <tab title="Info Personagem">
             <import file="Info.lfm"/>

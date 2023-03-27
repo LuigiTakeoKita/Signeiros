@@ -76,6 +76,12 @@ local function constructNew_Functions()
         function trim(s)
             return (s:gsub("^%s*(.-)%s*$", "%1"))
         end
+        function mergeTables(t1, t2)
+            for key, value in pairs(t2) do
+	            t1[key] = value
+            end 
+            return t1
+        end
     
 
 

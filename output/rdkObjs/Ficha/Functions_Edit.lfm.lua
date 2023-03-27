@@ -34,7 +34,10 @@ local function constructNew_Functions_Edit()
 
         function copyAll()
             magics = NDB.getChildNodes(sheet.magics)
+            magicsInv = NDB.getChildNodes(sheet.magicsInv)
+            magics = mergeTables(magics, magicsInv)
             System.setClipboardText(tableToStr(magics))
+            popupShow("Grimório copiado.")
         end
         function inGrimorio(sequencia)
             magics = NDB.getChildNodes(sheet.magics)
@@ -77,6 +80,7 @@ local function constructNew_Functions_Edit()
             else
                 paste(str)
             end
+            popupShow("Mágia inserida no grimmório.")
         end
     
 
