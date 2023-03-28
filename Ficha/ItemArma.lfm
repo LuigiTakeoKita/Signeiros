@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form name="ItemArma" height="30" theme="dark" margins="{top=5}">
+    <checkBox align="left" field="cbItem" width="20" margins="left=5"/>
+
+    <edit align="left" field="name" width="200" margins="left=5"/>
+    <edit align="left" field="vAtaque" width="50" margins="left=5" type="number" horzTextAlign="center"/>
+    <edit align="left" field="vDefesa" width="50" margins="left=5" type="number" horzTextAlign="center"/>
+    <button align="left" text="Copiar" width="70" margins="left=5">
+        <event name="onClick">
+            System.setClipboardText(tableToStr(sheet))
+            popupShow("Armadura copiada.")
+        </event>
+    </button>
+    <button align="left" text="Deletar Item" width="100" margins="left=5">
+        <event name="onClick">
+            if sheet ~= nil then 
+                Dialogs.confirmOkCancel("Deseja realmente deletar essa arma?\n\"" .. (sheet.name or "") .. "\"",
+                function (confirmado)
+                    if confirmado then
+                        value = 0
+                        NDB.deleteNode(sheet)
+                    end
+                end)
+            end
+        </event>
+    </button>
+</form>

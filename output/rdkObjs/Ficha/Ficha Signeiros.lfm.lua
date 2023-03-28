@@ -1683,27 +1683,186 @@ local function constructNew_Ficha_Signeiros()
     obj.Inventario:setTheme("dark");
     obj.Inventario:setMargins({top=1});
 
+    obj.flowLayout11 = GUI.fromHandle(_obj_newObject("flowLayout"));
+    obj.flowLayout11:setParent(obj.Inventario);
+    obj.flowLayout11:setAlign("client");
+    obj.flowLayout11:setAutoHeight(true);
+    obj.flowLayout11:setName("flowLayout11");
+
+    obj.layout23 = GUI.fromHandle(_obj_newObject("layout"));
+    obj.layout23:setParent(obj.flowLayout11);
+    obj.layout23:setWidth(465);
+    obj.layout23:setHeight(900);
+    obj.layout23:setMargins({left=5, top=5});
+    obj.layout23:setName("layout23");
+
+    obj.layout24 = GUI.fromHandle(_obj_newObject("layout"));
+    obj.layout24:setParent(obj.layout23);
+    obj.layout24:setAlign("top");
+    obj.layout24:setHeight(25);
+    obj.layout24:setMargins({left=30});
+    obj.layout24:setName("layout24");
+
+    obj.label35 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label35:setParent(obj.layout24);
+    obj.label35:setAlign("left");
+    obj.label35:setText("Armaduras");
+    lfm_setPropAsString(obj.label35, "fontStyle",  "bold");
+    obj.label35:setName("label35");
+
     obj.button5 = GUI.fromHandle(_obj_newObject("button"));
-    obj.button5:setParent(obj.Inventario);
-    obj.button5:setAlign("top");
-    obj.button5:setText("Adicionar Item");
-    obj.button5:setWidth(100);
+    obj.button5:setParent(obj.layout24);
+    obj.button5:setAlign("right");
+    obj.button5:setText("Adicionar Armadura");
+    obj.button5:setWidth(150);
+    obj.button5:setMargins({right=5});
     obj.button5:setName("button5");
 
+    obj.button6 = GUI.fromHandle(_obj_newObject("button"));
+    obj.button6:setParent(obj.layout24);
+    obj.button6:setAlign("right");
+    obj.button6:setText("Colar Armadura");
+    obj.button6:setWidth(150);
+    obj.button6:setName("button6");
+
+    obj.layout25 = GUI.fromHandle(_obj_newObject("layout"));
+    obj.layout25:setParent(obj.layout23);
+    obj.layout25:setAlign("top");
+    obj.layout25:setHeight(25);
+    obj.layout25:setMargins({top=10});
+    obj.layout25:setName("layout25");
+
+    obj.label36 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label36:setParent(obj.layout25);
+    obj.label36:setAlign("left");
+    obj.label36:setText("");
+    obj.label36:setWidth(20);
+    obj.label36:setMargins({left=5});
+    obj.label36:setName("label36");
+
+    obj.label37 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label37:setParent(obj.layout25);
+    obj.label37:setAlign("left");
+    obj.label37:setText("Nome");
+    obj.label37:setWidth(200);
+    obj.label37:setHorzTextAlign("center");
+    obj.label37:setMargins({left=5});
+    obj.label37:setName("label37");
+
+    obj.label38 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label38:setParent(obj.layout25);
+    obj.label38:setAlign("left");
+    obj.label38:setText("Defesa");
+    obj.label38:setWidth(50);
+    obj.label38:setHorzTextAlign("center");
+    obj.label38:setMargins({left=5});
+    obj.label38:setName("label38");
+
     obj.scrollBox3 = GUI.fromHandle(_obj_newObject("scrollBox"));
-    obj.scrollBox3:setParent(obj.Inventario);
+    obj.scrollBox3:setParent(obj.layout23);
     obj.scrollBox3:setAlign("top");
     obj.scrollBox3:setHeight(755);
-    obj.scrollBox3:setMargins({top = 10});
+    obj.scrollBox3:setMargins({top = 5});
     obj.scrollBox3:setName("scrollBox3");
 
-    obj.inventario = GUI.fromHandle(_obj_newObject("recordList"));
-    obj.inventario:setParent(obj.scrollBox3);
-    obj.inventario:setName("inventario");
-    obj.inventario:setField("inventario");
-    obj.inventario:setTemplateForm("ItemInventario");
-    obj.inventario:setAlign("client");
-    obj.inventario:setSelectable(true);
+    obj.iArmaduras = GUI.fromHandle(_obj_newObject("recordList"));
+    obj.iArmaduras:setParent(obj.scrollBox3);
+    obj.iArmaduras:setName("iArmaduras");
+    obj.iArmaduras:setField("iArmaduras");
+    obj.iArmaduras:setTemplateForm("ItemArmadura");
+    obj.iArmaduras:setAlign("client");
+
+    obj.layout26 = GUI.fromHandle(_obj_newObject("layout"));
+    obj.layout26:setParent(obj.flowLayout11);
+    obj.layout26:setWidth(520);
+    obj.layout26:setHeight(900);
+    obj.layout26:setMargins({left=5, top=5});
+    obj.layout26:setName("layout26");
+
+    obj.layout27 = GUI.fromHandle(_obj_newObject("layout"));
+    obj.layout27:setParent(obj.layout26);
+    obj.layout27:setAlign("top");
+    obj.layout27:setHeight(25);
+    obj.layout27:setMargins({left=30});
+    obj.layout27:setName("layout27");
+
+    obj.label39 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label39:setParent(obj.layout27);
+    obj.label39:setAlign("left");
+    obj.label39:setText("Armas");
+    lfm_setPropAsString(obj.label39, "fontStyle",  "bold");
+    obj.label39:setName("label39");
+
+    obj.button7 = GUI.fromHandle(_obj_newObject("button"));
+    obj.button7:setParent(obj.layout27);
+    obj.button7:setAlign("right");
+    obj.button7:setText("Adicionar Arma");
+    obj.button7:setWidth(150);
+    obj.button7:setMargins({right=5});
+    obj.button7:setName("button7");
+
+    obj.button8 = GUI.fromHandle(_obj_newObject("button"));
+    obj.button8:setParent(obj.layout27);
+    obj.button8:setAlign("right");
+    obj.button8:setText("Colar Arma");
+    obj.button8:setWidth(150);
+    obj.button8:setName("button8");
+
+    obj.layout28 = GUI.fromHandle(_obj_newObject("layout"));
+    obj.layout28:setParent(obj.layout26);
+    obj.layout28:setAlign("top");
+    obj.layout28:setHeight(25);
+    obj.layout28:setMargins({top=10});
+    obj.layout28:setName("layout28");
+
+    obj.label40 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label40:setParent(obj.layout28);
+    obj.label40:setAlign("left");
+    obj.label40:setText("");
+    obj.label40:setWidth(20);
+    obj.label40:setMargins({left=5});
+    obj.label40:setName("label40");
+
+    obj.label41 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label41:setParent(obj.layout28);
+    obj.label41:setAlign("left");
+    obj.label41:setText("Nome");
+    obj.label41:setWidth(200);
+    obj.label41:setHorzTextAlign("center");
+    obj.label41:setMargins({left=5});
+    obj.label41:setName("label41");
+
+    obj.label42 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label42:setParent(obj.layout28);
+    obj.label42:setAlign("left");
+    obj.label42:setText("Ataque");
+    obj.label42:setWidth(50);
+    obj.label42:setHorzTextAlign("center");
+    obj.label42:setMargins({left=5});
+    obj.label42:setName("label42");
+
+    obj.label43 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label43:setParent(obj.layout28);
+    obj.label43:setAlign("left");
+    obj.label43:setText("Defesa");
+    obj.label43:setWidth(50);
+    obj.label43:setHorzTextAlign("center");
+    obj.label43:setMargins({left=5});
+    obj.label43:setName("label43");
+
+    obj.scrollBox4 = GUI.fromHandle(_obj_newObject("scrollBox"));
+    obj.scrollBox4:setParent(obj.layout26);
+    obj.scrollBox4:setAlign("top");
+    obj.scrollBox4:setHeight(755);
+    obj.scrollBox4:setMargins({top = 5});
+    obj.scrollBox4:setName("scrollBox4");
+
+    obj.iArmas = GUI.fromHandle(_obj_newObject("recordList"));
+    obj.iArmas:setParent(obj.scrollBox4);
+    obj.iArmas:setName("iArmas");
+    obj.iArmas:setField("iArmas");
+    obj.iArmas:setTemplateForm("ItemArma");
+    obj.iArmas:setAlign("client");
 
     obj.tab4 = GUI.fromHandle(_obj_newObject("tab"));
     obj.tab4:setParent(obj.tabControl1);
@@ -2056,10 +2215,77 @@ local function constructNew_Ficha_Signeiros()
 
     obj._e_event28 = obj.button5:addEventListener("onClick",
         function (_)
-            self.inventario:append()
+            self.iArmaduras:append()
+                                    popupShow("Armadura adicionada.")
+        end, obj);
+
+    obj._e_event29 = obj.button6:addEventListener("onClick",
+        function (_)
+            str = System.getClipboardText()
+                                    if string.find(str, "name = ") == nil then
+                                        return
+                                    end
+                                    copyTable = totable(str)
+                                    node = self.iArmaduras:append()
+                                    if copyTable.cbItem ~= nil then
+                                        node.cbItem = copyTable.cbItem
+                                    end
+                                    if copyTable.name ~= nil then
+                                        node.name = copyTable.name
+                                    end
+                                    
+            
+                                    if copyTable.vNome ~= nil then
+                                        node.vNome = copyTable.vNome
+                                    end
+                                    
+            
+                                    if copyTable.vDefesa ~= nil then
+                                        node.vDefesa = copyTable.vDefesa
+                                    end
+        end, obj);
+
+    obj._e_event30 = obj.button7:addEventListener("onClick",
+        function (_)
+            self.iArmas:append()
+                                    popupShow("Arma adicionada.")
+        end, obj);
+
+    obj._e_event31 = obj.button8:addEventListener("onClick",
+        function (_)
+            str = System.getClipboardText()
+                                    if string.find(str, "name = ") == nil then
+                                        return
+                                    end
+                                    copyTable = totable(str)
+                                    node = self.iArmas:append()
+                                    if copyTable.cbItem ~= nil then
+                                        node.cbItem = copyTable.cbItem
+                                    end
+                                    if copyTable.name ~= nil then
+                                        node.name = copyTable.name
+                                    end
+                                    
+            
+                                    if copyTable.vNome ~= nil then
+                                        node.vNome = copyTable.vNome
+                                    end
+                                    
+            
+                                    if copyTable.vAtaque ~= nil then
+                                        node.vAtaque = copyTable.vAtaque
+                                    end
+                                    
+            
+                                    if copyTable.vDefesa ~= nil then
+                                        node.vDefesa = copyTable.vDefesa
+                                    end
         end, obj);
 
     function obj:_releaseEvents()
+        __o_rrpgObjs.removeEventListenerById(self._e_event31);
+        __o_rrpgObjs.removeEventListenerById(self._e_event30);
+        __o_rrpgObjs.removeEventListenerById(self._e_event29);
         __o_rrpgObjs.removeEventListenerById(self._e_event28);
         __o_rrpgObjs.removeEventListenerById(self._e_event27);
         __o_rrpgObjs.removeEventListenerById(self._e_event26);
@@ -2109,7 +2335,10 @@ local function constructNew_Ficha_Signeiros()
         if self.layout15 ~= nil then self.layout15:destroy(); self.layout15 = nil; end;
         if self.layout10 ~= nil then self.layout10:destroy(); self.layout10 = nil; end;
         if self.edit9 ~= nil then self.edit9:destroy(); self.edit9 = nil; end;
+        if self.label40 ~= nil then self.label40:destroy(); self.label40 = nil; end;
+        if self.iArmaduras ~= nil then self.iArmaduras:destroy(); self.iArmaduras = nil; end;
         if self.flowLayout3 ~= nil then self.flowLayout3:destroy(); self.flowLayout3 = nil; end;
+        if self.label43 ~= nil then self.label43:destroy(); self.label43 = nil; end;
         if self.btnRevelar ~= nil then self.btnRevelar:destroy(); self.btnRevelar = nil; end;
         if self.layout17 ~= nil then self.layout17:destroy(); self.layout17 = nil; end;
         if self.edit7 ~= nil then self.edit7:destroy(); self.edit7 = nil; end;
@@ -2139,13 +2368,16 @@ local function constructNew_Ficha_Signeiros()
         if self.cbModoUsecreto ~= nil then self.cbModoUsecreto:destroy(); self.cbModoUsecreto = nil; end;
         if self.grimorio ~= nil then self.grimorio:destroy(); self.grimorio = nil; end;
         if self.VigorBtn ~= nil then self.VigorBtn:destroy(); self.VigorBtn = nil; end;
-        if self.inventario ~= nil then self.inventario:destroy(); self.inventario = nil; end;
+        if self.layout23 ~= nil then self.layout23:destroy(); self.layout23 = nil; end;
         if self.layout12 ~= nil then self.layout12:destroy(); self.layout12 = nil; end;
         if self.edit14 ~= nil then self.edit14:destroy(); self.edit14 = nil; end;
+        if self.layout24 ~= nil then self.layout24:destroy(); self.layout24 = nil; end;
         if self.button1 ~= nil then self.button1:destroy(); self.button1 = nil; end;
         if self.Grimorio ~= nil then self.Grimorio:destroy(); self.Grimorio = nil; end;
         if self.edit4 ~= nil then self.edit4:destroy(); self.edit4 = nil; end;
+        if self.label35 ~= nil then self.label35:destroy(); self.label35 = nil; end;
         if self.label8 ~= nil then self.label8:destroy(); self.label8 = nil; end;
+        if self.layout25 ~= nil then self.layout25:destroy(); self.layout25 = nil; end;
         if self.label4 ~= nil then self.label4:destroy(); self.label4 = nil; end;
         if self.label6 ~= nil then self.label6:destroy(); self.label6 = nil; end;
         if self.edit11 ~= nil then self.edit11:destroy(); self.edit11 = nil; end;
@@ -2161,12 +2393,16 @@ local function constructNew_Ficha_Signeiros()
         if self.body ~= nil then self.body:destroy(); self.body = nil; end;
         if self.label34 ~= nil then self.label34:destroy(); self.label34 = nil; end;
         if self.flowPart12 ~= nil then self.flowPart12:destroy(); self.flowPart12 = nil; end;
+        if self.label37 ~= nil then self.label37:destroy(); self.label37 = nil; end;
+        if self.label41 ~= nil then self.label41:destroy(); self.label41 = nil; end;
         if self.scrollBox2 ~= nil then self.scrollBox2:destroy(); self.scrollBox2 = nil; end;
+        if self.layout26 ~= nil then self.layout26:destroy(); self.layout26 = nil; end;
         if self.label12 ~= nil then self.label12:destroy(); self.label12 = nil; end;
         if self.magicDesc ~= nil then self.magicDesc:destroy(); self.magicDesc = nil; end;
         if self.btn3 ~= nil then self.btn3:destroy(); self.btn3 = nil; end;
         if self.edit8 ~= nil then self.edit8:destroy(); self.edit8 = nil; end;
         if self.flowLayout7 ~= nil then self.flowLayout7:destroy(); self.flowLayout7 = nil; end;
+        if self.layout27 ~= nil then self.layout27:destroy(); self.layout27 = nil; end;
         if self.flowPart4 ~= nil then self.flowPart4:destroy(); self.flowPart4 = nil; end;
         if self.btnAName3 ~= nil then self.btnAName3:destroy(); self.btnAName3 = nil; end;
         if self.label16 ~= nil then self.label16:destroy(); self.label16 = nil; end;
@@ -2182,16 +2418,21 @@ local function constructNew_Ficha_Signeiros()
         if self.btnAName5 ~= nil then self.btnAName5:destroy(); self.btnAName5 = nil; end;
         if self.flowLayout10 ~= nil then self.flowLayout10:destroy(); self.flowLayout10 = nil; end;
         if self.grimorioInv ~= nil then self.grimorioInv:destroy(); self.grimorioInv = nil; end;
+        if self.layout28 ~= nil then self.layout28:destroy(); self.layout28 = nil; end;
+        if self.iArmas ~= nil then self.iArmas:destroy(); self.iArmas = nil; end;
         if self.Functions_Edit ~= nil then self.Functions_Edit:destroy(); self.Functions_Edit = nil; end;
         if self.button4 ~= nil then self.button4:destroy(); self.button4 = nil; end;
         if self.tab4 ~= nil then self.tab4:destroy(); self.tab4 = nil; end;
         if self.button3 ~= nil then self.button3:destroy(); self.button3 = nil; end;
         if self.label1 ~= nil then self.label1:destroy(); self.label1 = nil; end;
         if self.layout4 ~= nil then self.layout4:destroy(); self.layout4 = nil; end;
+        if self.label42 ~= nil then self.label42:destroy(); self.label42 = nil; end;
         if self.flowLineBreak3 ~= nil then self.flowLineBreak3:destroy(); self.flowLineBreak3 = nil; end;
+        if self.button7 ~= nil then self.button7:destroy(); self.button7 = nil; end;
         if self.Functions_Roll ~= nil then self.Functions_Roll:destroy(); self.Functions_Roll = nil; end;
         if self.label17 ~= nil then self.label17:destroy(); self.label17 = nil; end;
         if self.flowLineBreak5 ~= nil then self.flowLineBreak5:destroy(); self.flowLineBreak5 = nil; end;
+        if self.flowLayout11 ~= nil then self.flowLayout11:destroy(); self.flowLayout11 = nil; end;
         if self.Anotacoes ~= nil then self.Anotacoes:destroy(); self.Anotacoes = nil; end;
         if self.flowLayout4 ~= nil then self.flowLayout4:destroy(); self.flowLayout4 = nil; end;
         if self.flowPart5 ~= nil then self.flowPart5:destroy(); self.flowPart5 = nil; end;
@@ -2204,6 +2445,8 @@ local function constructNew_Ficha_Signeiros()
         if self.layout18 ~= nil then self.layout18:destroy(); self.layout18 = nil; end;
         if self.Inventario ~= nil then self.Inventario:destroy(); self.Inventario = nil; end;
         if self.label29 ~= nil then self.label29:destroy(); self.label29 = nil; end;
+        if self.button6 ~= nil then self.button6:destroy(); self.button6 = nil; end;
+        if self.label36 ~= nil then self.label36:destroy(); self.label36 = nil; end;
         if self.rectangle2 ~= nil then self.rectangle2:destroy(); self.rectangle2 = nil; end;
         if self.rectangle3 ~= nil then self.rectangle3:destroy(); self.rectangle3 = nil; end;
         if self.btnEscudo ~= nil then self.btnEscudo:destroy(); self.btnEscudo = nil; end;
@@ -2223,6 +2466,7 @@ local function constructNew_Ficha_Signeiros()
         if self.btn4 ~= nil then self.btn4:destroy(); self.btn4 = nil; end;
         if self.btnAName6 ~= nil then self.btnAName6:destroy(); self.btnAName6 = nil; end;
         if self.adminTab ~= nil then self.adminTab:destroy(); self.adminTab = nil; end;
+        if self.label39 ~= nil then self.label39:destroy(); self.label39 = nil; end;
         if self.label11 ~= nil then self.label11:destroy(); self.label11 = nil; end;
         if self.layout11 ~= nil then self.layout11:destroy(); self.layout11 = nil; end;
         if self.label3 ~= nil then self.label3:destroy(); self.label3 = nil; end;
@@ -2236,13 +2480,16 @@ local function constructNew_Ficha_Signeiros()
         if self.edit6 ~= nil then self.edit6:destroy(); self.edit6 = nil; end;
         if self.label25 ~= nil then self.label25:destroy(); self.label25 = nil; end;
         if self.label7 ~= nil then self.label7:destroy(); self.label7 = nil; end;
+        if self.button8 ~= nil then self.button8:destroy(); self.button8 = nil; end;
         if self.label18 ~= nil then self.label18:destroy(); self.label18 = nil; end;
         if self.label2 ~= nil then self.label2:destroy(); self.label2 = nil; end;
         if self.btnAName2 ~= nil then self.btnAName2:destroy(); self.btnAName2 = nil; end;
         if self.edit3 ~= nil then self.edit3:destroy(); self.edit3 = nil; end;
         if self.label5 ~= nil then self.label5:destroy(); self.label5 = nil; end;
         if self.layout6 ~= nil then self.layout6:destroy(); self.layout6 = nil; end;
+        if self.label38 ~= nil then self.label38:destroy(); self.label38 = nil; end;
         if self.layout22 ~= nil then self.layout22:destroy(); self.layout22 = nil; end;
+        if self.scrollBox4 ~= nil then self.scrollBox4:destroy(); self.scrollBox4 = nil; end;
         if self.layout14 ~= nil then self.layout14:destroy(); self.layout14 = nil; end;
         if self.cbModosecreto ~= nil then self.cbModosecreto:destroy(); self.cbModosecreto = nil; end;
         if self.layout16 ~= nil then self.layout16:destroy(); self.layout16 = nil; end;

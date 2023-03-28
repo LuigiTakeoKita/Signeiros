@@ -1,12 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form name="Inventario" align="client" theme="dark" margins="{top=1}">
-    <button align="top" text="Adicionar Item" width="100">
-        <event name="onClick">
-            self.inventario:append()
-        </event>
-    </button>
-    <!-- lista -->
-    <scrollBox align="top" height="755" margins="{top = 10}">
-        <recordList name="inventario" field="inventario" templateForm="ItemInventario" align="client" selectable="true"/>
-    </scrollBox>
+    <template name="items">
+        <!-- 
+            table = totable(body)
+            width = 190 + (#table[2][1]+3)*5
+            for i=1, #table[2][2], 1 do
+                width = width + table[2][2][i]
+            end
+         -->
+        <layout width="$(width)" height="900" margins="left=5, top=5">
+            <layout align="top" height="25" margins="left=30">
+                <label align="left" text="$(table[1])s" fontStyle="bold"/>
+                <button align="right" text="Adicionar $(table[1])" width="150" margins="right=5">
+                    <event name="onClick">
+                        self.i$(table[1])s:append()
+                        popupShow("$(table[1]) adicionada.")
+                    </event>
+                </button>
+                <button align="right" text="Colar $(table[1])" width="150">
+                    <event name="onClick">
+                        str = System.getClipboardText()
+                        if string.find(str, "name = ") == nil then
+                            return
+                        end
+                        copyTable = totable(str)
+                        node = self.i$(table[1])s:append()
+                        if copyTable.cbItem ~= nil then
+                            node.cbItem = copyTable.cbItem
+                        end
+                        if copyTable.name ~= nil then
+                            node.name = copyTable.name
+                        end
+                        <!-- 
+                            for i=1, #table[2][1], 1 do
+                            text = table[2][1][i]
+                         -->
+                        if copyTable.v$(text) ~= nil then
+                            node.v$(text) = copyTable.v$(text)
+                        end
+                        <!-- end -->
+                    </event>
+                </button>
+            </layout>
+            <layout align="top" height="25" margins="top=10">
+                <label align="left" text="" width="20" margins="left=5"/>
+                <!-- 
+                    for i=1, #table[2][1], 1 do
+                        text = table[2][1][i]
+                        width = table[2][2][i]
+                 -->
+                    <label align="left" text="$(text)" width="$(width)" horzTextAlign="center" margins="left=5"/>
+                <!-- end -->
+            </layout>
+            <scrollBox align="top" height="755" margins="{top = 5}">
+                <recordList name="i$(table[1])s" field="i$(table[1])s" templateForm="Item$(table[1])" align="client"/>
+            </scrollBox>
+        </layout>
+    </template>
+    <flowLayout align="client" autoHeight="true">
+        <items>
+            {
+                "Armadura", 
+                {
+                    {"Nome", "Defesa"},
+                    { 200, 50}
+                }
+            }
+        </items>
+        <items>
+            {
+                "Arma", 
+                {
+                    {"Nome", "Ataque", "Defesa"},
+                    {200, 50, 50}
+                }
+            }
+        </items>
+    </flowLayout>
 </form>
