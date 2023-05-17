@@ -53,7 +53,6 @@ local function constructNew_ItemArma()
     obj.edit2:setField("vAtaque");
     obj.edit2:setWidth(50);
     obj.edit2:setMargins({left=5});
-    obj.edit2:setType("number");
     obj.edit2:setHorzTextAlign("center");
     obj.edit2:setName("edit2");
 
@@ -63,7 +62,6 @@ local function constructNew_ItemArma()
     obj.edit3:setField("vDefesa");
     obj.edit3:setWidth(50);
     obj.edit3:setMargins({left=5});
-    obj.edit3:setType("number");
     obj.edit3:setHorzTextAlign("center");
     obj.edit3:setName("edit3");
 
@@ -83,19 +81,26 @@ local function constructNew_ItemArma()
     obj.button2:setMargins({left=5});
     obj.button2:setName("button2");
 
-    obj._e_event0 = obj.button1:addEventListener("onClick",
+    obj._e_event0 = obj.checkBox1:addEventListener("onChange",
+        function (_)
+            changeArma(sheet)
+        end, obj);
+
+    obj._e_event1 = obj.button1:addEventListener("onClick",
         function (_)
             System.setClipboardText(tableToStr(sheet))
                         popupShow("Armadura copiada.")
         end, obj);
 
-    obj._e_event1 = obj.button2:addEventListener("onClick",
+    obj._e_event2 = obj.button2:addEventListener("onClick",
         function (_)
             if sheet ~= nil then 
                             Dialogs.confirmOkCancel("Deseja realmente deletar essa arma?\n\"" .. (sheet.name or "") .. "\"",
                             function (confirmado)
                                 if confirmado then
                                     value = 0
+                                    sheet.cbItem = false
+                                    changeArma(sheet)
                                     NDB.deleteNode(sheet)
                                 end
                             end)
@@ -103,6 +108,7 @@ local function constructNew_ItemArma()
         end, obj);
 
     function obj:_releaseEvents()
+        __o_rrpgObjs.removeEventListenerById(self._e_event2);
         __o_rrpgObjs.removeEventListenerById(self._e_event1);
         __o_rrpgObjs.removeEventListenerById(self._e_event0);
     end;

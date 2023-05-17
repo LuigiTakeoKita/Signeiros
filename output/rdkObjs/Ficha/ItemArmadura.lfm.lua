@@ -39,7 +39,7 @@ local function constructNew_ItemArmadura()
                 armorValue = 0
                 for i=1, #items, 1 do
                     if (items[i].cbItem == true) then
-                        armorValue = armorValue + (items[i].value or 0)
+                        armorValue = armorValue + (items[i].vDefesa or 0)
                     end
                 end
                 if tonumber(root.armaduraAt) == tonumber(root.armaduraMax) then
@@ -115,7 +115,7 @@ local function constructNew_ItemArmadura()
                             Dialogs.confirmOkCancel("Deseja realmente deletar essa armadura?\n\"" .. (sheet.name or "") .. "\"",
                             function (confirmado)
                                 if confirmado then
-                                    value = 0
+                                    vDefesa = 0
                                     NDB.deleteNode(sheet)
                                 end
                             end)

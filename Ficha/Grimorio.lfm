@@ -186,12 +186,13 @@
             <flowLineBreak/>
             <flowLayout width="850" horzAlign="center">
                 <display_button number="2"/>
-                <label width="50" text=""/>
+                <label width="35" text=""/>
                 <display_button number="3"/>
             </flowLayout>
             <flowLineBreak/>
             <flowLayout width="850" horzAlign="center">
                 <display_button number="4"/>
+                <label width="5" text=""/>
                 <display_button number="5"/>
             </flowLayout>
         </flowLayout>

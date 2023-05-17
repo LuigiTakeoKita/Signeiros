@@ -1,9 +1,135 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form name="Inventario" align="client" theme="dark" margins="{top=1}">
+    <script>
+        function qntEquip()
+            qnt = 0
+            if (sheet ~= nil) then 
+                items = NDB.getChildNodes(sheet.iArmas)
+                for i=1, #items, 1 do
+                    if items[i].cbItem == true then
+                        qnt = qnt + 1
+                    end
+                end
+            end
+            return qnt
+        end
+        function getEquip()
+            equip = {}
+            if (sheet ~= nil) then 
+                items = NDB.getChildNodes(sheet.iArmas)
+                for i=1, #items, 1 do
+                    if items[i].cbItem == true then
+                        table.insert(equip, items[i])
+                    end
+                end
+            end
+            return equip
+        end
+        function changeArma(node)
+            if node ~= nil then
+                if node.cbItem == true then
+                    if node.name == nil or trim(node.name) == "" then
+                        node.cbItem = false
+                        return
+                    end
+                    qnt = qntEquip()
+                    if qnt > 2 then
+                        node.cbItem = false
+                        return
+                    end
+                    if (sheet ~= nil) then 
+                        if qnt == 1 then
+                            self.equip1.node = getEquip()[1]
+                        else
+                            self.equip1.node = getEquip()[1]
+                            self.equip2.node = getEquip()[2]
+                        end
+                    end
+                else
+                    self.equip1.node = getEquip()[1]
+                    self.equip2.node = getEquip()[2]
+                end
+            end
+        end
+        function RollThis(str, text)
+            rolagem = Firecast.interpretarRolagem(str)
+            mesaDoPersonagem = Firecast.getMesaDe(sheet)
+            if mesaDoPersonagem ~= nil then
+                mesaDoPersonagem.chat:rolarDados(rolagem, text)
+            end
+        end
+    </script>
+    <template name="equipados">
+        <layout align="top" width="300" height="90" margins="top=5">
+            <rectangle align="client" color="#505050" strokeColor="black" strokeSize="2">
+                <!-- 
+                    for i=1, 2, 1 do
+                        index = i
+                -->
+                <dataScopeBox name="equip$(index)" align="top" height="30">
+                    <layout align="client" margins="left=5">
+                        <label align="left" field="name"/>
+                        <label align="left" field="vAtaque"/>
+                        <button align="left" text="Atk" width="50" margins="left=5">
+                            <event name="onClick">
+                                str = self.equip$(index).node.vAtaque or ""
+                                name = self.equip$(index).node.name
+                                if str == "" then
+                                    popupShow("Não possui valor de ataque.")
+                                    return 
+                                end
+                                RollThis(str, "Rolagem de ataque(".. name ..").")
+                            </event>
+                        </button>
+                        <label align="left" field="vDefesa" margins="left=5"/>
+                        <button align="left" text="Def" width="50" margins="left=5">
+                            <event name="onClick">
+                                str = self.equip$(index).node.vDefesa or ""
+                                name = self.equip$(index).node.name
+                                if str == "" then
+                                    popupShow("Não possui valor de defesa.")
+                                    return 
+                                end
+                                RollThis(str, "Rolagem de defesa(".. name ..").")
+                            </event>
+                        </button>
+                    </layout>
+                </dataScopeBox>
+                <!-- if i == 1 then-->
+                <layout align="top" height="30" margins="left=5">
+                    <label align="left" width="120" text=""/>
+                    <edit align="left" width="120" field="atkCombinado"/>
+                    <button align="left" text="Atk" width="50" margins="left=5">
+                        <event name="onClick">
+                            str = sheet.atkCombinado or ""
+                            if str == "" then
+                                popupShow("Não possui valor de ataque combinado.")
+                                return 
+                            end
+                            RollThis(str, "Rolagem de ataque combinado.")
+                        </event>
+                    </button>
+                    <edit align="left" width="120" field="defCombinado" margins="left=5"/>
+                    <button align="left" text="Def" width="50" margins="left=5">
+                        <event name="onClick">
+                            str = sheet.defCombinado or ""
+                            if str == "" then
+                                popupShow("Não possui valor de defesa combinado.")
+                                return 
+                            end
+                            RollThis(str, "Rolagem de defesa combinado.")
+                        </event>
+                    </button>
+                </layout>
+                <!-- end -->
+                <!-- end -->
+            </rectangle>
+        </layout>
+    </template>
     <template name="items">
         <!-- 
             table = totable(body)
-            width = 190 + (#table[2][1]+3)*5
+            width = 210 + (#table[2][1]+3)*5
             for i=1, #table[2][2], 1 do
                 width = width + table[2][2][i]
             end
@@ -25,9 +151,6 @@
                         end
                         copyTable = totable(str)
                         node = self.i$(table[1])s:append()
-                        if copyTable.cbItem ~= nil then
-                            node.cbItem = copyTable.cbItem
-                        end
                         if copyTable.name ~= nil then
                             node.name = copyTable.name
                         end
@@ -42,7 +165,14 @@
                     </event>
                 </button>
             </layout>
-            <layout align="top" height="25" margins="top=10">
+            <!-- 
+                height = 755
+                if table[1] == "Arma" then
+                    height = height - 90
+             -->
+            <equipados/>
+            <!-- end -->
+            <layout align="top" height="25" margins="top=5">
                 <label align="left" text="" width="20" margins="left=5"/>
                 <!-- 
                     for i=1, #table[2][1], 1 do
@@ -52,7 +182,7 @@
                     <label align="left" text="$(text)" width="$(width)" horzTextAlign="center" margins="left=5"/>
                 <!-- end -->
             </layout>
-            <scrollBox align="top" height="755" margins="{top = 5}">
+            <scrollBox align="top" height="$(height)" margins="{top = 5}">
                 <recordList name="i$(table[1])s" field="i$(table[1])s" templateForm="Item$(table[1])" align="client"/>
             </scrollBox>
         </layout>

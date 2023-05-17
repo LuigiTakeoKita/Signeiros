@@ -957,7 +957,7 @@ local function constructNew_Grimorio()
 
     obj.label12 = GUI.fromHandle(_obj_newObject("label"));
     obj.label12:setParent(obj.flowLayout7);
-    obj.label12:setWidth(50);
+    obj.label12:setWidth(35);
     obj.label12:setText("");
     obj.label12:setName("label12");
 
@@ -1003,6 +1003,12 @@ local function constructNew_Grimorio()
     obj.label14:setHorzTextAlign("center");
     obj.label14:setName("label14");
 
+    obj.label15 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label15:setParent(obj.flowLayout8);
+    obj.label15:setWidth(5);
+    obj.label15:setText("");
+    obj.label15:setName("label15");
+
     obj.btn5 = GUI.fromHandle(_obj_newObject("button"));
     obj.btn5:setParent(obj.flowLayout8);
     obj.btn5:setWidth(50);
@@ -1011,13 +1017,13 @@ local function constructNew_Grimorio()
     obj.btn5:setMargins({left=5});
     obj.btn5:setFontSize(20);
 
-    obj.label15 = GUI.fromHandle(_obj_newObject("label"));
-    obj.label15:setParent(obj.btn5);
-    obj.label15:setAlign("client");
-    obj.label15:setField("btn5");
-    obj.label15:setFontSize(30);
-    obj.label15:setHorzTextAlign("center");
-    obj.label15:setName("label15");
+    obj.label16 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label16:setParent(obj.btn5);
+    obj.label16:setAlign("client");
+    obj.label16:setField("btn5");
+    obj.label16:setFontSize(30);
+    obj.label16:setHorzTextAlign("center");
+    obj.label16:setName("label16");
 
     obj.adminTab = GUI.fromHandle(_obj_newObject("flowLayout"));
     obj.adminTab:setParent(obj.layout12);
@@ -1081,12 +1087,12 @@ local function constructNew_Grimorio()
     obj.layout16:setMargins({top = 5});
     obj.layout16:setName("layout16");
 
-    obj.label16 = GUI.fromHandle(_obj_newObject("label"));
-    obj.label16:setParent(obj.layout16);
-    obj.label16:setAlign("left");
-    obj.label16:setText("Dano");
-    obj.label16:setMargins({left = 5});
-    obj.label16:setName("label16");
+    obj.label17 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label17:setParent(obj.layout16);
+    obj.label17:setAlign("left");
+    obj.label17:setText("Dano");
+    obj.label17:setMargins({left = 5});
+    obj.label17:setName("label17");
 
     obj.edit2 = GUI.fromHandle(_obj_newObject("edit"));
     obj.edit2:setParent(obj.layout16);
@@ -1105,12 +1111,12 @@ local function constructNew_Grimorio()
     obj.layout17:setMargins({top = 5});
     obj.layout17:setName("layout17");
 
-    obj.label17 = GUI.fromHandle(_obj_newObject("label"));
-    obj.label17:setParent(obj.layout17);
-    obj.label17:setAlign("left");
-    obj.label17:setText("Unidade");
-    obj.label17:setMargins({left = 5});
-    obj.label17:setName("label17");
+    obj.label18 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label18:setParent(obj.layout17);
+    obj.label18:setAlign("left");
+    obj.label18:setText("Unidade");
+    obj.label18:setMargins({left = 5});
+    obj.label18:setName("label18");
 
     obj.edit3 = GUI.fromHandle(_obj_newObject("edit"));
     obj.edit3:setParent(obj.layout17);
@@ -1127,13 +1133,13 @@ local function constructNew_Grimorio()
     obj.layout18:setMargins({top = 5});
     obj.layout18:setName("layout18");
 
-    obj.label18 = GUI.fromHandle(_obj_newObject("label"));
-    obj.label18:setParent(obj.layout18);
-    obj.label18:setAlign("left");
-    obj.label18:setHeight(55);
-    obj.label18:setText("Ultra Secreto");
-    obj.label18:setMargins({left = 5});
-    obj.label18:setName("label18");
+    obj.label19 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label19:setParent(obj.layout18);
+    obj.label19:setAlign("left");
+    obj.label19:setHeight(55);
+    obj.label19:setText("Ultra Secreto");
+    obj.label19:setMargins({left = 5});
+    obj.label19:setName("label19");
 
     obj.textEditor1 = GUI.fromHandle(_obj_newObject("textEditor"));
     obj.textEditor1:setParent(obj.layout18);
@@ -1206,12 +1212,12 @@ local function constructNew_Grimorio()
     obj.btnRevelar:setMargins({left=10});
     obj.btnRevelar:setName("btnRevelar");
 
-    obj.label19 = GUI.fromHandle(_obj_newObject("label"));
-    obj.label19:setParent(obj.rectangle1);
-    obj.label19:setAlign("bottom");
-    obj.label19:setText("Descrição");
-    obj.label19:setMargins({left = 5});
-    obj.label19:setName("label19");
+    obj.label20 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label20:setParent(obj.rectangle1);
+    obj.label20:setAlign("bottom");
+    obj.label20:setText("Descrição");
+    obj.label20:setMargins({left = 5});
+    obj.label20:setName("label20");
 
     obj.textEditor2 = GUI.fromHandle(_obj_newObject("textEditor"));
     obj.textEditor2:setParent(obj.rectangle1);
@@ -1236,14 +1242,14 @@ local function constructNew_Grimorio()
     obj.flowPart1:setHeight(30);
     obj.flowPart1:setName("flowPart1");
 
-    obj.label20 = GUI.fromHandle(_obj_newObject("label"));
-    obj.label20:setParent(obj.flowPart1);
-    obj.label20:setAlign("left");
-    obj.label20:setText("Grimório");
-    obj.label20:setWidth(100);
-    obj.label20:setHeight(25);
-    lfm_setPropAsString(obj.label20, "fontStyle",  "bold");
-    obj.label20:setName("label20");
+    obj.label21 = GUI.fromHandle(_obj_newObject("label"));
+    obj.label21:setParent(obj.flowPart1);
+    obj.label21:setAlign("left");
+    obj.label21:setText("Grimório");
+    obj.label21:setWidth(100);
+    obj.label21:setHeight(25);
+    lfm_setPropAsString(obj.label21, "fontStyle",  "bold");
+    obj.label21:setName("label21");
 
     obj.button3 = GUI.fromHandle(_obj_newObject("button"));
     obj.button3:setParent(obj.flowPart1);
@@ -1672,6 +1678,7 @@ local function constructNew_Grimorio()
         if self.rectangle2 ~= nil then self.rectangle2:destroy(); self.rectangle2 = nil; end;
         if self.rectangle3 ~= nil then self.rectangle3:destroy(); self.rectangle3 = nil; end;
         if self.btnEscudo ~= nil then self.btnEscudo:destroy(); self.btnEscudo = nil; end;
+        if self.label21 ~= nil then self.label21:destroy(); self.label21 = nil; end;
         if self.flowLayout2 ~= nil then self.flowLayout2:destroy(); self.flowLayout2 = nil; end;
         if self.btnAName8 ~= nil then self.btnAName8:destroy(); self.btnAName8 = nil; end;
         if self.popupText ~= nil then self.popupText:destroy(); self.popupText = nil; end;
