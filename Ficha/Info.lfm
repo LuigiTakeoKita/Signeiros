@@ -25,7 +25,7 @@
         <flowPart minWidth="295" maxWidth="300" height="25" vertAlign="center" margins="{top=5}">
             <label align="left" text="Dano" width="75"/>
             <edit align="left" field="dano" width="100" type="number" hint="Valor de dano a ser calculado."/>
-            <button align="left" text="Aplicar Dano" width="100" margins="left=10" name="btnDano">
+            <button align="left" text="Aplicar Dano" width="100" margins="{left=10}" name="btnDano">
                 <event name="onClick">
                     dano = (sheet.dano or 0)
                     valor =  dano - (sheet.armaduraAt or 0)
@@ -45,25 +45,25 @@
         <flowPart minWidth="300" maxWidth="425" height="25" vertAlign="center" margins="{top=5}">
             <label align="left" text="Vitalidade" width="75"/>
             <edit align="left" field="vitalidadeAt" width="100" type="number" horzTextAlign="trailing"/>
-            <label align="left" text="/" width="10" margins="left=5"/>
+            <label align="left" text="/" width="10" margins="{left=5}"/>
             <edit align="left" field="vitalidadeMax" width="100" type="number"/>
         </flowPart>
         <flowPart minWidth="300" maxWidth="425" height="25" vertAlign="center" margins="{top=5}">
             <label align="left" text="Ferimento" width="75"/>
             <edit align="left" field="ferimentoAt" width="100" type="number" horzTextAlign="trailing"/>
-            <label align="left" text="/" width="10" margins="left=5"/>
+            <label align="left" text="/" width="10" margins="{left=5}"/>
             <edit align="left" field="ferimentoMax" width="100" type="number"/>
         </flowPart>
         <flowPart minWidth="300" maxWidth="425" height="25" vertAlign="center" margins="{top=5}">
             <label align="left" text="Armadura " width="75"/>
             <edit align="left" field="armaduraAt" width="100" horzTextAlign="trailing"/>
-            <label align="left" text="/" width="10" margins="left=5"/>
+            <label align="left" text="/" width="10" margins="{left=5}"/>
             <edit align="left" field="armaduraMax" width="100" readOnly="true"/>
         </flowPart>
         <flowPart minWidth="300" maxWidth="425" height="25" vertAlign="center" margins="{top=5}">
             <label align="left" text="Escudo Mágico" width="100"/>
             <edit align="left" field="escudoMAt" width="100" type="number" horzTextAlign="trailing"/>
-            <label align="left" text="/" width="10" margins="left=5"/>
+            <label align="left" text="/" width="10" margins="{left=5}"/>
             <edit align="left" field="escudoMMax" width="100" type="number"/>
         </flowPart>
         <flowLineBreak/>

@@ -12,7 +12,7 @@ local function constructNew_Anotacoes()
     local self = obj;
     local sheet = nil;
 
-    rawset(obj, "_oldSetNodeObjectFunction", rawget(obj, "setNodeObject"));
+    rawset(obj, "_oldSetNodeObjectFunction", obj.setNodeObject);
 
     function obj:setNodeObject(nodeObject)
         sheet = nodeObject;
@@ -34,11 +34,11 @@ local function constructNew_Anotacoes()
     obj.anotacoes = GUI.fromHandle(_obj_newObject("richEdit"));
     obj.anotacoes:setParent(obj);
     obj.anotacoes:setAlign("client");
-    lfm_setPropAsString(obj.anotacoes, "backgroundColor",  "white");
-    lfm_setPropAsString(obj.anotacoes, "defaultFontColor",  "black");
+    obj.anotacoes.backgroundColor = "white";
+    obj.anotacoes.defaultFontColor = "black";
     obj.anotacoes:setField("anotacoes");
     obj.anotacoes:setName("anotacoes");
-    lfm_setPropAsString(obj.anotacoes, "animateImages",  "false");
+    obj.anotacoes.animateImages = false;
 
     function obj:_releaseEvents()
     end;
@@ -84,6 +84,7 @@ local _Anotacoes = {
     dataType = "", 
     formType = "undefined", 
     formComponentName = "form", 
+    cacheMode = "none", 
     title = "", 
     description=""};
 

@@ -18,24 +18,24 @@
             end
         end
     </script>
-    <checkBox align="left" field="cbItem" width="20" margins="left=5">
+    <checkBox align="left" field="cbItem" width="20" margins="{left=5}">
         <event name="onChange">
             changeArmor()
         </event>
     </checkBox>
-    <edit align="left" field="name" width="200" margins="left=5"/>
-    <edit align="left" field="vDefesa" width="50" margins="left=5" type="number" horzTextAlign="center">
+    <edit align="left" field="name" width="200" margins="{left=5}"/>
+    <edit align="left" field="vDefesa" width="50" margins="{left=5}" type="number" horzTextAlign="center">
         <event name="onChange">
             changeArmor()
         </event>
     </edit>
-    <button align="left" text="Copiar" width="70" margins="left=5">
+    <button align="left" text="Copiar" width="70" margins="{left=5}">
         <event name="onClick">
             System.setClipboardText(tableToStr(sheet))
             popupShow("Armadura copiada.")
         </event>
     </button>
-    <button align="left" text="Deletar Item" width="100" margins="left=5">
+    <button align="left" text="Deletar Item" width="100" margins="{left=5}">
         <event name="onClick">
             if sheet ~= nil then 
                 Dialogs.confirmOkCancel("Deseja realmente deletar essa armadura?\n\"" .. (sheet.name or "") .. "\"",

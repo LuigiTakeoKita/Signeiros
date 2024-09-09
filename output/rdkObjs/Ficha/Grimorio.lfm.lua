@@ -12,7 +12,7 @@ local function constructNew_Grimorio()
     local self = obj;
     local sheet = nil;
 
-    rawset(obj, "_oldSetNodeObjectFunction", rawget(obj, "setNodeObject"));
+    rawset(obj, "_oldSetNodeObjectFunction", obj.setNodeObject);
 
     function obj:setNodeObject(nodeObject)
         sheet = nodeObject;
@@ -1248,7 +1248,7 @@ local function constructNew_Grimorio()
     obj.label21:setText("Grimório");
     obj.label21:setWidth(100);
     obj.label21:setHeight(25);
-    lfm_setPropAsString(obj.label21, "fontStyle",  "bold");
+    lfm_setPropAsString(obj.label21, "fontStyle", "bold");
     obj.label21:setName("label21");
 
     obj.button3 = GUI.fromHandle(_obj_newObject("button"));
@@ -1330,7 +1330,7 @@ local function constructNew_Grimorio()
     obj.grimorioInv:setAlign("client");
 
     obj._e_event0 = obj.escudoAp:addEventListener("onClick",
-        function (_)
+        function (event)
             if (selected == "" or selected == nil) then
                                                 node = self.grimorio.selectedNode
                                                 if (node == nil) then
@@ -1361,22 +1361,22 @@ local function constructNew_Grimorio()
                                                 self.magicDesc.node = selectedNode
                                                 popupShow("Escudo selecionado.")
                                             end
-        end, obj);
+        end);
 
     obj._e_event1 = obj.btnEscudo:addEventListener("onClick",
-        function (_)
+        function (event)
             selected = ""
                                             self.escudoAp.checked = false
                                             popupShow("Escudo removido.")
-        end, obj);
+        end);
 
     obj._e_event2 = obj.VigorBar:addEventListener("onClick",
-        function (_)
+        function (event)
             popupShow("Vigor: " .. sheet.vigor .. "/" .. sheet.vigorMax)
-        end, obj);
+        end);
 
     obj._e_event3 = obj.VigorBtn:addEventListener("onClick",
-        function (_)
+        function (event)
             Dialogs.confirmOkCancel("Deseja resetar o vigor(".. sheet.vigorMax ..")?",
                                         function (confirmado)
                                             if confirmado then
@@ -1384,88 +1384,88 @@ local function constructNew_Grimorio()
                                                 popupShow("Vigor restaurado.")
                                             end
                                         end)
-        end, obj);
+        end);
 
     obj._e_event4 = obj.btnAName1:addEventListener("onClick",
-        function (_)
+        function (event)
             sig = "🔥"
                                     addSig(sig)
-        end, obj);
+        end);
 
     obj._e_event5 = obj.btnAName2:addEventListener("onClick",
-        function (_)
+        function (event)
             sig = "⚡"
                                     addSig(sig)
-        end, obj);
+        end);
 
     obj._e_event6 = obj.btnAName3:addEventListener("onClick",
-        function (_)
+        function (event)
             sig = "🎲"
                                     addSig(sig)
-        end, obj);
+        end);
 
     obj._e_event7 = obj.btnAName4:addEventListener("onClick",
-        function (_)
+        function (event)
             sig = "🌓"
                                     addSig(sig)
-        end, obj);
+        end);
 
     obj._e_event8 = obj.btnAName5:addEventListener("onClick",
-        function (_)
+        function (event)
             sig = "👊"
                                     addSig(sig)
-        end, obj);
+        end);
 
     obj._e_event9 = obj.btnAName6:addEventListener("onClick",
-        function (_)
+        function (event)
             sig = "💫"
                                     addSig(sig)
-        end, obj);
+        end);
 
     obj._e_event10 = obj.btnAName7:addEventListener("onClick",
-        function (_)
+        function (event)
             sig = "🎱"
                                     addSig(sig)
-        end, obj);
+        end);
 
     obj._e_event11 = obj.btnAName8:addEventListener("onClick",
-        function (_)
+        function (event)
             sig = "☔"
                                     addSig(sig)
-        end, obj);
+        end);
 
     obj._e_event12 = obj.btn1:addEventListener("onClick",
-        function (_)
+        function (event)
             btnNum = 1
                             removeSig(btnNum)
-        end, obj);
+        end);
 
     obj._e_event13 = obj.btn2:addEventListener("onClick",
-        function (_)
+        function (event)
             btnNum = 2
                             removeSig(btnNum)
-        end, obj);
+        end);
 
     obj._e_event14 = obj.btn3:addEventListener("onClick",
-        function (_)
+        function (event)
             btnNum = 3
                             removeSig(btnNum)
-        end, obj);
+        end);
 
     obj._e_event15 = obj.btn4:addEventListener("onClick",
-        function (_)
+        function (event)
             btnNum = 4
                             removeSig(btnNum)
-        end, obj);
+        end);
 
     obj._e_event16 = obj.btn5:addEventListener("onClick",
-        function (_)
+        function (event)
             btnNum = 5
                             removeSig(btnNum)
-        end, obj);
+        end);
 
     obj._e_event17 = obj.button1:addEventListener("onClick",
-        function (_)
+        function (event)
             sequencia = ""
                             for i=1, 5, 1 do
                                 sequencia = sequencia .. getBtn(i)
@@ -1492,10 +1492,10 @@ local function constructNew_Grimorio()
                                     popupShow("Mágica já escrita no Grimório.")
                                 end
                             end
-        end, obj);
+        end);
 
     obj._e_event18 = obj.button2:addEventListener("onClick",
-        function (_)
+        function (event)
             Dialogs.choose("Escolha o Signo.", {"🔥 - Calor","⚡ - Disrupção","🎲 - Engano","🌓 - Equilíbrio","👊 - Força","💫 - Imaterial","🎱 - Material","☔ - Proteção"},
                                 function(selected, selectedIndex, selectedText)
                                     if selected == false then 
@@ -1529,50 +1529,50 @@ local function constructNew_Grimorio()
                                     end
                                 end
                             )
-        end, obj);
+        end);
 
     obj._e_event19 = obj.btnRolar:addEventListener("onClick",
-        function (_)
+        function (event)
             node = self.grimorio.selectedNode
                                                             if node ~= nil then
                                                                 trySpell()
                                                             end
-        end, obj);
+        end);
 
     obj._e_event20 = obj.btnRevelar:addEventListener("onClick",
-        function (_)
+        function (event)
             revealResult()
-        end, obj);
+        end);
 
     obj._e_event21 = obj.button3:addEventListener("onClick",
-        function (_)
+        function (event)
             copyAll()
-        end, obj);
+        end);
 
     obj._e_event22 = obj.button4:addEventListener("onClick",
-        function (_)
+        function (event)
             pasteAll()
                                         self.grimorio:sort()
-        end, obj);
+        end);
 
     obj._e_event23 = obj.grimorio:addEventListener("onSelect",
-        function (_)
+        function ()
             node = self.grimorio.selectedNode
                                                 self.magicDesc.node = node
-        end, obj);
+        end);
 
     obj._e_event24 = obj.grimorio:addEventListener("onCompare",
-        function (_, nodeA, nodeB)
+        function (nodeA, nodeB)
             a = nodeA.sequencia or ""
                                                 b = nodeB.sequencia or ""
                                                 return sortSig(a, b)
-        end, obj);
+        end);
 
     obj._e_event25 = obj.grimorioInv:addEventListener("onSelect",
-        function (_)
+        function ()
             node = self.grimorioInv.selectedNode
                                                 self.magicDesc.node = node
-        end, obj);
+        end);
 
     function obj:_releaseEvents()
         __o_rrpgObjs.removeEventListenerById(self._e_event25);
@@ -1612,108 +1612,108 @@ local function constructNew_Grimorio()
           self:setNodeDatabase(nil);
         end;
 
-        if self.VigorBar ~= nil then self.VigorBar:destroy(); self.VigorBar = nil; end;
-        if self.label14 ~= nil then self.label14:destroy(); self.label14 = nil; end;
-        if self.layout15 ~= nil then self.layout15:destroy(); self.layout15 = nil; end;
-        if self.layout10 ~= nil then self.layout10:destroy(); self.layout10 = nil; end;
-        if self.flowLayout3 ~= nil then self.flowLayout3:destroy(); self.flowLayout3 = nil; end;
-        if self.btnRevelar ~= nil then self.btnRevelar:destroy(); self.btnRevelar = nil; end;
-        if self.layout17 ~= nil then self.layout17:destroy(); self.layout17 = nil; end;
-        if self.flowLayout1 ~= nil then self.flowLayout1:destroy(); self.flowLayout1 = nil; end;
-        if self.btn2 ~= nil then self.btn2:destroy(); self.btn2 = nil; end;
-        if self.flowPart1 ~= nil then self.flowPart1:destroy(); self.flowPart1 = nil; end;
-        if self.flowLayout5 ~= nil then self.flowLayout5:destroy(); self.flowLayout5 = nil; end;
-        if self.button2 ~= nil then self.button2:destroy(); self.button2 = nil; end;
-        if self.flowPart2 ~= nil then self.flowPart2:destroy(); self.flowPart2 = nil; end;
-        if self.layout13 ~= nil then self.layout13:destroy(); self.layout13 = nil; end;
-        if self.layout3 ~= nil then self.layout3:destroy(); self.layout3 = nil; end;
-        if self.label13 ~= nil then self.label13:destroy(); self.label13 = nil; end;
+        if self.flowLayout2 ~= nil then self.flowLayout2:destroy(); self.flowLayout2 = nil; end;
         if self.layout8 ~= nil then self.layout8:destroy(); self.layout8 = nil; end;
-        if self.cbModoUsecreto ~= nil then self.cbModoUsecreto:destroy(); self.cbModoUsecreto = nil; end;
-        if self.layout1 ~= nil then self.layout1:destroy(); self.layout1 = nil; end;
-        if self.btnAName7 ~= nil then self.btnAName7:destroy(); self.btnAName7 = nil; end;
-        if self.rectangle1 ~= nil then self.rectangle1:destroy(); self.rectangle1 = nil; end;
-        if self.grimorio ~= nil then self.grimorio:destroy(); self.grimorio = nil; end;
+        if self.btn5 ~= nil then self.btn5:destroy(); self.btn5 = nil; end;
+        if self.flowPart2 ~= nil then self.flowPart2:destroy(); self.flowPart2 = nil; end;
+        if self.layout11 ~= nil then self.layout11:destroy(); self.layout11 = nil; end;
         if self.VigorBtn ~= nil then self.VigorBtn:destroy(); self.VigorBtn = nil; end;
-        if self.layout12 ~= nil then self.layout12:destroy(); self.layout12 = nil; end;
-        if self.button1 ~= nil then self.button1:destroy(); self.button1 = nil; end;
-        if self.label8 ~= nil then self.label8:destroy(); self.label8 = nil; end;
-        if self.label4 ~= nil then self.label4:destroy(); self.label4 = nil; end;
-        if self.label6 ~= nil then self.label6:destroy(); self.label6 = nil; end;
-        if self.layout9 ~= nil then self.layout9:destroy(); self.layout9 = nil; end;
-        if self.btnAName1 ~= nil then self.btnAName1:destroy(); self.btnAName1 = nil; end;
-        if self.btnRolar ~= nil then self.btnRolar:destroy(); self.btnRolar = nil; end;
-        if self.btnAName4 ~= nil then self.btnAName4:destroy(); self.btnAName4 = nil; end;
         if self.textEditor2 ~= nil then self.textEditor2:destroy(); self.textEditor2 = nil; end;
-        if self.label15 ~= nil then self.label15:destroy(); self.label15 = nil; end;
-        if self.body ~= nil then self.body:destroy(); self.body = nil; end;
-        if self.scrollBox2 ~= nil then self.scrollBox2:destroy(); self.scrollBox2 = nil; end;
-        if self.label12 ~= nil then self.label12:destroy(); self.label12 = nil; end;
-        if self.magicDesc ~= nil then self.magicDesc:destroy(); self.magicDesc = nil; end;
-        if self.btn3 ~= nil then self.btn3:destroy(); self.btn3 = nil; end;
-        if self.flowLayout7 ~= nil then self.flowLayout7:destroy(); self.flowLayout7 = nil; end;
-        if self.grimorioInv ~= nil then self.grimorioInv:destroy(); self.grimorioInv = nil; end;
-        if self.btnAName3 ~= nil then self.btnAName3:destroy(); self.btnAName3 = nil; end;
-        if self.label16 ~= nil then self.label16:destroy(); self.label16 = nil; end;
+        if self.layout3 ~= nil then self.layout3:destroy(); self.layout3 = nil; end;
         if self.flowLayout9 ~= nil then self.flowLayout9:destroy(); self.flowLayout9 = nil; end;
-        if self.layout19 ~= nil then self.layout19:destroy(); self.layout19 = nil; end;
-        if self.edit2 ~= nil then self.edit2:destroy(); self.edit2 = nil; end;
-        if self.label9 ~= nil then self.label9:destroy(); self.label9 = nil; end;
-        if self.edit1 ~= nil then self.edit1:destroy(); self.edit1 = nil; end;
+        if self.rectangle3 ~= nil then self.rectangle3:destroy(); self.rectangle3 = nil; end;
+        if self.layout22 ~= nil then self.layout22:destroy(); self.layout22 = nil; end;
+        if self.flowLayout5 ~= nil then self.flowLayout5:destroy(); self.flowLayout5 = nil; end;
+        if self.layout16 ~= nil then self.layout16:destroy(); self.layout16 = nil; end;
+        if self.btnAName2 ~= nil then self.btnAName2:destroy(); self.btnAName2 = nil; end;
+        if self.label10 ~= nil then self.label10:destroy(); self.label10 = nil; end;
+        if self.button1 ~= nil then self.button1:destroy(); self.button1 = nil; end;
+        if self.layout13 ~= nil then self.layout13:destroy(); self.layout13 = nil; end;
         if self.btnAName5 ~= nil then self.btnAName5:destroy(); self.btnAName5 = nil; end;
+        if self.label15 ~= nil then self.label15:destroy(); self.label15 = nil; end;
+        if self.btnRevelar ~= nil then self.btnRevelar:destroy(); self.btnRevelar = nil; end;
+        if self.button4 ~= nil then self.button4:destroy(); self.button4 = nil; end;
+        if self.layout5 ~= nil then self.layout5:destroy(); self.layout5 = nil; end;
+        if self.Functions_Roll ~= nil then self.Functions_Roll:destroy(); self.Functions_Roll = nil; end;
+        if self.label2 ~= nil then self.label2:destroy(); self.label2 = nil; end;
+        if self.btnAName8 ~= nil then self.btnAName8:destroy(); self.btnAName8 = nil; end;
+        if self.flowLineBreak2 ~= nil then self.flowLineBreak2:destroy(); self.flowLineBreak2 = nil; end;
+        if self.rectangle1 ~= nil then self.rectangle1:destroy(); self.rectangle1 = nil; end;
+        if self.btnEscudo ~= nil then self.btnEscudo:destroy(); self.btnEscudo = nil; end;
+        if self.edit3 ~= nil then self.edit3:destroy(); self.edit3 = nil; end;
+        if self.label19 ~= nil then self.label19:destroy(); self.label19 = nil; end;
+        if self.layout20 ~= nil then self.layout20:destroy(); self.layout20 = nil; end;
+        if self.label5 ~= nil then self.label5:destroy(); self.label5 = nil; end;
+        if self.VigorBar ~= nil then self.VigorBar:destroy(); self.VigorBar = nil; end;
+        if self.layout18 ~= nil then self.layout18:destroy(); self.layout18 = nil; end;
+        if self.escudoAp ~= nil then self.escudoAp:destroy(); self.escudoAp = nil; end;
+        if self.label12 ~= nil then self.label12:destroy(); self.label12 = nil; end;
+        if self.label20 ~= nil then self.label20:destroy(); self.label20 = nil; end;
+        if self.button3 ~= nil then self.button3:destroy(); self.button3 = nil; end;
+        if self.flowLayout6 ~= nil then self.flowLayout6:destroy(); self.flowLayout6 = nil; end;
+        if self.label9 ~= nil then self.label9:destroy(); self.label9 = nil; end;
+        if self.layout15 ~= nil then self.layout15:destroy(); self.layout15 = nil; end;
+        if self.btnAName7 ~= nil then self.btnAName7:destroy(); self.btnAName7 = nil; end;
+        if self.label17 ~= nil then self.label17:destroy(); self.label17 = nil; end;
+        if self.layout7 ~= nil then self.layout7:destroy(); self.layout7 = nil; end;
+        if self.btn4 ~= nil then self.btn4:destroy(); self.btn4 = nil; end;
+        if self.layout2 ~= nil then self.layout2:destroy(); self.layout2 = nil; end;
+        if self.btn3 ~= nil then self.btn3:destroy(); self.btn3 = nil; end;
+        if self.flowLayout8 ~= nil then self.flowLayout8:destroy(); self.flowLayout8 = nil; end;
+        if self.edit1 ~= nil then self.edit1:destroy(); self.edit1 = nil; end;
+        if self.label7 ~= nil then self.label7:destroy(); self.label7 = nil; end;
         if self.flowLineBreak1 ~= nil then self.flowLineBreak1:destroy(); self.flowLineBreak1 = nil; end;
         if self.Functions_Edit ~= nil then self.Functions_Edit:destroy(); self.Functions_Edit = nil; end;
-        if self.button4 ~= nil then self.button4:destroy(); self.button4 = nil; end;
-        if self.button3 ~= nil then self.button3:destroy(); self.button3 = nil; end;
-        if self.label1 ~= nil then self.label1:destroy(); self.label1 = nil; end;
-        if self.layout4 ~= nil then self.layout4:destroy(); self.layout4 = nil; end;
-        if self.flowLineBreak3 ~= nil then self.flowLineBreak3:destroy(); self.flowLineBreak3 = nil; end;
-        if self.Functions_Roll ~= nil then self.Functions_Roll:destroy(); self.Functions_Roll = nil; end;
-        if self.label17 ~= nil then self.label17:destroy(); self.label17 = nil; end;
         if self.flowLayout4 ~= nil then self.flowLayout4:destroy(); self.flowLayout4 = nil; end;
-        if self.layout5 ~= nil then self.layout5:destroy(); self.layout5 = nil; end;
-        if self.popupMsg ~= nil then self.popupMsg:destroy(); self.popupMsg = nil; end;
-        if self.layout20 ~= nil then self.layout20:destroy(); self.layout20 = nil; end;
-        if self.layout18 ~= nil then self.layout18:destroy(); self.layout18 = nil; end;
-        if self.rectangle2 ~= nil then self.rectangle2:destroy(); self.rectangle2 = nil; end;
-        if self.rectangle3 ~= nil then self.rectangle3:destroy(); self.rectangle3 = nil; end;
-        if self.btnEscudo ~= nil then self.btnEscudo:destroy(); self.btnEscudo = nil; end;
-        if self.label21 ~= nil then self.label21:destroy(); self.label21 = nil; end;
-        if self.flowLayout2 ~= nil then self.flowLayout2:destroy(); self.flowLayout2 = nil; end;
-        if self.btnAName8 ~= nil then self.btnAName8:destroy(); self.btnAName8 = nil; end;
-        if self.popupText ~= nil then self.popupText:destroy(); self.popupText = nil; end;
-        if self.label10 ~= nil then self.label10:destroy(); self.label10 = nil; end;
-        if self.label19 ~= nil then self.label19:destroy(); self.label19 = nil; end;
-        if self.layout2 ~= nil then self.layout2:destroy(); self.layout2 = nil; end;
-        if self.btn4 ~= nil then self.btn4:destroy(); self.btn4 = nil; end;
-        if self.adminTab ~= nil then self.adminTab:destroy(); self.adminTab = nil; end;
-        if self.btnAName6 ~= nil then self.btnAName6:destroy(); self.btnAName6 = nil; end;
-        if self.layout11 ~= nil then self.layout11:destroy(); self.layout11 = nil; end;
-        if self.label11 ~= nil then self.label11:destroy(); self.label11 = nil; end;
-        if self.label3 ~= nil then self.label3:destroy(); self.label3 = nil; end;
-        if self.label20 ~= nil then self.label20:destroy(); self.label20 = nil; end;
-        if self.textEditor1 ~= nil then self.textEditor1:destroy(); self.textEditor1 = nil; end;
-        if self.flowLayout6 ~= nil then self.flowLayout6:destroy(); self.flowLayout6 = nil; end;
-        if self.btn1 ~= nil then self.btn1:destroy(); self.btn1 = nil; end;
-        if self.escudoAp ~= nil then self.escudoAp:destroy(); self.escudoAp = nil; end;
-        if self.label7 ~= nil then self.label7:destroy(); self.label7 = nil; end;
-        if self.label18 ~= nil then self.label18:destroy(); self.label18 = nil; end;
-        if self.btnAName2 ~= nil then self.btnAName2:destroy(); self.btnAName2 = nil; end;
-        if self.label2 ~= nil then self.label2:destroy(); self.label2 = nil; end;
-        if self.edit3 ~= nil then self.edit3:destroy(); self.edit3 = nil; end;
-        if self.layout6 ~= nil then self.layout6:destroy(); self.layout6 = nil; end;
-        if self.label5 ~= nil then self.label5:destroy(); self.label5 = nil; end;
-        if self.layout22 ~= nil then self.layout22:destroy(); self.layout22 = nil; end;
-        if self.layout14 ~= nil then self.layout14:destroy(); self.layout14 = nil; end;
         if self.cbModosecreto ~= nil then self.cbModosecreto:destroy(); self.cbModosecreto = nil; end;
-        if self.layout16 ~= nil then self.layout16:destroy(); self.layout16 = nil; end;
-        if self.layout21 ~= nil then self.layout21:destroy(); self.layout21 = nil; end;
-        if self.btn5 ~= nil then self.btn5:destroy(); self.btn5 = nil; end;
+        if self.grimorioInv ~= nil then self.grimorioInv:destroy(); self.grimorioInv = nil; end;
+        if self.btnRolar ~= nil then self.btnRolar:destroy(); self.btnRolar = nil; end;
+        if self.layout17 ~= nil then self.layout17:destroy(); self.layout17 = nil; end;
+        if self.btnAName1 ~= nil then self.btnAName1:destroy(); self.btnAName1 = nil; end;
+        if self.label11 ~= nil then self.label11:destroy(); self.label11 = nil; end;
+        if self.flowLayout3 ~= nil then self.flowLayout3:destroy(); self.flowLayout3 = nil; end;
+        if self.layout9 ~= nil then self.layout9:destroy(); self.layout9 = nil; end;
+        if self.flowPart1 ~= nil then self.flowPart1:destroy(); self.flowPart1 = nil; end;
+        if self.layout10 ~= nil then self.layout10:destroy(); self.layout10 = nil; end;
+        if self.btnAName4 ~= nil then self.btnAName4:destroy(); self.btnAName4 = nil; end;
+        if self.cbModoUsecreto ~= nil then self.cbModoUsecreto:destroy(); self.cbModoUsecreto = nil; end;
+        if self.layout4 ~= nil then self.layout4:destroy(); self.layout4 = nil; end;
+        if self.btn1 ~= nil then self.btn1:destroy(); self.btn1 = nil; end;
+        if self.label1 ~= nil then self.label1:destroy(); self.label1 = nil; end;
         if self.Functions ~= nil then self.Functions:destroy(); self.Functions = nil; end;
-        if self.flowLineBreak2 ~= nil then self.flowLineBreak2:destroy(); self.flowLineBreak2 = nil; end;
+        if self.flowLineBreak3 ~= nil then self.flowLineBreak3:destroy(); self.flowLineBreak3 = nil; end;
+        if self.rectangle2 ~= nil then self.rectangle2:destroy(); self.rectangle2 = nil; end;
         if self.scrollBox1 ~= nil then self.scrollBox1:destroy(); self.scrollBox1 = nil; end;
-        if self.layout7 ~= nil then self.layout7:destroy(); self.layout7 = nil; end;
-        if self.flowLayout8 ~= nil then self.flowLayout8:destroy(); self.flowLayout8 = nil; end;
+        if self.edit2 ~= nil then self.edit2:destroy(); self.edit2 = nil; end;
+        if self.body ~= nil then self.body:destroy(); self.body = nil; end;
+        if self.label4 ~= nil then self.label4:destroy(); self.label4 = nil; end;
+        if self.layout19 ~= nil then self.layout19:destroy(); self.layout19 = nil; end;
+        if self.btnAName3 ~= nil then self.btnAName3:destroy(); self.btnAName3 = nil; end;
+        if self.label13 ~= nil then self.label13:destroy(); self.label13 = nil; end;
+        if self.popupText ~= nil then self.popupText:destroy(); self.popupText = nil; end;
+        if self.button2 ~= nil then self.button2:destroy(); self.button2 = nil; end;
+        if self.flowLayout1 ~= nil then self.flowLayout1:destroy(); self.flowLayout1 = nil; end;
+        if self.label8 ~= nil then self.label8:destroy(); self.label8 = nil; end;
+        if self.layout12 ~= nil then self.layout12:destroy(); self.layout12 = nil; end;
+        if self.btnAName6 ~= nil then self.btnAName6:destroy(); self.btnAName6 = nil; end;
+        if self.label14 ~= nil then self.label14:destroy(); self.label14 = nil; end;
+        if self.textEditor1 ~= nil then self.textEditor1:destroy(); self.textEditor1 = nil; end;
+        if self.layout6 ~= nil then self.layout6:destroy(); self.layout6 = nil; end;
+        if self.label3 ~= nil then self.label3:destroy(); self.label3 = nil; end;
+        if self.layout1 ~= nil then self.layout1:destroy(); self.layout1 = nil; end;
+        if self.btn2 ~= nil then self.btn2:destroy(); self.btn2 = nil; end;
+        if self.grimorio ~= nil then self.grimorio:destroy(); self.grimorio = nil; end;
+        if self.label18 ~= nil then self.label18:destroy(); self.label18 = nil; end;
+        if self.layout21 ~= nil then self.layout21:destroy(); self.layout21 = nil; end;
+        if self.label6 ~= nil then self.label6:destroy(); self.label6 = nil; end;
+        if self.adminTab ~= nil then self.adminTab:destroy(); self.adminTab = nil; end;
+        if self.scrollBox2 ~= nil then self.scrollBox2:destroy(); self.scrollBox2 = nil; end;
+        if self.label21 ~= nil then self.label21:destroy(); self.label21 = nil; end;
+        if self.flowLayout7 ~= nil then self.flowLayout7:destroy(); self.flowLayout7 = nil; end;
+        if self.magicDesc ~= nil then self.magicDesc:destroy(); self.magicDesc = nil; end;
+        if self.popupMsg ~= nil then self.popupMsg:destroy(); self.popupMsg = nil; end;
+        if self.layout14 ~= nil then self.layout14:destroy(); self.layout14 = nil; end;
+        if self.label16 ~= nil then self.label16:destroy(); self.label16 = nil; end;
         self:_oldLFMDestroy();
     end;
 
@@ -1745,6 +1745,7 @@ local _Grimorio = {
     dataType = "", 
     formType = "undefined", 
     formComponentName = "form", 
+    cacheMode = "none", 
     title = "", 
     description=""};
 

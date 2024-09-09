@@ -12,7 +12,7 @@ local function constructNew_ItemGrimorio()
     local self = obj;
     local sheet = nil;
 
-    rawset(obj, "_oldSetNodeObjectFunction", rawget(obj, "setNodeObject"));
+    rawset(obj, "_oldSetNodeObjectFunction", obj.setNodeObject);
 
     function obj:setNodeObject(nodeObject)
         sheet = nodeObject;
@@ -104,7 +104,7 @@ local function constructNew_ItemGrimorio()
     obj.button2:setName("button2");
 
     obj._e_event0 = obj:addEventListener("onScopeNodeChanged",
-        function (_)
+        function ()
             if self.observer ~= nil then
                         self.observer.enabled = false
                         self.observer = nil
@@ -119,21 +119,21 @@ local function constructNew_ItemGrimorio()
                         end
                         self:atualizarCbxInvisivel()
                     end
-        end, obj);
+        end);
 
     obj._e_event1 = obj.cbxInvisivel:addEventListener("onClick",
-        function (_)
+        function (event)
             self:alternarVisibilidade();
-        end, obj);
+        end);
 
     obj._e_event2 = obj.button1:addEventListener("onClick",
-        function (_)
+        function (event)
             System.setClipboardText(tableToStr(sheet))
                         popupShow("Mágica copiada.")
-        end, obj);
+        end);
 
     obj._e_event3 = obj.button2:addEventListener("onClick",
-        function (_)
+        function (event)
             if sheet ~= nil then 
                             Dialogs.confirmOkCancel("Deseja realmente deletar essa linha?\n\"" .. (sheet.nomeMagia or sheet.sequencia or "") .. "\"",
                             function (confirmado)
@@ -142,7 +142,7 @@ local function constructNew_ItemGrimorio()
                                 end
                             end)
                         end
-        end, obj);
+        end);
 
     function obj:_releaseEvents()
         __o_rrpgObjs.removeEventListenerById(self._e_event3);
@@ -160,9 +160,9 @@ local function constructNew_ItemGrimorio()
           self:setNodeDatabase(nil);
         end;
 
-        if self.edit3 ~= nil then self.edit3:destroy(); self.edit3 = nil; end;
         if self.edit1 ~= nil then self.edit1:destroy(); self.edit1 = nil; end;
         if self.cbxInvisivel ~= nil then self.cbxInvisivel:destroy(); self.cbxInvisivel = nil; end;
+        if self.edit3 ~= nil then self.edit3:destroy(); self.edit3 = nil; end;
         if self.edit2 ~= nil then self.edit2:destroy(); self.edit2 = nil; end;
         if self.button1 ~= nil then self.button1:destroy(); self.button1 = nil; end;
         if self.button2 ~= nil then self.button2:destroy(); self.button2 = nil; end;
@@ -197,6 +197,7 @@ local _ItemGrimorio = {
     dataType = "", 
     formType = "undefined", 
     formComponentName = "form", 
+    cacheMode = "none", 
     title = "", 
     description=""};
 

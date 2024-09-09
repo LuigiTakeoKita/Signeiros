@@ -22,16 +22,16 @@
     </script>
     <imageCheckBox name="cbxInvisivel" align="left" width="25" checkedImage="images/invisivel.png" uncheckedImage="images/visivel.png"
         autoChange="false" onClick="self:alternarVisibilidade();"/>
-    <edit align="left" field="sequencia" readOnly="true" width="100" margins="left=10"/>
+    <edit align="left" field="sequencia" readOnly="true" width="100" margins="{left=10}"/>
     <edit field="vis" visible="false" width="0"/>
-    <edit align="left" field="nomeMagia" width="350" margins="left=10" hint="Nome da Magia" />
-    <button align="left" text="Copiar Sequência" width="150" margins="left=10">
+    <edit align="left" field="nomeMagia" width="350" margins="{left=10}" hint="Nome da Magia" />
+    <button align="left" text="Copiar Sequência" width="150" margins="{left=10}">
         <event name="onClick">
             System.setClipboardText(tableToStr(sheet))
             popupShow("Mágica copiada.")
         </event>
     </button>
-    <button align="left" text="Deletar Item" width="150" margins="left=10">
+    <button align="left" text="Deletar Item" width="150" margins="{left=10}">
         <event name="onClick">
             if sheet ~= nil then 
                 Dialogs.confirmOkCancel("Deseja realmente deletar essa linha?\n\"" .. (sheet.nomeMagia or sheet.sequencia or "") .. "\"",

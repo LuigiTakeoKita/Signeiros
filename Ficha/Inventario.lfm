@@ -60,17 +60,17 @@
         end
     </script>
     <template name="equipados">
-        <layout align="top" width="300" height="90" margins="top=5">
+        <layout align="top" width="300" height="90" margins="{top=5}">
             <rectangle align="client" color="#505050" strokeColor="black" strokeSize="2">
                 <!-- 
                     for i=1, 2, 1 do
                         index = i
                 -->
                 <dataScopeBox name="equip$(index)" align="top" height="30">
-                    <layout align="client" margins="left=5">
+                    <layout align="client" margins="{left=5}">
                         <label align="left" field="name"/>
                         <label align="left" field="vAtaque"/>
-                        <button align="left" text="Atk" width="50" margins="left=5">
+                        <button align="left" text="Atk" width="50" margins="{left=5}">
                             <event name="onClick">
                                 str = self.equip$(index).node.vAtaque or ""
                                 name = self.equip$(index).node.name
@@ -81,8 +81,8 @@
                                 RollThis(str, "Rolagem de ataque(".. name ..").")
                             </event>
                         </button>
-                        <label align="left" field="vDefesa" margins="left=5"/>
-                        <button align="left" text="Def" width="50" margins="left=5">
+                        <label align="left" field="vDefesa" margins="{left=5}"/>
+                        <button align="left" text="Def" width="50" margins="{left=5}">
                             <event name="onClick">
                                 str = self.equip$(index).node.vDefesa or ""
                                 name = self.equip$(index).node.name
@@ -96,10 +96,10 @@
                     </layout>
                 </dataScopeBox>
                 <!-- if i == 1 then-->
-                <layout align="top" height="30" margins="left=5">
+                <layout align="top" height="30" margins="{left=5}">
                     <label align="left" width="120" text=""/>
                     <edit align="left" width="120" field="atkCombinado"/>
-                    <button align="left" text="Atk" width="50" margins="left=5">
+                    <button align="left" text="Atk" width="50" margins="{left=5}">
                         <event name="onClick">
                             str = sheet.atkCombinado or ""
                             if str == "" then
@@ -109,8 +109,8 @@
                             RollThis(str, "Rolagem de ataque combinado.")
                         </event>
                     </button>
-                    <edit align="left" width="120" field="defCombinado" margins="left=5"/>
-                    <button align="left" text="Def" width="50" margins="left=5">
+                    <edit align="left" width="120" field="defCombinado" margins="{left=5}"/>
+                    <button align="left" text="Def" width="50" margins="{left=5}">
                         <event name="onClick">
                             str = sheet.defCombinado or ""
                             if str == "" then
@@ -134,10 +134,10 @@
                 width = width + table[2][2][i]
             end
          -->
-        <layout width="$(width)" height="900" margins="left=5, top=5">
-            <layout align="top" height="25" margins="left=30">
+        <layout width="$(width)" height="900" margins="{left=5, top=5}">
+            <layout align="top" height="25" margins="{left=30}">
                 <label align="left" text="$(table[1])s" fontStyle="bold"/>
-                <button align="right" text="Adicionar $(table[1])" width="150" margins="right=5">
+                <button align="right" text="Adicionar $(table[1])" width="150" margins="{right=5}">
                     <event name="onClick">
                         self.i$(table[1])s:append()
                         popupShow("$(table[1]) adicionada.")
@@ -172,14 +172,14 @@
              -->
             <equipados/>
             <!-- end -->
-            <layout align="top" height="25" margins="top=5">
-                <label align="left" text="" width="20" margins="left=5"/>
+            <layout align="top" height="25" margins="{top=5}">
+                <label align="left" text="" width="20" margins="{left=5}"/>
                 <!-- 
                     for i=1, #table[2][1], 1 do
                         text = table[2][1][i]
                         width = table[2][2][i]
                  -->
-                    <label align="left" text="$(text)" width="$(width)" horzTextAlign="center" margins="left=5"/>
+                    <label align="left" text="$(text)" width="$(width)" horzTextAlign="center" margins="{left=5}"/>
                 <!-- end -->
             </layout>
             <scrollBox align="top" height="$(height)" margins="{top = 5}">

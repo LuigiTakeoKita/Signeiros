@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module sdkVersion="3.5">
+<module sdkVersion="3.7b">
     <id>Signeiros</id>
     <version>1.0</version>
-    <name>Signeiros</name>
-    <description>Fichas para Signeiros</description>
-    <author>Luigi Takeo Kita</author>
-    <site></site>
-    <contact>luigikita@gmail.com</contact>
+    <info lang="pt-BR">
+        <!--Informações do plugin na língua "pt-BR". Você pode ter várias tags "info", uma para cada tradução que quiser.-->
+        <name>Signeiros</name>
+        <description>Fichas para Signeiros</description>
+        <author>Luigi Takeo Kita</author>
+        <contact>luigikita@gmail.com</contact>
+    </info>
 </module>

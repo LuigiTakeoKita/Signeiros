@@ -12,7 +12,7 @@ local function constructNew_Info()
     local self = obj;
     local sheet = nil;
 
-    rawset(obj, "_oldSetNodeObjectFunction", rawget(obj, "setNodeObject"));
+    rawset(obj, "_oldSetNodeObjectFunction", obj.setNodeObject);
 
     function obj:setNodeObject(nodeObject)
         sheet = nodeObject;
@@ -348,7 +348,7 @@ local function constructNew_Info()
     obj.richEdit1:setName("richEdit1");
 
     obj._e_event0 = obj.btnDano:addEventListener("onClick",
-        function (_)
+        function (event)
             dano = (sheet.dano or 0)
                                 valor =  dano - (sheet.armaduraAt or 0)
                                 sheet.armaduraAt = sheet.armaduraAt - dano
@@ -361,7 +361,7 @@ local function constructNew_Info()
                                 else
                                     showMessage("Nenhum dano aplicado.")
                                 end
-        end, obj);
+        end);
 
     function obj:_releaseEvents()
         __o_rrpgObjs.removeEventListenerById(self._e_event0);
@@ -376,48 +376,48 @@ local function constructNew_Info()
           self:setNodeDatabase(nil);
         end;
 
-        if self.label14 ~= nil then self.label14:destroy(); self.label14 = nil; end;
-        if self.flowPart3 ~= nil then self.flowPart3:destroy(); self.flowPart3 = nil; end;
+        if self.flowLineBreak1 ~= nil then self.flowLineBreak1:destroy(); self.flowLineBreak1 = nil; end;
         if self.richEdit1 ~= nil then self.richEdit1:destroy(); self.richEdit1 = nil; end;
-        if self.flowPart8 ~= nil then self.flowPart8:destroy(); self.flowPart8 = nil; end;
-        if self.label1 ~= nil then self.label1:destroy(); self.label1 = nil; end;
-        if self.edit4 ~= nil then self.edit4:destroy(); self.edit4 = nil; end;
-        if self.label8 ~= nil then self.label8:destroy(); self.label8 = nil; end;
-        if self.label11 ~= nil then self.label11:destroy(); self.label11 = nil; end;
-        if self.flowPart10 ~= nil then self.flowPart10:destroy(); self.flowPart10 = nil; end;
-        if self.label3 ~= nil then self.label3:destroy(); self.label3 = nil; end;
-        if self.label4 ~= nil then self.label4:destroy(); self.label4 = nil; end;
-        if self.label6 ~= nil then self.label6:destroy(); self.label6 = nil; end;
-        if self.edit11 ~= nil then self.edit11:destroy(); self.edit11 = nil; end;
-        if self.edit9 ~= nil then self.edit9:destroy(); self.edit9 = nil; end;
-        if self.edit5 ~= nil then self.edit5:destroy(); self.edit5 = nil; end;
-        if self.edit6 ~= nil then self.edit6:destroy(); self.edit6 = nil; end;
-        if self.flowPart5 ~= nil then self.flowPart5:destroy(); self.flowPart5 = nil; end;
-        if self.flowPart9 ~= nil then self.flowPart9:destroy(); self.flowPart9 = nil; end;
-        if self.label7 ~= nil then self.label7:destroy(); self.label7 = nil; end;
-        if self.edit13 ~= nil then self.edit13:destroy(); self.edit13 = nil; end;
-        if self.edit7 ~= nil then self.edit7:destroy(); self.edit7 = nil; end;
-        if self.flowPart7 ~= nil then self.flowPart7:destroy(); self.flowPart7 = nil; end;
         if self.label2 ~= nil then self.label2:destroy(); self.label2 = nil; end;
-        if self.edit3 ~= nil then self.edit3:destroy(); self.edit3 = nil; end;
+        if self.flowPart2 ~= nil then self.flowPart2:destroy(); self.flowPart2 = nil; end;
+        if self.label13 ~= nil then self.label13:destroy(); self.label13 = nil; end;
         if self.flowLayout1 ~= nil then self.flowLayout1:destroy(); self.flowLayout1 = nil; end;
-        if self.edit12 ~= nil then self.edit12:destroy(); self.edit12 = nil; end;
+        if self.edit4 ~= nil then self.edit4:destroy(); self.edit4 = nil; end;
+        if self.edit13 ~= nil then self.edit13:destroy(); self.edit13 = nil; end;
+        if self.flowLineBreak2 ~= nil then self.flowLineBreak2:destroy(); self.flowLineBreak2 = nil; end;
+        if self.edit10 ~= nil then self.edit10:destroy(); self.edit10 = nil; end;
+        if self.edit3 ~= nil then self.edit3:destroy(); self.edit3 = nil; end;
+        if self.label8 ~= nil then self.label8:destroy(); self.label8 = nil; end;
         if self.label5 ~= nil then self.label5:destroy(); self.label5 = nil; end;
-        if self.label12 ~= nil then self.label12:destroy(); self.label12 = nil; end;
+        if self.flowPart7 ~= nil then self.flowPart7:destroy(); self.flowPart7 = nil; end;
+        if self.label14 ~= nil then self.label14:destroy(); self.label14 = nil; end;
+        if self.btnDano ~= nil then self.btnDano:destroy(); self.btnDano = nil; end;
+        if self.flowPart10 ~= nil then self.flowPart10:destroy(); self.flowPart10 = nil; end;
+        if self.label11 ~= nil then self.label11:destroy(); self.label11 = nil; end;
+        if self.flowPart4 ~= nil then self.flowPart4:destroy(); self.flowPart4 = nil; end;
+        if self.edit6 ~= nil then self.edit6:destroy(); self.edit6 = nil; end;
+        if self.label3 ~= nil then self.label3:destroy(); self.label3 = nil; end;
         if self.flowPart1 ~= nil then self.flowPart1:destroy(); self.flowPart1 = nil; end;
         if self.edit8 ~= nil then self.edit8:destroy(); self.edit8 = nil; end;
-        if self.flowPart2 ~= nil then self.flowPart2:destroy(); self.flowPart2 = nil; end;
-        if self.flowPart4 ~= nil then self.flowPart4:destroy(); self.flowPart4 = nil; end;
-        if self.flowPart6 ~= nil then self.flowPart6:destroy(); self.flowPart6 = nil; end;
-        if self.edit2 ~= nil then self.edit2:destroy(); self.edit2 = nil; end;
+        if self.label12 ~= nil then self.label12:destroy(); self.label12 = nil; end;
+        if self.edit5 ~= nil then self.edit5:destroy(); self.edit5 = nil; end;
+        if self.edit12 ~= nil then self.edit12:destroy(); self.edit12 = nil; end;
+        if self.flowPart9 ~= nil then self.flowPart9:destroy(); self.flowPart9 = nil; end;
         if self.label9 ~= nil then self.label9:destroy(); self.label9 = nil; end;
-        if self.btnDano ~= nil then self.btnDano:destroy(); self.btnDano = nil; end;
+        if self.label6 ~= nil then self.label6:destroy(); self.label6 = nil; end;
+        if self.flowPart6 ~= nil then self.flowPart6:destroy(); self.flowPart6 = nil; end;
+        if self.label1 ~= nil then self.label1:destroy(); self.label1 = nil; end;
+        if self.flowPart3 ~= nil then self.flowPart3:destroy(); self.flowPart3 = nil; end;
         if self.label10 ~= nil then self.label10:destroy(); self.label10 = nil; end;
-        if self.edit10 ~= nil then self.edit10:destroy(); self.edit10 = nil; end;
+        if self.edit7 ~= nil then self.edit7:destroy(); self.edit7 = nil; end;
+        if self.edit9 ~= nil then self.edit9:destroy(); self.edit9 = nil; end;
+        if self.edit11 ~= nil then self.edit11:destroy(); self.edit11 = nil; end;
+        if self.edit2 ~= nil then self.edit2:destroy(); self.edit2 = nil; end;
+        if self.label4 ~= nil then self.label4:destroy(); self.label4 = nil; end;
         if self.edit1 ~= nil then self.edit1:destroy(); self.edit1 = nil; end;
-        if self.flowLineBreak1 ~= nil then self.flowLineBreak1:destroy(); self.flowLineBreak1 = nil; end;
-        if self.label13 ~= nil then self.label13:destroy(); self.label13 = nil; end;
-        if self.flowLineBreak2 ~= nil then self.flowLineBreak2:destroy(); self.flowLineBreak2 = nil; end;
+        if self.flowPart8 ~= nil then self.flowPart8:destroy(); self.flowPart8 = nil; end;
+        if self.label7 ~= nil then self.label7:destroy(); self.label7 = nil; end;
+        if self.flowPart5 ~= nil then self.flowPart5:destroy(); self.flowPart5 = nil; end;
         self:_oldLFMDestroy();
     end;
 
@@ -449,6 +449,7 @@ local _Info = {
     dataType = "", 
     formType = "undefined", 
     formComponentName = "form", 
+    cacheMode = "none", 
     title = "", 
     description=""};
 

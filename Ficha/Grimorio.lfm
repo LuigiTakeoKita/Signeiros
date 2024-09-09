@@ -165,7 +165,7 @@
                 index = i
                 btnAName = "btnAName" .. i
         -->
-            <layout width="70" height="85" margins="left=5">
+            <layout width="70" height="85" margins="{left=5}">
                 <button align="top" text="$(ic)" height="60" hint="$(h)" fontSize="30" name="$(btnAName)">
                     <event name="onClick">
                         sig = "$(ic)"
@@ -179,7 +179,7 @@
         -->
     </template>
     <template name="magic_display">
-        <flowLayout align="top" height="165" horzAlign="center" lineSpacing="5" margins="bottom=5">
+        <flowLayout align="top" height="165" horzAlign="center" lineSpacing="5" margins="{bottom=5}">
             <flowLayout width="850" horzAlign="center">
                 <display_button number="1"/>
             </flowLayout>
@@ -201,7 +201,7 @@
         <!-- 
             btn = "btn" .. number
          -->
-        <button width="50" height="50" name="$(btn)" margins="left=5" fontSize="20">
+        <button width="50" height="50" name="$(btn)" margins="{left=5}" fontSize="20">
             <label align="client" field="$(btn)" fontSize="30" horzTextAlign="center"/>
             <event name="onCLick">
                 btnNum = $(number)
@@ -242,7 +242,7 @@
         </button>
     </template>
     <template name="button_Level">
-        <button width="150" text="Ajustar Level de magia" margins="left=10">
+        <button width="150" text="Ajustar Level de magia" margins="{left=10}">
             <event name="onClick">
                 Dialogs.choose("Escolha o Signo.", {"🔥 - Calor","⚡ - Disrupção","🎲 - Engano","🌓 - Equilíbrio","👊 - Força","💫 - Imaterial","🎱 - Material","☔ - Proteção"},
                     function(selected, selectedIndex, selectedText)
@@ -342,7 +342,7 @@
                             popupShow("Vigor: " .. sheet.vigor .. "/" .. sheet.vigorMax)
                         </event>
                     </progressBar>
-                    <button text="Restaurar Vigor" width="100" margins="left=10" name="VigorBtn">
+                    <button text="Restaurar Vigor" width="100" margins="{left=10}" name="VigorBtn">
                         <event name="onClick">
                             Dialogs.confirmOkCancel("Deseja resetar o vigor(".. sheet.vigorMax ..")?",
                             function (confirmado)
@@ -359,7 +359,7 @@
                     <flowLayout align="top" width="850" height="85" horzAlign="center">
                         <select_magia/>
                     </flowLayout>
-                    <layout align="top" width="850" height="200" margins="top=10">
+                    <layout align="top" width="850" height="200" margins="{top=10}">
                         <magic_display/>
                         <flowLayout align="top" width="850" height="35" margins="{left = 5, right = 5, top = 5, bottom = 5}" horzAlign="center" name="adminTab">
                             <button_addMagic/>
@@ -373,22 +373,22 @@
                         <rectangle align="client" color="black" xradius="10" yradius="10" padding="{top=5, left=5, right=5, bottom=5}">
                             <layout align="top" height="135">
                                 <layout align="left" width="600">
-                                    <layout align="top"  height="25" margins="top = 5">
-                                        <label align="left" text="Dano" margins="left = 5"/>
+                                    <layout align="top"  height="25" margins="{top = 5}">
+                                        <label align="left" text="Dano" margins="{left = 5}"/>
                                         <edit align="left" width="50" field="dano" type="number" min="0" max="5"/>
                                     </layout>
-                                    <layout align="top" height="25" margins="top = 5">
-                                        <label align="left" text="Unidade" margins="left = 5"/>
+                                    <layout align="top" height="25" margins="{top = 5}">
+                                        <label align="left" text="Unidade" margins="{left = 5}"/>
                                         <edit align="left" width="400" field="unidades" hint="Nome=Valor,Nome=Valor ou Valor,Valor"/>
                                     </layout>
-                                    <layout align="top" height="80" margins="top = 5">
-                                        <label align="left" height="55" text="Ultra Secreto" margins="left = 5"/>
+                                    <layout align="top" height="80" margins="{top = 5}">
+                                        <label align="left" height="55" text="Ultra Secreto" margins="{left = 5}"/>
                                         <textEditor align="left" width="400" height="55" field="rolagemUltraSecreta" readOnly="true"/>
                                     </layout>
                                 </layout>
                                 <layout align="right" width="200">
-                                    <layout align="top" width="90" height="25" margins="top = 5">
-                                        <button align="left" text="Rolar" width="60" margins="left=10" name="btnRolar">
+                                    <layout align="top" width="90" height="25" margins="{top = 5}">
+                                        <button align="left" text="Rolar" width="60" margins="{left=10}" name="btnRolar">
                                             <event name="onClick">
                                                 node = self.grimorio.selectedNode
                                                 if node ~= nil then
@@ -396,13 +396,13 @@
                                                 end
                                             </event>
                                         </button>
-                                        <checkBox align="left" field="modoSecreto" text="Modo Secreto" margins="left = 5" name="cbModosecreto"/>
+                                        <checkBox align="left" field="modoSecreto" text="Modo Secreto" margins="{left = 5}" name="cbModosecreto"/>
                                     </layout>
-                                    <layout align="top" width="90" height="25" margins="top = 5">
-                                        <checkBox align="left" field="modoUltraSecreto" text="Modo Ultra Secreto" margins="left = 10" name="cbModoUsecreto"/>
+                                    <layout align="top" width="90" height="25" margins="{top = 5}">
+                                        <checkBox align="left" field="modoUltraSecreto" text="Modo Ultra Secreto" margins="{left = 10}" name="cbModoUsecreto"/>
                                     </layout>
-                                    <layout align="top" width="90" height="25" margins="top = 5">
-                                        <button align="left" text="Revelar Valores" width="180" margins="left=10" name="btnRevelar">
+                                    <layout align="top" width="90" height="25" margins="{top = 5}">
+                                        <button align="left" text="Revelar Valores" width="180" margins="{left=10}" name="btnRevelar">
                                             <event name="onClick">
                                                 revealResult()
                                             </event>
@@ -410,8 +410,8 @@
                                     </layout>
                                 </layout>
                             </layout>
-                            <label align="bottom" text="Descrição" margins="left = 5"/>
-                            <textEditor align="bottom" height="190" field="desc" margins="top = 5"/>
+                            <label align="bottom" text="Descrição" margins="{left = 5}"/>
+                            <textEditor align="bottom" height="190" field="desc" margins="{top = 5}"/>
                         </rectangle>
                     </dataScopeBox>
                 </layout>
@@ -421,12 +421,12 @@
                 <!-- Grimorio head -->
                 <flowPart minWidth="500" maxWidth="900" height="30">
                     <label align="left" text="Grimório" width="100" height="25" fontStyle="bold"/>
-                    <button align="left" left="10" text="Copiar Grimório" width="150" height="25" margins="left = 10">
+                    <button align="left" left="10" text="Copiar Grimório" width="150" height="25" margins="{left = 10}">
                         <event name="onCLick">
                             copyAll()
                         </event>
                     </button>
-                    <button align="left" left="10" text="Colar no Grimório" width="150" height="25" margins="left = 10">
+                    <button align="left" left="10" text="Colar no Grimório" width="150" height="25" margins="{left = 10}">
                         <event name="onCLick">
                             pasteAll()
                             self.grimorio:sort()

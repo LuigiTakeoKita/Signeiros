@@ -12,7 +12,7 @@ local function constructNew_Inventario()
     local self = obj;
     local sheet = nil;
 
-    rawset(obj, "_oldSetNodeObjectFunction", rawget(obj, "setNodeObject"));
+    rawset(obj, "_oldSetNodeObjectFunction", obj.setNodeObject);
 
     function obj:setNodeObject(nodeObject)
         sheet = nodeObject;
@@ -116,7 +116,7 @@ local function constructNew_Inventario()
     obj.label1:setParent(obj.layout2);
     obj.label1:setAlign("left");
     obj.label1:setText("Armaduras");
-    lfm_setPropAsString(obj.label1, "fontStyle",  "bold");
+    lfm_setPropAsString(obj.label1, "fontStyle", "bold");
     obj.label1:setName("label1");
 
     obj.button1 = GUI.fromHandle(_obj_newObject("button"));
@@ -199,7 +199,7 @@ local function constructNew_Inventario()
     obj.label5:setParent(obj.layout5);
     obj.label5:setAlign("left");
     obj.label5:setText("Armas");
-    lfm_setPropAsString(obj.label5, "fontStyle",  "bold");
+    lfm_setPropAsString(obj.label5, "fontStyle", "bold");
     obj.label5:setName("label5");
 
     obj.button3 = GUI.fromHandle(_obj_newObject("button"));
@@ -429,13 +429,13 @@ local function constructNew_Inventario()
     obj.iArmas:setAlign("client");
 
     obj._e_event0 = obj.button1:addEventListener("onClick",
-        function (_)
+        function (event)
             self.iArmaduras:append()
                                     popupShow("Armadura adicionada.")
-        end, obj);
+        end);
 
     obj._e_event1 = obj.button2:addEventListener("onClick",
-        function (_)
+        function (event)
             str = System.getClipboardText()
                                     if string.find(str, "name = ") == nil then
                                         return
@@ -455,16 +455,16 @@ local function constructNew_Inventario()
                                     if copyTable.vDefesa ~= nil then
                                         node.vDefesa = copyTable.vDefesa
                                     end
-        end, obj);
+        end);
 
     obj._e_event2 = obj.button3:addEventListener("onClick",
-        function (_)
+        function (event)
             self.iArmas:append()
                                     popupShow("Arma adicionada.")
-        end, obj);
+        end);
 
     obj._e_event3 = obj.button4:addEventListener("onClick",
-        function (_)
+        function (event)
             str = System.getClipboardText()
                                     if string.find(str, "name = ") == nil then
                                         return
@@ -489,10 +489,10 @@ local function constructNew_Inventario()
                                     if copyTable.vDefesa ~= nil then
                                         node.vDefesa = copyTable.vDefesa
                                     end
-        end, obj);
+        end);
 
     obj._e_event4 = obj.button5:addEventListener("onClick",
-        function (_)
+        function (event)
             str = self.equip1.node.vAtaque or ""
                                             name = self.equip1.node.name
                                             if str == "" then
@@ -500,10 +500,10 @@ local function constructNew_Inventario()
                                                 return 
                                             end
                                             RollThis(str, "Rolagem de ataque(".. name ..").")
-        end, obj);
+        end);
 
     obj._e_event5 = obj.button6:addEventListener("onClick",
-        function (_)
+        function (event)
             str = self.equip1.node.vDefesa or ""
                                             name = self.equip1.node.name
                                             if str == "" then
@@ -511,30 +511,30 @@ local function constructNew_Inventario()
                                                 return 
                                             end
                                             RollThis(str, "Rolagem de defesa(".. name ..").")
-        end, obj);
+        end);
 
     obj._e_event6 = obj.button7:addEventListener("onClick",
-        function (_)
+        function (event)
             str = sheet.atkCombinado or ""
                                         if str == "" then
                                             popupShow("Não possui valor de ataque combinado.")
                                             return 
                                         end
                                         RollThis(str, "Rolagem de ataque combinado.")
-        end, obj);
+        end);
 
     obj._e_event7 = obj.button8:addEventListener("onClick",
-        function (_)
+        function (event)
             str = sheet.defCombinado or ""
                                         if str == "" then
                                             popupShow("Não possui valor de defesa combinado.")
                                             return 
                                         end
                                         RollThis(str, "Rolagem de defesa combinado.")
-        end, obj);
+        end);
 
     obj._e_event8 = obj.button9:addEventListener("onClick",
-        function (_)
+        function (event)
             str = self.equip2.node.vAtaque or ""
                                             name = self.equip2.node.name
                                             if str == "" then
@@ -542,10 +542,10 @@ local function constructNew_Inventario()
                                                 return 
                                             end
                                             RollThis(str, "Rolagem de ataque(".. name ..").")
-        end, obj);
+        end);
 
     obj._e_event9 = obj.button10:addEventListener("onClick",
-        function (_)
+        function (event)
             str = self.equip2.node.vDefesa or ""
                                             name = self.equip2.node.name
                                             if str == "" then
@@ -553,7 +553,7 @@ local function constructNew_Inventario()
                                                 return 
                                             end
                                             RollThis(str, "Rolagem de defesa(".. name ..").")
-        end, obj);
+        end);
 
     function obj:_releaseEvents()
         __o_rrpgObjs.removeEventListenerById(self._e_event9);
@@ -577,52 +577,52 @@ local function constructNew_Inventario()
           self:setNodeDatabase(nil);
         end;
 
-        if self.button10 ~= nil then self.button10:destroy(); self.button10 = nil; end;
-        if self.button4 ~= nil then self.button4:destroy(); self.button4 = nil; end;
+        if self.layout8 ~= nil then self.layout8:destroy(); self.layout8 = nil; end;
+        if self.button2 ~= nil then self.button2:destroy(); self.button2 = nil; end;
+        if self.label2 ~= nil then self.label2:destroy(); self.label2 = nil; end;
         if self.label13 ~= nil then self.label13:destroy(); self.label13 = nil; end;
-        if self.label14 ~= nil then self.label14:destroy(); self.label14 = nil; end;
+        if self.flowLayout1 ~= nil then self.flowLayout1:destroy(); self.flowLayout1 = nil; end;
+        if self.rectangle1 ~= nil then self.rectangle1:destroy(); self.rectangle1 = nil; end;
         if self.iArmas ~= nil then self.iArmas:destroy(); self.iArmas = nil; end;
-        if self.button1 ~= nil then self.button1:destroy(); self.button1 = nil; end;
-        if self.button3 ~= nil then self.button3:destroy(); self.button3 = nil; end;
-        if self.label1 ~= nil then self.label1:destroy(); self.label1 = nil; end;
-        if self.layout4 ~= nil then self.layout4:destroy(); self.layout4 = nil; end;
         if self.label8 ~= nil then self.label8:destroy(); self.label8 = nil; end;
+        if self.layout3 ~= nil then self.layout3:destroy(); self.layout3 = nil; end;
+        if self.button8 ~= nil then self.button8:destroy(); self.button8 = nil; end;
+        if self.label5 ~= nil then self.label5:destroy(); self.label5 = nil; end;
+        if self.button5 ~= nil then self.button5:destroy(); self.button5 = nil; end;
+        if self.equip2 ~= nil then self.equip2:destroy(); self.equip2 = nil; end;
+        if self.layout6 ~= nil then self.layout6:destroy(); self.layout6 = nil; end;
+        if self.label14 ~= nil then self.label14:destroy(); self.label14 = nil; end;
         if self.label11 ~= nil then self.label11:destroy(); self.label11 = nil; end;
-        if self.label3 ~= nil then self.label3:destroy(); self.label3 = nil; end;
-        if self.label4 ~= nil then self.label4:destroy(); self.label4 = nil; end;
-        if self.label6 ~= nil then self.label6:destroy(); self.label6 = nil; end;
-        if self.button7 ~= nil then self.button7:destroy(); self.button7 = nil; end;
+        if self.equip1 ~= nil then self.equip1:destroy(); self.equip1 = nil; end;
         if self.layout9 ~= nil then self.layout9:destroy(); self.layout9 = nil; end;
+        if self.label3 ~= nil then self.label3:destroy(); self.label3 = nil; end;
+        if self.button3 ~= nil then self.button3:destroy(); self.button3 = nil; end;
+        if self.label12 ~= nil then self.label12:destroy(); self.label12 = nil; end;
+        if self.layout1 ~= nil then self.layout1:destroy(); self.layout1 = nil; end;
         if self.layout10 ~= nil then self.layout10:destroy(); self.layout10 = nil; end;
+        if self.label9 ~= nil then self.label9:destroy(); self.label9 = nil; end;
+        if self.layout4 ~= nil then self.layout4:destroy(); self.layout4 = nil; end;
         if self.button9 ~= nil then self.button9:destroy(); self.button9 = nil; end;
+        if self.label6 ~= nil then self.label6:destroy(); self.label6 = nil; end;
+        if self.button6 ~= nil then self.button6:destroy(); self.button6 = nil; end;
+        if self.scrollBox2 ~= nil then self.scrollBox2:destroy(); self.scrollBox2 = nil; end;
+        if self.layout7 ~= nil then self.layout7:destroy(); self.layout7 = nil; end;
         if self.iArmaduras ~= nil then self.iArmaduras:destroy(); self.iArmaduras = nil; end;
+        if self.label1 ~= nil then self.label1:destroy(); self.label1 = nil; end;
+        if self.button1 ~= nil then self.button1:destroy(); self.button1 = nil; end;
+        if self.scrollBox1 ~= nil then self.scrollBox1:destroy(); self.scrollBox1 = nil; end;
+        if self.label10 ~= nil then self.label10:destroy(); self.label10 = nil; end;
+        if self.button10 ~= nil then self.button10:destroy(); self.button10 = nil; end;
+        if self.edit2 ~= nil then self.edit2:destroy(); self.edit2 = nil; end;
+        if self.layout2 ~= nil then self.layout2:destroy(); self.layout2 = nil; end;
+        if self.label4 ~= nil then self.label4:destroy(); self.label4 = nil; end;
+        if self.button4 ~= nil then self.button4:destroy(); self.button4 = nil; end;
+        if self.edit1 ~= nil then self.edit1:destroy(); self.edit1 = nil; end;
+        if self.layout5 ~= nil then self.layout5:destroy(); self.layout5 = nil; end;
         if self.label15 ~= nil then self.label15:destroy(); self.label15 = nil; end;
         if self.label7 ~= nil then self.label7:destroy(); self.label7 = nil; end;
-        if self.layout5 ~= nil then self.layout5:destroy(); self.layout5 = nil; end;
-        if self.button8 ~= nil then self.button8:destroy(); self.button8 = nil; end;
-        if self.label2 ~= nil then self.label2:destroy(); self.label2 = nil; end;
-        if self.scrollBox2 ~= nil then self.scrollBox2:destroy(); self.scrollBox2 = nil; end;
-        if self.flowLayout1 ~= nil then self.flowLayout1:destroy(); self.flowLayout1 = nil; end;
-        if self.label5 ~= nil then self.label5:destroy(); self.label5 = nil; end;
-        if self.layout6 ~= nil then self.layout6:destroy(); self.layout6 = nil; end;
-        if self.label12 ~= nil then self.label12:destroy(); self.label12 = nil; end;
-        if self.button6 ~= nil then self.button6:destroy(); self.button6 = nil; end;
-        if self.button5 ~= nil then self.button5:destroy(); self.button5 = nil; end;
-        if self.button2 ~= nil then self.button2:destroy(); self.button2 = nil; end;
+        if self.button7 ~= nil then self.button7:destroy(); self.button7 = nil; end;
         if self.label16 ~= nil then self.label16:destroy(); self.label16 = nil; end;
-        if self.layout3 ~= nil then self.layout3:destroy(); self.layout3 = nil; end;
-        if self.equip1 ~= nil then self.equip1:destroy(); self.equip1 = nil; end;
-        if self.edit2 ~= nil then self.edit2:destroy(); self.edit2 = nil; end;
-        if self.layout8 ~= nil then self.layout8:destroy(); self.layout8 = nil; end;
-        if self.label9 ~= nil then self.label9:destroy(); self.label9 = nil; end;
-        if self.layout1 ~= nil then self.layout1:destroy(); self.layout1 = nil; end;
-        if self.scrollBox1 ~= nil then self.scrollBox1:destroy(); self.scrollBox1 = nil; end;
-        if self.rectangle1 ~= nil then self.rectangle1:destroy(); self.rectangle1 = nil; end;
-        if self.layout2 ~= nil then self.layout2:destroy(); self.layout2 = nil; end;
-        if self.layout7 ~= nil then self.layout7:destroy(); self.layout7 = nil; end;
-        if self.edit1 ~= nil then self.edit1:destroy(); self.edit1 = nil; end;
-        if self.equip2 ~= nil then self.equip2:destroy(); self.equip2 = nil; end;
-        if self.label10 ~= nil then self.label10:destroy(); self.label10 = nil; end;
         self:_oldLFMDestroy();
     end;
 
@@ -654,6 +654,7 @@ local _Inventario = {
     dataType = "", 
     formType = "undefined", 
     formComponentName = "form", 
+    cacheMode = "none", 
     title = "", 
     description=""};
 
