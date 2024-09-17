@@ -379,7 +379,7 @@
                                     </layout>
                                     <layout align="top" height="25" margins="{top = 5}">
                                         <label align="left" text="Unidade" margins="{left = 5}"/>
-                                        <edit align="left" width="400" field="unidades" hint="Nome=Valor,Nome=Valor ou Valor,Valor"/>
+                                        <edit align="left" width="400" field="unidades" hint="Nome=Valor,Nome=Valor(Max ou xVezes) ou Valor,Valor(Max ou xVezes)"/>
                                     </layout>
                                     <layout align="top" height="80" margins="{top = 5}">
                                         <label align="left" height="55" text="Ultra Secreto" margins="{left = 5}"/>

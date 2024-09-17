@@ -220,8 +220,13 @@ local function constructNew_Grimorio()
             end
             return results, value
         end
-        function calUnidades(value, sum)
-            return math.floor(value*(1+(sum/10))+0.2)
+        function calUnidades(value, sum, max)
+            result = math.floor(value*(1+(sum/10))+0.2)
+            if max == 0 then
+                return result
+            else
+                return math.min(result, max)
+            end
         end
         function generateUnidades(txtUnits, sum)
             if txtUnits == nil then
@@ -234,10 +239,25 @@ local function constructNew_Grimorio()
                     msg = msg .. ", "
                 end
                 parts = split(allUnits[i], "=")
+                value = ""
                 if #parts == 2 then
-                    msg = msg .. trim(parts[1]) .. "(".. trim(parts[2]) ..") = " .. calUnidades(tonumber(parts[2]), sum)
+                    msg = msg .. trim(parts[1]) .. "(".. trim(parts[2])
+                    value = parts[2]
                 else
-                    msg = msg .. "Unidade " .. i .. "(".. tonumber(parts[1]) .. ") = " .. calUnidades(tonumber(parts[1]), sum)
+                    msg = msg .. "Unidade " .. i .. "("
+                    value = parts[1]
+                end
+                parts = split(value, "%(")
+                if #parts == 2 then
+                    msg = msg .. parts[1] .. "-"
+                    max = split(split(parts[2], "%)")[1], "x")
+                    if #max == 2 then
+                        msg = msg .. tonumber(max[2])*tonumber(parts[1]) .. ") = " .. calUnidades(tonumber(parts[1]), sum, tonumber(max[2])*tonumber(parts[1]))
+                    else
+                        msg = msg .. max[1] .. ") = " .. calUnidades(tonumber(parts[1]), sum, tonumber(max[1]))
+                    end
+                else
+                    msg = msg .. value .. ") = " .. calUnidades(tonumber(value), sum, 0)
                 end
             end
             return msg
@@ -247,7 +267,7 @@ local function constructNew_Grimorio()
             rolagem:rolarLocalmente()
             resultsStr, resultInt = valuesRolls(rolagem.ops)
             dano = node.dano or 0
-            dmg = calUnidades(tonumber(dano), resultInt)
+            dmg = calUnidades(tonumber(dano), resultInt, 0)
             msg = node.sequencia .. ": " .. (node.nomeMagia or "Sem Nome") .. "\n"..
                     "Dados(".. strRolagem .."): ".. resultsStr .. " = " .. rolagem.resultado .. "(".. round(resultInt) ..")" .. "\n" ..
                     "Dano(".. (dano) .."): ".. dmg .."\n" ..
@@ -1123,7 +1143,7 @@ local function constructNew_Grimorio()
     obj.edit3:setAlign("left");
     obj.edit3:setWidth(400);
     obj.edit3:setField("unidades");
-    obj.edit3:setHint("Nome=Valor,Nome=Valor ou Valor,Valor");
+    obj.edit3:setHint("Nome=Valor,Nome=Valor(Max ou xVezes) ou Valor,Valor(Max ou xVezes)");
     obj.edit3:setName("edit3");
 
     obj.layout18 = GUI.fromHandle(_obj_newObject("layout"));
