@@ -589,7 +589,7 @@ local function constructNew_Ficha_Signeiros()
                 parts = split(allUnits[i], "=")
                 value = ""
                 if #parts == 2 then
-                    msg = msg .. trim(parts[1]) .. "(".. trim(parts[2])
+                    msg = msg .. trim(parts[1]) .. "("
                     value = parts[2]
                 else
                     msg = msg .. "Unidade " .. i .. "("
