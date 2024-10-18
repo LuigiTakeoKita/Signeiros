@@ -2176,7 +2176,7 @@ local function constructNew_Ficha_Signeiros()
                         self.anotacoes.visible = false
                         enableButtons(false)
                     else
-                        self.adminTab.visible = jogador.isMestre 
+                        self.adminTab.visible = jogador.isMestre or isDono()
                         self.anotacoes.visible = jogador.isMestre or isDono()
                         enableButtons(jogador.isMestre or isDono())
                     end
